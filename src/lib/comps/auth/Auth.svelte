@@ -1,3 +1,17 @@
+<style>
+  .neon-button {
+  background-color: transparent;
+  color: #0ff;
+  border: 2px solid #0ff;
+  text-shadow: 0 0 8px #0ff;
+  box-shadow: 0 0 8px #0ff inset;
+  transition: all 0.2s ease;
+}
+.neon-button:hover {
+  box-shadow: 0 0 12px #0ff, 0 0 8px #0ff inset;
+}
+</style>
+
 <section class="text-gray-400 bg-gray-900 body-font">
     <div class="container px-5 py-24 mx-auto flex flex-wrap items-center">
     <div class="lg:w-2/6 md:w-1/2 bg-gray-800 bg-opacity-50 rounded-lg p-8 flex flex-col mx-auto w-full mt-10 md:mt-0">

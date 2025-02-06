@@ -1,17 +1,39 @@
-<section class="text-gray-400 bg-gray-900 body-font">
-<div class="container px-5 py-24 mx-auto flex flex-wrap items-center">
-<div class="lg:w-2/6 md:w-1/2 bg-gray-800 bg-opacity-50 rounded-lg p-8 flex flex-col mx-auto w-full mt-10 md:mt-0">
-    <h2 class="text-white text-lg font-medium title-font mb-5">Sign Up</h2>
-    <div class="relative mb-4">
-      <label for="full-name" class="leading-7 text-sm text-gray-400">Username</label>
-      <input type="text" id="full-name" name="full-name" class="w-full bg-gray-600 bg-opacity-20 focus:bg-transparent focus:ring-2 focus:ring-yellow-900 rounded border border-gray-600 focus:border-yellow-500 text-base outline-none text-gray-100 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
+<section class="bg-black bg-opacity-50 text-cyan-300 body-font min-h-screen flex items-center">
+  <div class="container px-5 py-24 mx-auto flex flex-wrap items-center justify-center">
+    <div class="lg:w-2/6 md:w-1/2 w-full bg-gray-800 bg-opacity-80 rounded-lg p-8 flex flex-col mx-auto mt-10 md:mt-0">
+      <h2 class="text-cyan-200 text-2xl font-semibold mb-5 drop-shadow-[0_0_5px_#0ff]">
+        Sign Up
+      </h2>
+      <div class="relative mb-4">
+        <label for="username" class="leading-7 text-sm text-cyan-400">
+          Username
+        </label>
+        <input
+          type="text"
+          id="username"
+          name="username"
+          class="w-full bg-gray-700 bg-opacity-20 rounded border border-cyan-600 focus:border-cyan-400 focus:ring-2 focus:ring-cyan-800 text-cyan-100 text-base outline-none py-2 px-3 leading-8 transition-colors duration-200 ease-in-out"
+        />
+      </div>
+      <div class="relative mb-4">
+        <label for="password" class="leading-7 text-sm text-cyan-400">
+          Password
+        </label>
+        <input
+          type="password"
+          id="password"
+          name="password"
+          class="w-full bg-gray-700 bg-opacity-20 rounded border border-cyan-600 focus:border-cyan-400 focus:ring-2 focus:ring-cyan-800 text-cyan-100 text-base outline-none py-2 px-3 leading-8 transition-colors duration-200 ease-in-out"
+        />
+      </div>
+      <button
+        class="text-black bg-cyan-400 border-0 py-2 px-8 focus:outline-none hover:bg-cyan-300 rounded text-lg transition-colors duration-200 ease-in-out font-bold"
+      >
+        Sign Up
+      </button>
+      <a href="/auth/login" class="text-xs mt-3 hover:text-cyan-100 transition-colors">
+        Already have an account?
+      </a>
     </div>
-    <div class="relative mb-4">
-      <label for="email" class="leading-7 text-sm text-gray-400">Password</label>
-      <input type="password" id="email" name="email" class="w-full bg-gray-600 bg-opacity-20 focus:bg-transparent focus:ring-2 focus:ring-yellow-900 rounded border border-gray-600 focus:border-yellow-500 text-base outline-none text-gray-100 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
-    </div>
-    <button class="text-white bg-yellow-500 border-0 py-2 px-8 focus:outline-none hover:bg-yellow-600 rounded text-lg">Sign up</button>
-    <a href="/auth/login" class="text-xs mt-3">Already have an account?</a>
   </div>
-</div>
 </section>
