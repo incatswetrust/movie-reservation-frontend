@@ -3,8 +3,21 @@
 	import Navbar from '$lib/comps/Navbar.svelte';
 import '../app.css';
 	let { children } = $props();
+
+	import { QueryClient, QueryClientProvider } from '@tanstack/svelte-query';
+
+  const queryClient = new QueryClient({
+    defaultOptions: {
+      queries: {
+        // 
+      },
+    },
+  });
 </script>
 
-<Navbar/>
-{@render children()}
-<Footer/>
+
+<QueryClientProvider client={queryClient}>
+	<Navbar/>
+	{@render children()}
+	<Footer/>
+</QueryClientProvider>
