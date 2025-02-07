@@ -17,7 +17,29 @@ export interface BookingCreateDto {
 	seatIds?: number[] | null;
 }
 
+export interface BookingReadDto {
+	/** @format int32 */
+	id?: number;
+	/** @format int32 */
+	userId?: number;
+	/** @format int32 */
+	showtimeId?: number;
+	/** @format date-time */
+	createdAt?: string;
+	status?: string | null;
+	/** @format double */
+	totalPrice?: number;
+	seatIds?: number[] | null;
+}
+
 export interface CinemaCreateDto {
+	name?: string | null;
+	address?: string | null;
+}
+
+export interface CinemaReadDto {
+	/** @format int32 */
+	id?: number;
 	name?: string | null;
 	address?: string | null;
 }
@@ -37,6 +59,15 @@ export interface HallCreateDto {
 	seatsPerRow?: number;
 }
 
+export interface HallReadDto {
+	/** @format int32 */
+	id?: number;
+	name?: string | null;
+	/** @format int32 */
+	cinemaId?: number;
+	seats?: SeatReadDto[] | null;
+}
+
 export interface HallUpdateDto {
 	name?: string | null;
 	/** @format int32 */
@@ -44,6 +75,18 @@ export interface HallUpdateDto {
 }
 
 export interface MovieCreateDto {
+	title?: string | null;
+	description?: string | null;
+	genre?: string | null;
+	/** @format int32 */
+	duration?: number;
+	/** @format int32 */
+	releaseYear?: number;
+}
+
+export interface MovieReadDto {
+	/** @format int32 */
+	id?: number;
 	title?: string | null;
 	description?: string | null;
 	genre?: string | null;
@@ -63,7 +106,29 @@ export interface MovieUpdateDto {
 	releaseYear?: number;
 }
 
+export interface SeatReadDto {
+	/** @format int32 */
+	id?: number;
+	rowLabel?: string | null;
+	/** @format int32 */
+	seatNumber?: number;
+	isReserved?: boolean;
+}
+
 export interface ShowtimeCreateDto {
+	/** @format int32 */
+	hallId?: number;
+	/** @format int32 */
+	movieId?: number;
+	/** @format date-time */
+	startTime?: string;
+	/** @format double */
+	price?: number;
+}
+
+export interface ShowtimeReadDto {
+	/** @format int32 */
+	id?: number;
 	/** @format int32 */
 	hallId?: number;
 	/** @format int32 */
@@ -84,6 +149,13 @@ export interface ShowtimeUpdateDto {
 export interface UserLoginDto {
 	username?: string | null;
 	password?: string | null;
+}
+
+export interface UserReadDto {
+	/** @format int32 */
+	id?: number;
+	username?: string | null;
+	role?: UserRole;
 }
 
 export interface UserRegisterDto {
@@ -264,11 +336,12 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
 		 * @request POST:/api/Auth/register
 		 */
 		authRegisterCreate: (data: UserRegisterDto, params: RequestParams = {}) =>
-			this.request<void, any>({
+			this.request<UserReadDto, any>({
 				path: `/api/Auth/register`,
 				method: 'POST',
 				body: data,
 				type: ContentType.Json,
+				format: 'json',
 				...params
 			}),
 
@@ -280,11 +353,12 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
 		 * @request POST:/api/Auth/login
 		 */
 		authLoginCreate: (data: UserLoginDto, params: RequestParams = {}) =>
-			this.request<void, any>({
+			this.request<UserReadDto, any>({
 				path: `/api/Auth/login`,
 				method: 'POST',
 				body: data,
 				type: ContentType.Json,
+				format: 'json',
 				...params
 			}),
 
@@ -311,9 +385,10 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
 		 * @request GET:/api/Bookings
 		 */
 		bookingsList: (params: RequestParams = {}) =>
-			this.request<void, any>({
+			this.request<BookingReadDto[], any>({
 				path: `/api/Bookings`,
 				method: 'GET',
+				format: 'json',
 				...params
 			}),
 
@@ -325,11 +400,12 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
 		 * @request POST:/api/Bookings
 		 */
 		bookingsCreate: (data: BookingCreateDto, params: RequestParams = {}) =>
-			this.request<void, any>({
+			this.request<BookingReadDto, any>({
 				path: `/api/Bookings`,
 				method: 'POST',
 				body: data,
 				type: ContentType.Json,
+				format: 'json',
 				...params
 			}),
 
@@ -341,9 +417,10 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
 		 * @request GET:/api/Bookings/my
 		 */
 		bookingsMyList: (params: RequestParams = {}) =>
-			this.request<void, any>({
+			this.request<BookingReadDto[], any>({
 				path: `/api/Bookings/my`,
 				method: 'GET',
+				format: 'json',
 				...params
 			}),
 
@@ -370,9 +447,10 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
 		 * @request GET:/api/Cinemas
 		 */
 		cinemasList: (params: RequestParams = {}) =>
-			this.request<void, any>({
+			this.request<CinemaReadDto[], any>({
 				path: `/api/Cinemas`,
 				method: 'GET',
+				format: 'json',
 				...params
 			}),
 
@@ -384,11 +462,12 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
 		 * @request POST:/api/Cinemas
 		 */
 		cinemasCreate: (data: CinemaCreateDto, params: RequestParams = {}) =>
-			this.request<void, any>({
+			this.request<CinemaReadDto, any>({
 				path: `/api/Cinemas`,
 				method: 'POST',
 				body: data,
 				type: ContentType.Json,
+				format: 'json',
 				...params
 			}),
 
@@ -400,9 +479,10 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
 		 * @request GET:/api/Cinemas/{id}
 		 */
 		cinemasDetail: (id: number, params: RequestParams = {}) =>
-			this.request<void, any>({
+			this.request<CinemaReadDto, any>({
 				path: `/api/Cinemas/${id}`,
 				method: 'GET',
+				format: 'json',
 				...params
 			}),
 
@@ -414,11 +494,12 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
 		 * @request PUT:/api/Cinemas/{id}
 		 */
 		cinemasUpdate: (id: number, data: CinemaUpdateDto, params: RequestParams = {}) =>
-			this.request<void, any>({
+			this.request<CinemaReadDto, any>({
 				path: `/api/Cinemas/${id}`,
 				method: 'PUT',
 				body: data,
 				type: ContentType.Json,
+				format: 'json',
 				...params
 			}),
 
@@ -445,9 +526,10 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
 		 * @request GET:/api/Halls
 		 */
 		hallsList: (params: RequestParams = {}) =>
-			this.request<void, any>({
+			this.request<HallReadDto[], any>({
 				path: `/api/Halls`,
 				method: 'GET',
+				format: 'json',
 				...params
 			}),
 
@@ -459,11 +541,12 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
 		 * @request POST:/api/Halls
 		 */
 		hallsCreate: (data: HallCreateDto, params: RequestParams = {}) =>
-			this.request<void, any>({
+			this.request<HallReadDto, any>({
 				path: `/api/Halls`,
 				method: 'POST',
 				body: data,
 				type: ContentType.Json,
+				format: 'json',
 				...params
 			}),
 
@@ -475,9 +558,10 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
 		 * @request GET:/api/Halls/{id}
 		 */
 		hallsDetail: (id: number, params: RequestParams = {}) =>
-			this.request<void, any>({
+			this.request<HallReadDto, any>({
 				path: `/api/Halls/${id}`,
 				method: 'GET',
+				format: 'json',
 				...params
 			}),
 
@@ -489,11 +573,12 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
 		 * @request PUT:/api/Halls/{id}
 		 */
 		hallsUpdate: (id: number, data: HallUpdateDto, params: RequestParams = {}) =>
-			this.request<void, any>({
+			this.request<HallReadDto, any>({
 				path: `/api/Halls/${id}`,
 				method: 'PUT',
 				body: data,
 				type: ContentType.Json,
+				format: 'json',
 				...params
 			}),
 
@@ -520,9 +605,10 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
 		 * @request GET:/api/Movies
 		 */
 		moviesList: (params: RequestParams = {}) =>
-			this.request<void, any>({
+			this.request<MovieReadDto[], any>({
 				path: `/api/Movies`,
 				method: 'GET',
+				format: 'json',
 				...params
 			}),
 
@@ -534,11 +620,12 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
 		 * @request POST:/api/Movies
 		 */
 		moviesCreate: (data: MovieCreateDto, params: RequestParams = {}) =>
-			this.request<void, any>({
+			this.request<MovieReadDto, any>({
 				path: `/api/Movies`,
 				method: 'POST',
 				body: data,
 				type: ContentType.Json,
+				format: 'json',
 				...params
 			}),
 
@@ -550,9 +637,10 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
 		 * @request GET:/api/Movies/{id}
 		 */
 		moviesDetail: (id: number, params: RequestParams = {}) =>
-			this.request<void, any>({
+			this.request<MovieReadDto, any>({
 				path: `/api/Movies/${id}`,
 				method: 'GET',
+				format: 'json',
 				...params
 			}),
 
@@ -564,11 +652,12 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
 		 * @request PUT:/api/Movies/{id}
 		 */
 		moviesUpdate: (id: number, data: MovieUpdateDto, params: RequestParams = {}) =>
-			this.request<void, any>({
+			this.request<MovieReadDto, any>({
 				path: `/api/Movies/${id}`,
 				method: 'PUT',
 				body: data,
 				type: ContentType.Json,
+				format: 'json',
 				...params
 			}),
 
@@ -594,9 +683,10 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
 		 * @request GET:/api/Movies/genre/{genre}
 		 */
 		moviesGenreDetail: (genre: string, params: RequestParams = {}) =>
-			this.request<void, any>({
+			this.request<MovieReadDto[], any>({
 				path: `/api/Movies/genre/${genre}`,
 				method: 'GET',
+				format: 'json',
 				...params
 			})
 	};
@@ -609,9 +699,10 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
 		 * @request GET:/api/Showtimes
 		 */
 		showtimesList: (params: RequestParams = {}) =>
-			this.request<void, any>({
+			this.request<ShowtimeReadDto[], any>({
 				path: `/api/Showtimes`,
 				method: 'GET',
+				format: 'json',
 				...params
 			}),
 
@@ -623,11 +714,12 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
 		 * @request POST:/api/Showtimes
 		 */
 		showtimesCreate: (data: ShowtimeCreateDto, params: RequestParams = {}) =>
-			this.request<void, any>({
+			this.request<ShowtimeReadDto, any>({
 				path: `/api/Showtimes`,
 				method: 'POST',
 				body: data,
 				type: ContentType.Json,
+				format: 'json',
 				...params
 			}),
 
@@ -639,9 +731,10 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
 		 * @request GET:/api/Showtimes/{id}
 		 */
 		showtimesDetail: (id: number, params: RequestParams = {}) =>
-			this.request<void, any>({
+			this.request<ShowtimeReadDto, any>({
 				path: `/api/Showtimes/${id}`,
 				method: 'GET',
+				format: 'json',
 				...params
 			}),
 
@@ -653,11 +746,12 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
 		 * @request PUT:/api/Showtimes/{id}
 		 */
 		showtimesUpdate: (id: number, data: ShowtimeUpdateDto, params: RequestParams = {}) =>
-			this.request<void, any>({
+			this.request<ShowtimeReadDto, any>({
 				path: `/api/Showtimes/${id}`,
 				method: 'PUT',
 				body: data,
 				type: ContentType.Json,
+				format: 'json',
 				...params
 			}),
 
@@ -683,9 +777,10 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
 		 * @request GET:/api/Showtimes/movie/{movieId}
 		 */
 		showtimesMovieDetail: (movieId: number, params: RequestParams = {}) =>
-			this.request<void, any>({
+			this.request<ShowtimeReadDto[], any>({
 				path: `/api/Showtimes/movie/${movieId}`,
 				method: 'GET',
+				format: 'json',
 				...params
 			})
 	};
@@ -698,9 +793,10 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
 		 * @request GET:/api/Users
 		 */
 		usersList: (params: RequestParams = {}) =>
-			this.request<void, any>({
+			this.request<UserReadDto[], any>({
 				path: `/api/Users`,
 				method: 'GET',
+				format: 'json',
 				...params
 			}),
 
@@ -712,9 +808,10 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
 		 * @request GET:/api/Users/{id}
 		 */
 		usersDetail: (id: number, params: RequestParams = {}) =>
-			this.request<void, any>({
+			this.request<UserReadDto, any>({
 				path: `/api/Users/${id}`,
 				method: 'GET',
+				format: 'json',
 				...params
 			}),
 
@@ -726,9 +823,10 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
 		 * @request DELETE:/api/Users/{id}
 		 */
 		usersDelete: (id: number, params: RequestParams = {}) =>
-			this.request<void, any>({
+			this.request<UserReadDto, any>({
 				path: `/api/Users/${id}`,
 				method: 'DELETE',
+				format: 'json',
 				...params
 			})
 	};

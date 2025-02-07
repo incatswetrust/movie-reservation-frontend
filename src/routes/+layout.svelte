@@ -18,11 +18,7 @@ import '../app.css';
 
 <QueryClientProvider client={queryClient}>
 	<Navbar/>
-  <section 
-  class="min-h-screen bg-no-repeat bg-cover bg-center" 
-  style="background-image: url('/Back.webp');"
->
-  <!-- Контент страницы -->
+  <section class="min-h-[90vh] max-h-[90vh] bg-no-repeat bg-cover bg-center" style="background-image: url('/Back.webp');">
   {@render children()}
 </section>
 	
