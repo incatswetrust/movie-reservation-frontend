@@ -1,4 +1,4 @@
-<section class="bg-black bg-opacity-50 text-cyan-300 body-font min-h-screen flex items-center">
+<section class="bg-black bg-opacity-70 text-cyan-300 body-font min-h-screen flex items-center">
   <div class="container px-5 py-24 mx-auto flex flex-wrap items-center justify-center">
     <div class="lg:w-2/6 md:w-1/2 w-full bg-gray-800 bg-opacity-80 rounded-lg p-8 flex flex-col mx-auto mt-10 md:mt-0">
       <h2 class="text-cyan-200 text-2xl font-semibold mb-5 drop-shadow-[0_0_5px_#0ff]">

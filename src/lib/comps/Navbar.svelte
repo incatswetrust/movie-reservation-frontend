@@ -14,7 +14,7 @@
     <nav class="md:mr-auto md:ml-4 md:py-1 md:pl-4 md:border-l md:border-cyan-600 flex flex-wrap items-center text-base justify-center">
       <a href="/movies" class="mr-5 hover:text-cyan-100 transition-colors">Movies</a>
       <a href="/cinemas" class="mr-5 hover:text-cyan-100 transition-colors">Cinemas</a>
-      <a href="/cinemas" class="mr-5 hover:text-cyan-100 transition-colors">About</a>
+      <a href="/about" class="mr-5 hover:text-cyan-100 transition-colors">About</a>
     </nav>
 
     <!-- Кнопка/ссылка на профиль -->
