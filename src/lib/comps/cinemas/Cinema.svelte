@@ -25,7 +25,7 @@
       Cinema description or address.
     </p>
     <a 
-      class="mt-3 inline-flex items-center text-cyan-300 hover:text-cyan-100 transition-colors"
+      class="mt-3 inline-flex items-center text-fuchsia-300 hover:text-fuchsia-100 transition-colors"
       href="#"
     >
       Learn More
