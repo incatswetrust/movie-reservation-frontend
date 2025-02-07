@@ -1,20 +1,24 @@
 <script lang="ts">
    
 </script>
-<section class="text-gray-400 bg-gray-900 body-font">
-    <div class="container mx-auto flex px-5 py-24 md:flex-row flex-col items-center">
-      <div class="lg:max-w-lg lg:w-full md:w-1/2 w-5/6 md:mb-0 mb-10">
-        <img class="object-cover object-center rounded" alt="hero" src="https://dummyimage.com/720x600">
-      </div>
-      <div class="lg:flex-grow md:w-1/2 lg:pl-24 md:pl-16 flex flex-col md:items-start md:text-left items-center text-center">
-        <h1 class="title-font sm:text-4xl text-3xl mb-4 font-medium text-white">Movie name
-          <br class="hidden lg:inline-block">2024 year
-        </h1>
-        <p class="mb-8 leading-relaxed">Something interesting about film</p>
-        <div class="flex justify-center">
-          <button class="inline-flex text-white bg-yellow-500 border-0 py-2 px-6 focus:outline-none hover:bg-yellow-600 rounded text-lg">Book</button>
-          <button class="ml-4 inline-flex text-gray-400 bg-gray-800 border-0 py-2 px-6 focus:outline-none hover:bg-gray-700 hover:text-white rounded text-lg">Button</button>
-        </div>
-      </div>
-    </div>
-  </section>
+<div class="xl:w-1/4 md:w-1/2 p-4">
+  <div
+    class="bg-black bg-opacity-50 border border-cyan-600 p-6 rounded-lg shadow-[0_0_10px_#0ff] hover:shadow-[0_0_15px_#0ff] transition-shadow duration-200"
+  >
+    <img 
+      class="h-40 w-full object-cover object-center mb-6 rounded" 
+      src="https://dummyimage.com/722x402" 
+      alt="content"
+    />
+    <h3 class="tracking-widest text-fuchsia-400 text-xs font-medium mb-1">
+      SUBTITLE
+    </h3>
+    <h2 class="text-lg text-cyan-100 font-bold mb-3 drop-shadow-[0_0_3px_#0ff]">
+      Great Pyramid of Giza
+    </h2>
+    <p class="leading-relaxed text-cyan-300 text-base">
+      Fingerstache flexitarian street art 8-bit waistcoat. Distillery hexagon
+      disrupt edison bulbche.
+    </p>
+  </div>
+</div>
