@@ -1,3 +1,7 @@
+<script lang="ts">
+  import {type CinemaReadDto} from '../../../Api';
+  export let Cinema: CinemaReadDto|null;
+</script>
 <div class="flex items-center lg:w-3/5 mx-auto border-b border-cyan-600 pb-10 mb-10 sm:flex-row flex-col text-cyan-300">
   
   <div 
@@ -19,10 +23,10 @@
   </div>
   <div class="flex-grow sm:text-left text-center mt-6 sm:mt-0">
     <h2 class="text-cyan-100 text-xl title-font font-bold mb-2 drop-shadow-[0_0_3px_#0ff]">
-      Cinema name
+      {Cinema?.name}
     </h2>
     <p class="leading-relaxed text-base text-cyan-400">
-      Cinema description or address.
+      {Cinema?.address}
     </p>
     <a 
       class="mt-3 inline-flex items-center text-fuchsia-300 hover:text-fuchsia-100 transition-colors"
