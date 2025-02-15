@@ -1,5 +1,8 @@
 <script lang="ts">
-   
+   import {api} from '../../../Module';
+   import {type MovieReadDto} from '../../../Api';
+
+   export let Movie: MovieReadDto|null; 
 </script>
 <div class="xl:w-1/4 md:w-1/2 p-4">
   <div
@@ -11,14 +14,13 @@
       alt="content"
     />
     <h3 class="tracking-widest text-fuchsia-400 text-xs font-medium mb-1">
-      SUBTITLE
+      {Movie?.genre}
     </h3>
     <h2 class="text-lg text-cyan-100 font-bold mb-3 drop-shadow-[0_0_3px_#0ff]">
-      Great Pyramid of Giza
+      {Movie?.title}
     </h2>
     <p class="leading-relaxed text-cyan-300 text-base">
-      Fingerstache flexitarian street art 8-bit waistcoat. Distillery hexagon
-      disrupt edison bulbche.
+      {Movie?.description}
     </p>
   </div>
 </div>
