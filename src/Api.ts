@@ -82,6 +82,7 @@ export interface MovieCreateDto {
 	duration?: number;
 	/** @format int32 */
 	releaseYear?: number;
+	base64Image?: string | null;
 }
 
 export interface MovieReadDto {
@@ -94,6 +95,7 @@ export interface MovieReadDto {
 	duration?: number;
 	/** @format int32 */
 	releaseYear?: number;
+	base64Image?: string | null;
 }
 
 export interface MovieUpdateDto {
@@ -104,6 +106,7 @@ export interface MovieUpdateDto {
 	duration?: number;
 	/** @format int32 */
 	releaseYear?: number;
+	base64Image?: string | null;
 }
 
 export interface SeatReadDto {

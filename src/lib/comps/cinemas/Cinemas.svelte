@@ -20,6 +20,5 @@
         <Cinema Cinema = {C}/>
         <Cinema Cinema = {C}/>
         <Cinema Cinema = {C}/>
-
     </div>
 </section>
