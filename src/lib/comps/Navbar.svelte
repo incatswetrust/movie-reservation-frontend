@@ -1,12 +1,8 @@
 <script lang="ts">
-  import { onMount } from 'svelte';
 	import { UserRole, type UserReadDto } from '../../Api';
   import type {AxiosResponse} from "axios";
   import { createMutation, createQuery, useQueryClient } from '@tanstack/svelte-query';
   import {api} from '../../Module';
-	import { applyAction } from '$app/forms';
-  const queryClient = useQueryClient();
-
   const client = useQueryClient();
   const user = createQuery<UserReadDto>({
         queryKey: ['user'],

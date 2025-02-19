@@ -39,7 +39,7 @@
         <tr>
           <th class="px-4 py-2 font-bold whitespace-nowrap border-b border-cyan-100">
             <label for="SelectAll" class="sr-only">Select All</label>
-            <input type="checkbox" id="SelectAll" class="size-5 rounded-sm bg-cyan-100 border-cyan-300" />
+            <input type="checkbox" id="SelectAll" class="my-neon-checkbox" />
           </th>
           <th class="px-4 py-2 font-bold whitespace-nowrap border-b border-cyan-100">
             Id
@@ -78,7 +78,8 @@
         {#each $users.data as user}
         <tr class="hover:bg-cyan-900 hover:bg-opacity-20 transition-colors">
           <td class="px-4 py-2 font-semibold whitespace-nowrap">
-            
+            <label for="SelectAll" class="sr-only">Select All</label>
+            <input type="checkbox" id="SelectAll" class="my-neon-checkbox"/>
           </td>
           <td class="px-4 py-2 whitespace-nowrap text-cyan-400">
             {user.id}
