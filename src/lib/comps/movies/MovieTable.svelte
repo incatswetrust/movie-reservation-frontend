@@ -1,33 +1,43 @@
 <script lang="ts">
     import {createMutation, createQuery, useQueryClient} from "@tanstack/svelte-query";
     import type {AxiosResponse} from "axios";
-    import { api } from "../../../../Module";
-	  import {type UserReadDto } from "../../../../Api";
-
-
+    import { api } from "../../../Module";
+	  import {type MovieReadDto } from "../../../Api";
+	  import NewMovie from "./NewMovie.svelte";
+	  import { goto } from "$app/navigation";
     const client = useQueryClient();
-
-    const users = createQuery<UserReadDto[]>({
-        queryKey: ['users'],
-        queryFn: async () => {
-            const response: AxiosResponse<UserReadDto[]> = await api.users.usersList();
-                return response.data;
+    const movies = createQuery<MovieReadDto[]>({
+        queryKey: ['movies'],
+        queryFn: async() => {
+            const responce:AxiosResponse<MovieReadDto[]> = await api.movies.moviesList();
+            return responce.data;
         }
     });
 
     const deleteMutation = createMutation({
         mutationFn: async (id: number) =>{
-            await api.users.usersDelete(id);
+            await api.movies.moviesDelete(id);
         },
         onSuccess: () =>{
-            client.invalidateQueries({queryKey: ['users']})
+            client.invalidateQueries({queryKey: ['cinemas']})
         }
     })
 
     function Delete(id: number|undefined){
-        if(id!==undefined)
-            $deleteMutation.mutate(id);
+      if(id!==undefined)
+        $deleteMutation.mutate(id);
     }
+
+    async function Edit(id: number|undefined){
+      if(id!==undefined)
+        await goto(`/movies/${id}`);
+    }
+
+    let IsOpenned:boolean = false;
+    function OpenNewMovieModal(){
+        IsOpenned = true;
+    }
+
 
 </script>
 
@@ -44,13 +54,22 @@
             Id
           </th>
           <th class="px-4 py-2 font-bold whitespace-nowrap border-b border-cyan-100">
-            Username
+            Title
           </th>
           <th class="px-4 py-2 font-bold whitespace-nowrap border-b border-cyan-100">
-            Bookings
+            Genre
+          </th>
+          <th class="px-4 py-2 font-bold whitespace-nowrap border-b border-cyan-100">
+            Duration
+          </th>
+          <th class="px-4 py-2 font-bold whitespace-nowrap border-b border-cyan-100">
+            Release year
+          </th>
+          <th class="px-4 py-2 font-bold whitespace-nowrap border-b border-cyan-100">
+            Showtimes
           </th>
           <th class="px-4 py-2 border-b border-cyan-500">
-            <button
+            <button aria-label="Delete checked"
               class="inline-block rounded-sm bg-transperent px-4 py-2 text-xs font-medium text-fuchsia-600 hover:text-fuchsia-500 transition-colors"
             >
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
@@ -58,32 +77,50 @@
                 <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z"/>
               </svg>
             </button>
+            <button aria-label="add-new" on:click={OpenNewMovieModal}
+            class="inline-block rounded-sm bg-transperent px-4 py-2 text-xs font-medium text-cyan-300 hover:text-cyan-100 transition-colors"
+          >
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-plus-fill" viewBox="0 0 16 16">
+            <path d="M12.5 16a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7m.5-5v1h1a.5.5 0 0 1 0 1h-1v1a.5.5 0 1 1-1 0v-1h-1a.5.5 0 1 1 0-1h1v-1a.5.5 0 0 1 1 0"/>
+            <path d="M8.707 1.5a1 1 0 0 0-1.414 0L.646 8.146a.5.5 0 0 0 .708.708L8 2.207l6.646 6.647a.5.5 0 0 0 .708-.708L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293z"/>
+            <path d="m8 3.293 4.712 4.712A4.5 4.5 0 0 0 8.758 15H3.5A1.5 1.5 0 0 1 2 13.5V9.293z"/>
+          </svg>
+          </button>
           </th>
         </tr>
       </thead>
   
       <!-- Body -->
-       {#if $users.isSuccess} 
+       {#if $movies.isSuccess} 
         
       <tbody class="divide-y divide-cyan-700">
-        {#each $users.data as user}
+        {#each $movies.data as movie}
         <tr class="hover:bg-cyan-900 hover:bg-opacity-20 transition-colors">
           <td class="px-4 py-2 font-semibold whitespace-nowrap">
             <label for="SelectAll" class="sr-only">Select All</label>
             <input type="checkbox" id="SelectAll" class="my-neon-checkbox"/>
           </td>
           <td class="px-4 py-2 whitespace-nowrap text-cyan-400">
-            {user.id}
+            {movie.id}
           </td>
           <td class="px-4 py-2 whitespace-nowrap text-cyan-400">
-           {user.username}
+           {movie.title}
           </td>
           <td class="px-4 py-2 whitespace-nowrap text-cyan-400">
-            {user.role} <!--Change to user bookings-->
+            {movie.genre} 
+          </td>
+          <td class="px-4 py-2 whitespace-nowrap text-cyan-400">
+            {movie.duration}
+          </td>
+          <td class="px-4 py-2 whitespace-nowrap text-cyan-400">
+            {movie.releaseYear}
+          </td>
+          <td class="px-4 py-2 whitespace-nowrap text-cyan-400">
+            {100} <!--change to showtimes count-->
           </td>
           <td class="px-4 py-2 whitespace-nowrap">
-            <button
-            on:click={(() => Delete(user.id))}
+            <button aria-label="delete"
+            on:click={(() => Delete(movie.id))}
               class="inline-block rounded-sm bg-transperent px-4 py-2 text-xs font-medium text-fuchsia-600 hover:text-fuchsia-500 transition-colors"
             >
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
@@ -91,6 +128,13 @@
                 <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z"/>
               </svg>
             </button>
+            <button aria-label="edit" on:click={(async() => await Edit(movie.id))}
+            class="inline-block rounded-sm bg-transperent px-4 py-2 text-xs font-medium text-cyan-300 hover:text-cyan-100 transition-colors"
+          >
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-plus-fill" viewBox="0 0 16 16">
+            <path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325"/>
+          </svg>
+          </button>
           </td>
         </tr>
         {/each}  
@@ -100,6 +144,4 @@
     </table>
   </div>
 
- 
-
-  
+  <NewMovie bind:IsOpenned={IsOpenned}/>

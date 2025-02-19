@@ -10,7 +10,7 @@
   >
     <img 
       class="h-40 w-full object-cover object-center mb-6 rounded" 
-      src="https://dummyimage.com/722x402" 
+      src={Movie?.base64Image} 
       alt="content"
     />
     <h3 class="tracking-widest text-fuchsia-400 text-xs font-medium mb-1">
