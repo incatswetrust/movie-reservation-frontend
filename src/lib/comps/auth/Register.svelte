@@ -25,7 +25,7 @@
         await $registerMutation.mutate();
       }
       async function Success(userData: UserReadDto){
-        client.setQueryData(['user'], userData);;
+        client.invalidateQueries({queryKey: ['user']})
         await goto('/');
       }
 
