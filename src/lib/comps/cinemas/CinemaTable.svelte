@@ -3,8 +3,8 @@
     import type {AxiosResponse} from "axios";
     import { api } from "../../../Module";
 	  import {type CinemaReadDto } from "../../../Api";
-	import NewCinema from "./NewCinema.svelte";
-	import { goto } from "$app/navigation";
+	  import NewCinema from "./NewCinema.svelte";
+	  import { goto } from "$app/navigation";
     const client = useQueryClient();
     const cinemas = createQuery<CinemaReadDto[]>({
       queryKey: ['cinemas'],
@@ -33,7 +33,7 @@
         await goto(`/cinemas/${id}`);
     }
 
-    let IsOpenned = false;
+    let IsOpenned:boolean = false;
     function OpenNewCinemaModal(){
       IsOpenned = true;
     }

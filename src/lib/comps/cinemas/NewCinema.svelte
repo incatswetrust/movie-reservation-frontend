@@ -37,7 +37,7 @@
 {#if IsOpenned}
     
 
-<modal id="new_user"
+<modal id="new_cinema"
   class="fixed inset-0 bg-black bg-opacity-60 backdrop-blur-sm flex items-center justify-center z-50"
 >
   <div 

@@ -30,7 +30,7 @@
 </script>
 <header class="bg-black text-cyan-300 body-font shadow-[0_0_15px_#0ff]">
   <div class="container mx-auto flex flex-wrap p-5 flex-col md:flex-row items-center">
-    <!-- Логотип / Название -->
+   
     <a href="/" class="flex title-font font-medium items-center text-cyan-300 mb-4 md:mb-0 hover:text-cyan-100 transition-colors">
       <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="currentColor" class="bi bi-film" viewBox="0 0 16 16">
         <path d="M0 1a1 1 0 0 1 1-1h14a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1H1a1 1 0 0 1-1-1zm4 0v6h8V1zm8 8H4v6h8zM1 1v2h2V1zm2 3H1v2h2zM1 7v2h2V7zm2 3H1v2h2zm-2 3v2h2v-2zM15 1h-2v2h2zm-2 3v2h2V4zm2 3h-2v2h2zm-2 3v2h2v-2zm2 3h-2v2h2z"/>
@@ -40,7 +40,7 @@
       </span>
     </a>
 
-    <!-- Навигация -->
+   
     <nav class="md:mr-auto md:ml-4 md:py-1 md:pl-4 md:border-l md:border-cyan-600 flex flex-wrap items-center text-base justify-center">
       <a href="/movies" class="mr-5 hover:text-cyan-100 transition-colors">Movies</a>
       <a href="/cinemas" class="mr-5 hover:text-cyan-100 transition-colors">Cinemas</a>
@@ -52,7 +52,7 @@
       {/if}
     </nav>
 
-    <!-- Кнопка/ссылка на профиль -->
+    
     <a href="/profile" class="flex items-center text-cyan-300 hover:text-cyan-100 transition-colors">
       {#if $user.isSuccess}
         <span>{$user.data!== null && $user.data!== undefined ? $user.data.username : ""}</span>
