@@ -338,12 +338,10 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
 		 * @name AuthStatusList
 		 * @request GET:/api/Auth/status
 		 */
-		authStatusList: (data: UserRegisterDto, params: RequestParams = {}) =>
+		authStatusList: (params: RequestParams = {}) =>
 			this.request<UserReadDto, any>({
 				path: `/api/Auth/status`,
 				method: 'GET',
-				body: data,
-				type: ContentType.Json,
 				format: 'json',
 				...params
 			}),

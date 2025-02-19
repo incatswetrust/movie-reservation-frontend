@@ -1,25 +1,27 @@
 <script lang="ts">
-    import { onMount } from 'svelte';
-    import { useQueryClient } from '@tanstack/svelte-query';
+    import type {AxiosResponse} from "axios";
+    import { createQuery, useQueryClient } from '@tanstack/svelte-query';
 	import { UserRole, type UserReadDto } from '../../../Api';
     import Admin from './admin/Admin.svelte';
     import Regular from './regular/Regular.svelte';
+	import { api } from '../../../Module';
 
 
-    let user: UserReadDto|null|undefined = null;
-    const queryClient = useQueryClient();
-
-    onMount(() => {
-        user = queryClient.getQueryData(['user']);
-        console.log(user);
-    });
+    const user = createQuery<UserReadDto>({
+        queryKey: ['user'],
+        queryFn: async () => {
+            const response: AxiosResponse<UserReadDto> = await api.auth.authStatusList();
+                return response.data;
+        }
+    })
 </script>
 
-
-{#if user!== null && user!== undefined}
-    {#if user.role == UserRole.Value1}
-        <Admin/>
-    {:else if user.role == UserRole.Value0}
-        <Regular/>
+{#if $user.isSuccess}
+    {#if $user.data!== null && $user.data!== undefined}
+        {#if $user.data.role == UserRole.Value1}
+            <Admin/>
+        {:else if $user.data.role == UserRole.Value0}
+            <Regular/>
+        {/if}
     {/if}
 {/if}
