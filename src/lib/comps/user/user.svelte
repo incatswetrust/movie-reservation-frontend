@@ -11,12 +11,15 @@
 
     onMount(() => {
         user = queryClient.getQueryData(['user']);
+        console.log(user);
     });
 </script>
+
+
 {#if user!== null && user!== undefined}
-    {#if user.role == UserRole.Value0}
+    {#if user.role == UserRole.Value1}
         <Admin/>
-    {:else if user.role == UserRole.Value1}
+    {:else if user.role == UserRole.Value0}
         <Regular/>
     {/if}
 {/if}

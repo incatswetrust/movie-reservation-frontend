@@ -1,3 +1,18 @@
+<script lang="ts">
+  import { onMount } from 'svelte';
+  import { useQueryClient } from '@tanstack/svelte-query';
+	import { UserRole, type UserReadDto } from '../../Api';
+
+  let user: UserReadDto|null|undefined = null;
+  const queryClient = useQueryClient();
+
+
+  onMount(() => {
+        user = queryClient.getQueryData(['user']);
+        console.log(user);
+    });
+
+</script>
 <header class="bg-black text-cyan-300 body-font shadow-[0_0_15px_#0ff]">
   <div class="container mx-auto flex flex-wrap p-5 flex-col md:flex-row items-center">
     <!-- Логотип / Название -->
@@ -15,10 +30,14 @@
       <a href="/movies" class="mr-5 hover:text-cyan-100 transition-colors">Movies</a>
       <a href="/cinemas" class="mr-5 hover:text-cyan-100 transition-colors">Cinemas</a>
       <a href="/about" class="mr-5 hover:text-cyan-100 transition-colors">About</a>
+      {#if user!== null && user!== undefined  && user.role == UserRole.Value1}
+      <a href="/users" class="mr-5 hover:text-cyan-100 transition-colors">Users</a>
+      {/if}
     </nav>
 
     <!-- Кнопка/ссылка на профиль -->
     <a href="/profile" class="flex items-center text-cyan-300 hover:text-cyan-100 transition-colors">
+      <span>{user!== null && user!== undefined? user.username : ""}</span>
       <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="currentColor" class="ml-3" viewBox="0 0 16 16">
         <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0"/>
         <path d="M2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2zm12 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1v-1c0-1-1-4-6-4s-6 3-6 4v1a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1z"/>
