@@ -1,4 +1,7 @@
 <script>
-	import Auth from "$lib/comps/auth/Auth.svelte";
+	//get my bookings, manage profile 
+
+	import User from "$lib/comps/user/User.svelte";
 
 </script>
+<User/>

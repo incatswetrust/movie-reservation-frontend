@@ -11,8 +11,8 @@
           const responce: AxiosResponse<UserReadDto> = await api.auth.authLoginCreate(newUser);
             return responce.data;
         },
-        onSuccess: async () => {
-          await Success();
+        onSuccess: async (userData: UserReadDto) => {
+          await Success(userData);
         }
       })
 
@@ -22,8 +22,8 @@
       }
 
 
-      async function Success(){
-        client.invalidateQueries({ queryKey: ['user'] });;
+      async function Success(userData: UserReadDto){
+        client.setQueryData(['user'], userData);;
         await goto('/');
       }
 
