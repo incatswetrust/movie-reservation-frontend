@@ -29,7 +29,6 @@
     
     function AddNewCinema(){
         $addCinemaMutation.mutate();
-        
     };
 
 </script>
