@@ -3,6 +3,19 @@
    import {type MovieReadDto} from '../../../Api';
 
    export let Movie: MovieReadDto|null; 
+
+   function formatMinutesToHours(minutes: number|undefined): string {
+    if(minutes === undefined){
+      return "";
+    }
+  if (minutes < 60) {
+    return `${minutes}m`;
+  } else {
+    const h = Math.floor(minutes / 60);
+    const m = minutes % 60;
+    return `${h}h ${m}m`;
+  }
+   }
 </script>
 <div class="xl:w-1/4 md:w-1/2 p-4">
   <div
@@ -14,7 +27,7 @@
       alt="content"
     />
     <h3 class="tracking-widest text-fuchsia-400 text-xs font-medium mb-1">
-      {Movie?.genre}
+      {Movie?.releaseYear} | {Movie?.genre} | {formatMinutesToHours(Movie?.duration)}
     </h3>
     <h2 class="text-lg text-cyan-100 font-bold mb-3 drop-shadow-[0_0_3px_#0ff]">
       {Movie?.title}
