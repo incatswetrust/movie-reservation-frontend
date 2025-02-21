@@ -4,6 +4,7 @@
       import type {AxiosResponse} from "axios";
       import {api} from '../../../Module';
 	    import { goto } from '$app/navigation';
+	    import { page } from '$app/stores';
 
       const client = useQueryClient();
       let user: UserRegisterDto = {
@@ -21,12 +22,24 @@
         }
       });
 
+      let redirectParam = '';
+
+      $: {
+        // whenever page.url changes, we capture redirect=...
+        const searchParams = new URLSearchParams($page.url.searchParams);
+        redirectParam = searchParams.get('redirect') ?? '';
+      }
+
       async function Register(){
         await $registerMutation.mutate();
       }
       async function Success(userData: UserReadDto){
         client.invalidateQueries({queryKey: ['user']})
-        await goto('/');
+        if (redirectParam && redirectParam!=='') {
+            await goto(redirectParam);
+          } else {
+            await goto('/');
+          }
       }
 
 </script>
@@ -63,7 +76,7 @@
       >
         Sign Up
       </button>
-      <a href="/auth/login" class="text-xs mt-3 hover:text-cyan-100 transition-colors">
+      <a href={`/auth/login${(redirectParam && redirectParam!==''? "?redirect="+redirectParam: "")}`} class="text-xs mt-3 hover:text-cyan-100 transition-colors">
         Already have an account?
       </a>
     </div>

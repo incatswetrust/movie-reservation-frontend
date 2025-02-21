@@ -34,9 +34,9 @@
       async function Success(userData: UserReadDto){
         client.invalidateQueries({queryKey: ['user']});
           if (redirectParam && redirectParam!=='') {
-            goto(redirectParam);
+            await goto(redirectParam);
           } else {
-            goto('/');
+            await goto('/');
           }
       };
 
@@ -82,7 +82,7 @@
           >
             Sign In
           </button>
-          <a href="/auth/register" class="text-xs mt-3 hover:text-cyan-100 transition-colors">
+          <a href={`/auth/register${(redirectParam && redirectParam!==''? "?redirect="+redirectParam: "")}`} class="text-xs mt-3 hover:text-cyan-100 transition-colors">
             Sign up
           </a>
         </div>
