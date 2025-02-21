@@ -1,7 +1,7 @@
     <script lang="ts">
       import {type UserLoginDto, type UserReadDto} from '../../../Api';
       import {createMutation, useQueryClient} from "@tanstack/svelte-query";
-      import type {AxiosResponse} from "axios";
+      import {AxiosError, type AxiosResponse} from "axios";
       import {api} from '../../../Module';
 	    import { goto } from '$app/navigation';
       import { page } from '$app/stores'; 
@@ -21,6 +21,8 @@
         username: "",
         password: "",
       }
+
+      
 
       let redirectParam = '';
 
@@ -55,6 +57,8 @@
           <h2 class="text-cyan-200 text-2xl font-semibold mb-5 drop-shadow-[0_0_5px_#0ff]">
             Sign In
           </h2>
+          <h3 class="text-fuchsia-600">{$authMutation.isError && $authMutation.error instanceof AxiosError? $authMutation.error?.response?.data: ""}</h3>
+          
           <div class="relative mb-4">
             <label for="username" class="leading-7 text-sm text-cyan-400">
               Username

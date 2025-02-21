@@ -29,11 +29,32 @@
     <h3 class="tracking-widest text-fuchsia-400 text-xs font-medium mb-1">
       {Movie?.releaseYear} | {Movie?.genre} | {formatMinutesToHours(Movie?.duration)}
     </h3>
-    <h2 class="text-lg text-cyan-100 font-bold mb-3 drop-shadow-[0_0_3px_#0ff]">
-      {Movie?.title}
-    </h2>
-    <p class="leading-relaxed text-cyan-300 text-base">
-      {Movie?.description}
-    </p>
+    <div class="relative group w-64">
+      <h2 class="text-lg text-cyan-100 font-bold mb-3 drop-shadow-[0_0_3px_#0ff]">
+        {Movie?.title?.slice(0, 20)+`${(Movie?.title?.length!==undefined && Movie?.title?.length>=20 ? '...':'')}`}
+      </h2>
+      {#if Movie?.title?.length!==undefined && Movie?.title?.length>=20}
+        <div class="absolute hidden group-hover:block bg-gray-800 bg-opacity-90 text-cyan-200 text-sm px-3 py-2 rounded w-max max-w-xs -top-0 left-0 z-50">
+          {Movie?.title}
+        </div>
+      {/if}
+    </div>
+    <a 
+      class="mt-3 inline-flex items-center text-fuchsia-300 hover:text-fuchsia-100 transition-colors"
+      href={`/movies/${Movie?.id}`}
+    >
+      Book now
+      <svg 
+        fill="none" 
+        stroke="currentColor" 
+        stroke-linecap="round" 
+        stroke-linejoin="round" 
+        stroke-width="2" 
+        class="w-4 h-4 ml-2" 
+        viewBox="0 0 24 24"
+      >
+        <path d="M5 12h14M12 5l7 7-7 7"></path>
+      </svg>
+    </a>
   </div>
 </div>
