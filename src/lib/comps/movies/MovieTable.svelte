@@ -5,7 +5,7 @@
 	  import {type MovieReadDto } from "../../../Api";
 	  import NewMovie from "./NewMovie.svelte";
 	  import { goto } from "$app/navigation";
-	import MovieLabel from "./MovieLabel.svelte";
+	  import MovieLabel from "./MovieLabel.svelte";
 
 
   let MovieToShow: MovieReadDto|null = null;
@@ -50,6 +50,15 @@
     };
 
 
+    let checkedIds: number[] = [];
+
+    function checkAll(e: Event){
+      if(e.target instanceof HTMLInputElement) {
+        if($movies.data!==undefined)
+          checkedIds = e.target.checked ? [...$movies.data.map(item => item.id ?? 0)] : [];
+      }
+    };
+
 </script>
 
 <div class="py-5 lg:w-3/4 mx-auto overflow-x-auto">
@@ -59,7 +68,7 @@
         <tr>
           <th class="px-4 py-2 font-bold whitespace-nowrap border-b border-cyan-100">
             <label for="SelectAll" class="sr-only">Select All</label>
-            <input type="checkbox" id="SelectAll" class="my-neon-checkbox" />
+            <input type="checkbox" id="SelectAll" class="my-neon-checkbox" on:change={checkAll} checked={$movies.data!==undefined && $movies.data.length === checkedIds.length}/>
           </th>
           <th class="px-4 py-2 font-bold whitespace-nowrap border-b border-cyan-100">
             Id
@@ -108,7 +117,7 @@
         <tr class="hover:bg-cyan-900 hover:bg-opacity-20 transition-colors">
           <td class="px-4 py-2 font-semibold whitespace-nowrap">
             <label for="SelectAll" class="sr-only">Select All</label>
-            <input type="checkbox" id="SelectAll" class="my-neon-checkbox"/>
+            <input bind:group={checkedIds} value={movie.id} type="checkbox" id="SelectAll" class="my-neon-checkbox"/>
           </td>
           <td class="px-4 py-2 whitespace-nowrap text-cyan-400">
             {movie.id}

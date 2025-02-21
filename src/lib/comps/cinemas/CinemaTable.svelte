@@ -36,7 +36,15 @@
     let IsOpenned:boolean = false;
     function OpenNewCinemaModal(){
       IsOpenned = true;
-    }
+    };
+
+    let checkedIds: number[] = [];
+    function checkAll(e: Event){
+      if(e.target instanceof HTMLInputElement) {
+        if($cinemas.data!==undefined)
+          checkedIds = e.target.checked ? [...$cinemas.data.map(item => item.id ?? 0)] : [];
+      }
+    };
 
     
 </script>
@@ -48,7 +56,7 @@
         <tr>
           <th class="px-4 py-2 font-bold whitespace-nowrap border-b border-cyan-100">
             <label for="SelectAll" class="sr-only">Select All</label>
-            <input type="checkbox" id="SelectAll" class="my-neon-checkbox" />
+            <input type="checkbox" id="SelectAll" class="my-neon-checkbox" on:change={checkAll} checked={$cinemas.data!==undefined && $cinemas.data.length === checkedIds.length}/>
           </th>
           <th class="px-4 py-2 font-bold whitespace-nowrap border-b border-cyan-100">
             Id
@@ -92,7 +100,7 @@
         <tr class="hover:bg-cyan-900 hover:bg-opacity-20 transition-colors">
           <td class="px-4 py-2 font-semibold whitespace-nowrap">
             <label for="SelectAll" class="sr-only">Select All</label>
-            <input type="checkbox" id="SelectAll" class="my-neon-checkbox"/>
+            <input bind:group={checkedIds} value={cinema.id} type="checkbox" id="SelectAll" class="my-neon-checkbox"/>
           </td>
           <td class="px-4 py-2 whitespace-nowrap text-cyan-400">
             {cinema.id}

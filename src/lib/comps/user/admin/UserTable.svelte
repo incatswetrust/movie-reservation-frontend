@@ -22,12 +22,20 @@
         onSuccess: () =>{
             client.invalidateQueries({queryKey: ['users']})
         }
-    })
+    });
 
     function Delete(id: number|undefined){
         if(id!==undefined)
             $deleteMutation.mutate(id);
-    }
+    };
+
+    let checkedIds: number[] = [];
+    function checkAll(e: Event){
+      if(e.target instanceof HTMLInputElement) {
+        if($users.data!==undefined)
+          checkedIds = e.target.checked ? [...$users.data.map(item => item.id ?? 0)] : [];
+      }
+    };
 
 </script>
 
@@ -38,7 +46,7 @@
         <tr>
           <th class="px-4 py-2 font-bold whitespace-nowrap border-b border-cyan-100">
             <label for="SelectAll" class="sr-only">Select All</label>
-            <input type="checkbox" id="SelectAll" class="my-neon-checkbox" />
+            <input type="checkbox" id="SelectAll" class="my-neon-checkbox" on:change={checkAll} checked={$users.data!==undefined && $users.data.length === checkedIds.length}/>
           </th>
           <th class="px-4 py-2 font-bold whitespace-nowrap border-b border-cyan-100">
             Id
@@ -50,7 +58,7 @@
             Bookings
           </th>
           <th class="px-4 py-2 border-b border-cyan-500">
-            <button
+            <button aria-label="delete-all"
               class="inline-block rounded-sm bg-transperent px-4 py-2 text-xs font-medium text-fuchsia-600 hover:text-fuchsia-500 transition-colors"
             >
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
@@ -70,7 +78,7 @@
         <tr class="hover:bg-cyan-900 hover:bg-opacity-20 transition-colors">
           <td class="px-4 py-2 font-semibold whitespace-nowrap">
             <label for="SelectAll" class="sr-only">Select All</label>
-            <input type="checkbox" id="SelectAll" class="my-neon-checkbox"/>
+            <input bind:group={checkedIds} value={user.id} type="checkbox" id="SelectAll" class="my-neon-checkbox"/>
           </td>
           <td class="px-4 py-2 whitespace-nowrap text-cyan-400">
             {user.id}
@@ -82,7 +90,7 @@
             {user.role} <!--Change to user bookings-->
           </td>
           <td class="px-4 py-2 whitespace-nowrap">
-            <button
+            <button aria-label="delete"
             on:click={(() => Delete(user.id))}
               class="inline-block rounded-sm bg-transperent px-4 py-2 text-xs font-medium text-fuchsia-600 hover:text-fuchsia-500 transition-colors"
             >
