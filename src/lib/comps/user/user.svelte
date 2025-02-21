@@ -18,7 +18,7 @@
             }
             catch(err: any) {
                 if (err.response?.status === 401) {
-                    goto(`/auth/login?redirect=${window.location.pathname}`);
+                    await goto(`/auth/login?redirect=${window.location.pathname}`);
                     return null;
                 }
                     throw err;
