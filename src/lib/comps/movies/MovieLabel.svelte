@@ -25,7 +25,7 @@
   id="new_movie"
   class="fixed inset-0 bg-black bg-opacity-60 backdrop-blur-sm flex items-center justify-center z-50"
 >
-  <!-- Основной контейнер модалки -->
+ 
   <div 
     class="
       max-w-4xl 
@@ -59,7 +59,7 @@
       />
     </div>
 
-    <!-- Блок с информацией о фильме -->
+
     <div 
       class="
         md:w-1/2 

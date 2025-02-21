@@ -5,13 +5,24 @@
     import Admin from './admin/Admin.svelte';
     import Regular from './regular/Regular.svelte';
 	import { api } from '../../../Module';
+	import { goto } from "$app/navigation";
 
+    
 
-    const user = createQuery<UserReadDto>({
+    const user = createQuery<UserReadDto|null>({
         queryKey: ['user'],
         queryFn: async () => {
+            try{
             const response: AxiosResponse<UserReadDto> = await api.auth.authStatusList();
                 return response.data;
+            }
+            catch(err: any) {
+                if (err.response?.status === 401) {
+                    goto(`/auth/login?redirect=${window.location.pathname}`);
+                    return null;
+                }
+                    throw err;
+            }
         }
     })
 </script>

@@ -4,6 +4,7 @@
       import type {AxiosResponse} from "axios";
       import {api} from '../../../Module';
 	    import { goto } from '$app/navigation';
+      import { page } from '$app/stores'; 
 
       const client = useQueryClient();
       const authMutation = createMutation({
@@ -21,18 +22,34 @@
         password: "",
       }
 
+      let redirectParam = '';
 
-      async function Success(userData: UserReadDto){
-        client.invalidateQueries({queryKey: ['user']})
-        await goto('/');
+      $: {
+        // whenever page.url changes, we capture redirect=...
+        const searchParams = new URLSearchParams($page.url.searchParams);
+        redirectParam = searchParams.get('redirect') ?? '';
       }
+
+      
+      async function Success(userData: UserReadDto){
+        client.invalidateQueries({queryKey: ['user']});
+          if (redirectParam && redirectParam!=='') {
+            await goto(redirectParam);
+          } else {
+            await goto('/');
+          }
+      };
 
       async function Auhtorize(){
         await $authMutation.mutate();
       }
+
     </script>
     
-    <section class="bg-black bg-opacity-50 text-cyan-300 body-font min-h-screen flex items-center">
+
+  
+
+    <modal class="bg-black bg-opacity-50 text-cyan-300 body-font min-h-screen flex items-center">
       <div class="container px-5 py-24 mx-auto flex flex-wrap items-center justify-center">
         <div class="lg:w-2/6 md:w-1/2 w-full bg-gray-800 bg-opacity-80 rounded-lg p-8 flex flex-col mx-auto mt-10 md:mt-0">
           <h2 class="text-cyan-200 text-2xl font-semibold mb-5 drop-shadow-[0_0_5px_#0ff]">
@@ -65,10 +82,9 @@
           >
             Sign In
           </button>
-          <a href="/auth/register" class="text-xs mt-3 hover:text-cyan-100 transition-colors">
+          <a href={`/auth/register${(redirectParam && redirectParam!==''? "?redirect="+redirectParam: "")}`} class="text-xs mt-3 hover:text-cyan-100 transition-colors">
             Sign up
           </a>
         </div>
       </div>
-    </section>
-    
+    </modal>
