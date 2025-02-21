@@ -28,7 +28,7 @@
       </p>
   
       <div class="flex flex-col sm:flex-row items-center justify-between">
-        <!-- Return Home Button -->
+        
         <a 
           href="/cinemas"
           class="
@@ -51,7 +51,7 @@
         <!-- Social Icons -->
         <div class="flex space-x-4">
           <!-- GitHub -->
-          <a 
+          <a aria-label="github"
             href="https://https://github.com/incatswetrust" 
             target="_blank" 
             rel="noopener noreferrer"
@@ -86,7 +86,7 @@
   
   
           <!-- LinkedIn -->
-          <a 
+          <a aria-label="linkedin"
             href="https:/www.linkedin.com/in/oleksii-chaikovskyi-14b508196" 
             target="_blank" 
             rel="noopener noreferrer"
