@@ -572,6 +572,21 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
 		 * No description
 		 *
 		 * @tags Halls
+		 * @name HallsByCinemaDetail
+		 * @request GET:/api/Halls/byCinema/{cinemaId}
+		 */
+		hallsByCinemaDetail: (cinemaId: number, params: RequestParams = {}) =>
+			this.request<HallReadDto[], any>({
+				path: `/api/Halls/byCinema/${cinemaId}`,
+				method: 'GET',
+				format: 'json',
+				...params
+			}),
+
+		/**
+		 * No description
+		 *
+		 * @tags Halls
 		 * @name HallsDetail
 		 * @request GET:/api/Halls/{id}
 		 */
