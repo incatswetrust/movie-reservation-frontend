@@ -10,7 +10,7 @@
     const halls = createQuery<HallReadDto[]>({
       queryKey: ['cinemas'],
       queryFn: async () => {
-        const responce: AxiosResponse<HallReadDto[]> = await api.cinemas.cinemasList(); //change to new endpoint
+        const responce: AxiosResponse<HallReadDto[]> = await api.halls.hallsByCinemaDetail(Id);
         return responce.data;
       }
     });
