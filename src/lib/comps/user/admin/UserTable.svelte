@@ -29,6 +29,12 @@
             $deleteMutation.mutate(id);
     };
 
+    function DeleteAll(){
+      for(let i = 0; i<checkedIds.length; i++){
+        $deleteMutation.mutate(checkedIds[i]);
+      }
+    };
+
     let checkedIds: number[] = [];
     function checkAll(e: Event){
       if(e.target instanceof HTMLInputElement) {
@@ -58,7 +64,7 @@
             Bookings
           </th>
           <th class="px-4 py-2 border-b border-cyan-500">
-            <button aria-label="delete-all"
+            <button aria-label="delete-all" on:click={DeleteAll}
               class="inline-block rounded-sm bg-transperent px-4 py-2 text-xs font-medium text-fuchsia-600 hover:text-fuchsia-500 transition-colors"
             >
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
