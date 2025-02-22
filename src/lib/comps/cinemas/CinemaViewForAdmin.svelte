@@ -48,7 +48,7 @@
   </button>
 </div>
 
-  <HallsTable/>
+  <HallsTabl Id={Id}/>
 </div>
 
   {/if}
