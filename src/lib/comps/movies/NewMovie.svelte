@@ -130,7 +130,7 @@
 
     
 
-    <div class="flex justify-end space-x-2">
+  <div class="flex justify-end space-x-2">
     
     <input bind:value={newMovie.releaseYear}
       id="password"
