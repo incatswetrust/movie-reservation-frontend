@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { AxiosResponse } from "axios";
-	import type { HallReadDto } from "../../../Api";
+	import type { HallReadDto, SeatReadDto } from "../../../Api";
 	import { api } from "../../../Module";
 	import { createQuery } from "@tanstack/svelte-query";
 
@@ -13,6 +13,16 @@
                 return responce.data;
         }
     });
+
+
+    $: groupedByRow = ($Hall.data?.seats || []).reduce((acc, seat) => {
+        if (seat.rowLabel!==undefined && seat.rowLabel!==null && !acc[seat.rowLabel]) {
+      acc[seat.rowLabel] = [];
+    }
+    if(seat.rowLabel!==null && seat.rowLabel!==undefined)
+        acc[seat.rowLabel].push(seat);
+    return acc;
+  }, {} as Record<string, SeatReadDto[]>);
 
 
 </script>
@@ -30,10 +40,33 @@
             </svg>
             </button>
         </div>
-    </div>
+        
 
-    <!--Hall plan-->
+        <!--Screen-->
+        <div class="py-3 flex items-center text-s text-cyan-600 uppercase before:flex-1 before:border-2 before:border-cyan-600 before:me-6 after:flex-1 after:border-2 after:border-cyan-600 after:ms-6">Screen</div>
+   
 
+        <!--Hall plan-->
+        {#each Object.keys(groupedByRow) as row}
+            <div class="flex items-center mb-2">
+                <!-- Row label -->
+                <div class="mr-4 text-cyan-500 font-bold w-6 flex justify-end">
+                    {row}
+                </div>
+        
+            
+                <div class="flex-1 flex justify-between">
+                    {#each groupedByRow[row] as seat}
+                    <!-- Square place -->
+                    <div class="border border-cyan-500 text-cyan-300 w-8 h-8 flex items-center justify-center cursor-pointer hover:bg-cyan-900 hover:bg-opacity-20 transition-colors">
+                        {seat.seatNumber}
+                    </div>
+                    {/each}
+                </div>
+            </div>
+        {/each}
+    
     <!--Showtimes table-->
+    </div>
 {/if}
 
