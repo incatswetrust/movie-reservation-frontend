@@ -3,15 +3,12 @@
 	import type { ShowtimeReadDto } from "../../../Api";
 	import type { AxiosResponse } from "axios";
 	import { api } from "../../../Module";
-    import NewShowtimeByHall from './NewShowtimeByHall.svelte'
 
-
-    export let HallId: number;
 
     const showtimes = createQuery<ShowtimeReadDto[]>({
         queryKey:['showtimes'],
         queryFn: async () => {
-            const responce:AxiosResponse<ShowtimeReadDto[]> = await api.showtimes.showtimesHallDetail(HallId);
+            const responce:AxiosResponse<ShowtimeReadDto[]> = await api.showtimes.showtimesList();
             return responce.data;
         }
     });
@@ -41,11 +38,6 @@
       }
     };
 
-    let IsOpenned: boolean = false;
-    function OpenNewShowtimeModal(){
-        IsOpenned = true;
-    };
-
     function Delete(id: number|undefined){
       if(id!==undefined)
         $deleteMutation.mutate(id);
@@ -55,7 +47,11 @@
       
     };
 
-    
+    let IsOpenned: boolean = false;
+    function OpenNewShowtimeModal(){
+        IsOpenned = true;
+    };
+
 </script>
 
 <table class="min-w-full text-left text-sm text-cyan-300 bg-black bg-opacity-80">
@@ -154,5 +150,3 @@
       </tbody>
       {/if}
 </table>
-
-<NewShowtimeByHall HallId={HallId} bind:IsOpenned={IsOpenned}/>

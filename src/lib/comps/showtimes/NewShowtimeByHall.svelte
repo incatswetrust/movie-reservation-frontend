@@ -58,13 +58,36 @@
 {#if IsOpenned}
     <modal id="new_hall" class="fixed inset-0 bg-black bg-opacity-60 backdrop-blur-sm flex items-center justify-center z-50">
         <div class="w-full max-w-lg p-6 bg-black bg-opacity-80 border border-cyan-500 rounded-md">
-            <form class="max-w-sm mx-auto">
-                <label for="movies" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Select movie</label>
-                <select bind:value={newShowtime.movieId} id="movies" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+            <form class="mx-auto">
+                <label 
+                  for="movies"
+                  class="block text-cyan-400 text-sm mb-1"
+                >
+                  Select movie
+                </label>
+              
+                <select
+                  bind:value={newShowtime.movieId}
+                  id="movies"
+                  style="margin-bottom: 5px;"
+                  class="
+                    w-full
+                    px-3 py-2
+                    bg-transparent
+                    border border-cyan-500
+                    text-cyan-300
+                    rounded
+                    focus:outline-none
+                    focus:border-cyan-400
+                    hover:shadow-[0_0_6px_#0ff]
+                    transition-colors
+                    placeholder-cyan-500
+                  "
+                >
                   <option selected>Choose a movie</option>
                   {#if $movies.isSuccess}
                     {#each $movies.data as movie}
-                        <option value={movie.id}>{movie.title}</option>
+                      <option value={movie.id}>{movie.title}</option>
                     {/each}
                   {/if}
                 </select>

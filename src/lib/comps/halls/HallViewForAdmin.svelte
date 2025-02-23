@@ -15,6 +15,8 @@
         }
     });
 
+    
+
 
     $: groupedByRow = ($Hall.data?.seats || []).reduce((acc, seat) => {
         if (seat.rowLabel!==undefined && seat.rowLabel!==null && !acc[seat.rowLabel]) {
@@ -66,7 +68,7 @@
                 </div>
             </div>
         {/each}
-    
+        <div class="py-3 flex items-center text-s text-cyan-600 uppercase before:flex-1 before:border-2 before:border-cyan-600 before:me-6 after:flex-1 after:border-2 after:border-cyan-600 after:ms-6"></div>
     <!--Showtimes table-->
     <ShowTimeByHallTable HallId={Id}/>
     </div>

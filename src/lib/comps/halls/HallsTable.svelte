@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { createQuery } from "@tanstack/svelte-query";
+	import { createMutation, createQuery, useQueryClient } from "@tanstack/svelte-query";
 	import type { HallReadDto } from "../../../Api";
 	import { api } from "../../../Module";
 	import type { AxiosResponse } from "axios";
@@ -25,9 +25,28 @@
       }
     };
 
-    function Delete(id:number|undefined){
+    const client = useQueryClient();
 
+    const deleteMutation = createMutation({
+        mutationFn: async (id: number) =>{
+            await api.halls.hallsDelete(id);
+        },
+        onSuccess: () =>{
+            client.invalidateQueries({queryKey: ['halls']})
+        }
+    });
+
+    function Delete(id:number|undefined){
+      if(id!==undefined)
+        $deleteMutation.mutate(id);
     };
+
+    function DeleteAll(){
+        for(let i = 0; i<checkedIds.length; i++){
+            $deleteMutation.mutate(checkedIds[i]);
+      }
+    };
+
     async function Edit(id:number|undefined){
       await goto(`/cinemas/${Id}/${id}`);
 
@@ -59,7 +78,7 @@
           Showtimes
         </th>
         <th class="px-4 py-2 border-b border-cyan-500">
-          <button aria-label="Delete checked" 
+          <button on:click={DeleteAll} aria-label="Delete checked" 
             class="inline-block rounded-sm bg-transperent px-4 py-2 text-xs font-medium text-fuchsia-600 hover:text-fuchsia-500 transition-colors"
           >
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
