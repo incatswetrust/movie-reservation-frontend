@@ -3,6 +3,8 @@
 	import type { ShowtimeReadDto } from "../../../Api";
 	import type { AxiosResponse } from "axios";
 	import { api } from "../../../Module";
+    import NewShowtimeByHall from './NewShowtimeByHall.svelte'
+
 
     export let HallId: number;
 
@@ -32,8 +34,9 @@
 
     };
 
+    let IsOpenned: boolean = false;
     function OpenNewShowtimeModal(){
-
+        IsOpenned = true;
     };
 
     function Delete(id: number|undefined){
@@ -144,3 +147,5 @@
       </tbody>
       {/if}
 </table>
+
+<NewShowtimeByHall HallId={HallId} bind:IsOpenned={IsOpenned}/>
