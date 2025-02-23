@@ -47,7 +47,8 @@
       <a href="/about" class="mr-5 hover:text-cyan-100 transition-colors">About</a>
       {#if $user.isSuccess}
         {#if $user.data!== null && $user.data!== undefined  && $user.data.role == UserRole.Value1}
-        <a href="/users" class="mr-5 hover:text-cyan-100 transition-colors">Users</a>
+          <a href="/users" class="mr-5 hover:text-cyan-100 transition-colors">Users</a>
+          <a href="/showtimes" class="mr-5 hover:text-cyan-100 transition-colors">Showtimes</a>
         {/if}
       {/if}
     </nav>

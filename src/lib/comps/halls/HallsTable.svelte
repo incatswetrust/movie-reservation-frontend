@@ -53,6 +53,9 @@
         <th class="px-4 py-2 font-bold whitespace-nowrap border-b border-cyan-100">
           Places
         </th>
+        <th class="px-4 py-2 font-bold whitespace-nowrap border-b border-cyan-100">
+          Showtimes
+        </th>
         <th class="px-4 py-2 border-b border-cyan-500">
           <button aria-label="Delete checked" 
             class="inline-block rounded-sm bg-transperent px-4 py-2 text-xs font-medium text-fuchsia-600 hover:text-fuchsia-500 transition-colors"
@@ -91,6 +94,9 @@
                   </td>
                   <td class="px-4 py-2 whitespace-nowrap text-cyan-400">
                     {hall.seats?.length}
+                  </td>
+                  <td class="px-4 py-2 whitespace-nowrap text-cyan-400">
+                    {100}
                   </td>
                   <td class="px-4 py-2 whitespace-nowrap">
                     <button aria-label="delete"
