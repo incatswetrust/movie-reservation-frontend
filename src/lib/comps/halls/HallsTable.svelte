@@ -3,12 +3,13 @@
 	import type { HallReadDto } from "../../../Api";
 	import { api } from "../../../Module";
 	import type { AxiosResponse } from "axios";
+	import NewHall from "./NewHall.svelte";
 
     export let Id:number;
 
 
     const halls = createQuery<HallReadDto[]>({
-      queryKey: ['cinemas'],
+      queryKey: ['halls'],
       queryFn: async () => {
         const responce: AxiosResponse<HallReadDto[]> = await api.halls.hallsByCinemaDetail(Id);
         return responce.data;
@@ -28,7 +29,11 @@
     };
     async function Edit(id:number|undefined){
 
-    }
+    };
+    let IsOpenned:boolean = false;
+    function OpenNewHallModal(){
+      IsOpenned = true;
+    };
 </script>
 
 <table class="min-w-full text-left text-sm text-cyan-300 bg-black bg-opacity-80">
@@ -57,7 +62,7 @@
               <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z"/>
             </svg>
           </button>
-          <button aria-label="add-new" 
+          <button aria-label="add-new" on:click={OpenNewHallModal}
           class="inline-block rounded-sm bg-transperent px-4 py-2 text-xs font-medium text-cyan-300 hover:text-cyan-100 transition-colors"
         >
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-plus-fill" viewBox="0 0 16 16">
@@ -110,3 +115,5 @@
     </tbody>
     {/if}
 </table>
+
+<NewHall bind:IsOpenned={IsOpenned} CinemaId={Id}/>
