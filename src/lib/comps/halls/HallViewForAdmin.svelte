@@ -3,6 +3,7 @@
 	import type { HallReadDto, SeatReadDto } from "../../../Api";
 	import { api } from "../../../Module";
 	import { createQuery } from "@tanstack/svelte-query";
+	import ShowTimeByHallTable from "../showtimes/ShowTimeByHallTable.svelte";
 
     export let Id: number;
 
@@ -13,6 +14,8 @@
                 return responce.data;
         }
     });
+
+    
 
 
     $: groupedByRow = ($Hall.data?.seats || []).reduce((acc, seat) => {
@@ -65,8 +68,9 @@
                 </div>
             </div>
         {/each}
-    
+        <div class="py-3 flex items-center text-s text-cyan-600 uppercase before:flex-1 before:border-2 before:border-cyan-600 before:me-6 after:flex-1 after:border-2 after:border-cyan-600 after:ms-6"></div>
     <!--Showtimes table-->
+    <ShowTimeByHallTable HallId={Id}/>
     </div>
 {/if}
 

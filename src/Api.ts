@@ -136,6 +136,9 @@ export interface ShowtimeReadDto {
 	hallId?: number;
 	/** @format int32 */
 	movieId?: number;
+	movieName?: string | null;
+	cinemaName?: string | null;
+	hallName?: string | null;
 	/** @format date-time */
 	startTime?: string;
 	/** @format double */
@@ -812,6 +815,21 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
 		showtimesMovieDetail: (movieId: number, params: RequestParams = {}) =>
 			this.request<ShowtimeReadDto[], any>({
 				path: `/api/Showtimes/movie/${movieId}`,
+				method: 'GET',
+				format: 'json',
+				...params
+			}),
+
+		/**
+		 * No description
+		 *
+		 * @tags Showtimes
+		 * @name ShowtimesHallDetail
+		 * @request GET:/api/Showtimes/hall/{movieId}
+		 */
+		showtimesHallDetail: (movieId: number, params: RequestParams = {}) =>
+			this.request<ShowtimeReadDto[], any>({
+				path: `/api/Showtimes/hall/${movieId}`,
 				method: 'GET',
 				format: 'json',
 				...params
