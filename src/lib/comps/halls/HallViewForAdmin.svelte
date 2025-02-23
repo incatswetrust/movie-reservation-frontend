@@ -3,6 +3,7 @@
 	import type { HallReadDto, SeatReadDto } from "../../../Api";
 	import { api } from "../../../Module";
 	import { createQuery } from "@tanstack/svelte-query";
+	import ShowTimeByHallTable from "../showtimes/ShowTimeByHallTable.svelte";
 
     export let Id: number;
 
@@ -67,6 +68,7 @@
         {/each}
     
     <!--Showtimes table-->
+    <ShowTimeByHallTable HallId={Id}/>
     </div>
 {/if}
 
