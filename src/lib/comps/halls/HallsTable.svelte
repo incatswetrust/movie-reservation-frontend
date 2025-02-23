@@ -4,6 +4,7 @@
 	import { api } from "../../../Module";
 	import type { AxiosResponse } from "axios";
 	import NewHall from "./NewHall.svelte";
+	import { goto } from "$app/navigation";
 
     export let Id:number;
 
@@ -28,6 +29,7 @@
 
     };
     async function Edit(id:number|undefined){
+      await goto(`/cinemas/${Id}/${id}`);
 
     };
     let IsOpenned:boolean = false;
