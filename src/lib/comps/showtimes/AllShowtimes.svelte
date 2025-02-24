@@ -3,6 +3,7 @@
 	import type { ShowtimeReadDto } from "../../../Api";
 	import type { AxiosResponse } from "axios";
 	import { api } from "../../../Module";
+	import { FormatParser } from "$lib/tools/FormatParser";
 
 
     const showtimes = createQuery<ShowtimeReadDto[]>({
@@ -29,6 +30,8 @@
             $deleteMutation.mutate(checkedIds[i]);
       }
     };
+
+    
 
     let checkedIds: number[] = [];
     function checkAll(e: Event){
@@ -122,7 +125,7 @@
             {showtime.hallName}
           </td>
           <td class="px-4 py-2 whitespace-nowrap text-cyan-400">
-            {showtime.startTime}
+            {FormatParser.formatDateTime(showtime.startTime)}
           </td>
           <td class="px-4 py-2 whitespace-nowrap text-cyan-400">
             {showtime.price}

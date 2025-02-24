@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { createMutation, createQuery, useQueryClient } from "@tanstack/svelte-query";
-	import type { HallReadDto } from "../../../Api";
+	import type { HallReadDto, ShowtimeReadDto } from "../../../Api";
 	import { api } from "../../../Module";
 	import type { AxiosResponse } from "axios";
 	import NewHall from "./NewHall.svelte";
@@ -15,6 +15,14 @@
         const responce: AxiosResponse<HallReadDto[]> = await api.halls.hallsByCinemaDetail(Id);
         return responce.data;
       }
+    });
+
+    const showtimes = createQuery<ShowtimeReadDto[]>({
+        queryKey: ['showtimes'],
+        queryFn: async() => {
+          const response:AxiosResponse<ShowtimeReadDto[]> = await api.showtimes.showtimesList();
+          return response.data;
+        }
     });
 
     let checkedIds: number[] = [];
@@ -95,7 +103,7 @@
       </tr>
     </thead>
 
-    {#if $halls.isSuccess}
+    {#if $halls.isSuccess && $showtimes.isSuccess}
     <tbody class="divide-y divide-cyan-700">
         {#each $halls.data as hall}
             <tr class="hover:bg-cyan-900 hover:bg-opacity-20 transition-colors">
@@ -113,7 +121,7 @@
                     {hall.seats?.length}
                   </td>
                   <td class="px-4 py-2 whitespace-nowrap text-cyan-400">
-                    {100}
+                    {$showtimes.data!==null && $showtimes.data!==undefined ? $showtimes.data.filter(item => item.hallId === hall.id).length : 0}
                   </td>
                   <td class="px-4 py-2 whitespace-nowrap">
                     <button aria-label="delete" on:click={(() => Delete(hall.id))} class="inline-block rounded-sm bg-transperent px-4 py-2 text-xs font-medium text-fuchsia-600 hover:text-fuchsia-500 transition-colors">
