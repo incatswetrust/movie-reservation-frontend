@@ -28,6 +28,7 @@
     <div class="md:w-1/2 flex justify-center">
       <img class="object-cover object-center rounded max-h-96" alt="Movie Poster" src={Movie?.base64Image}/>
     </div>
+    
     <div class="md:w-1/2 flex flex-col md:items-start md:text-left items-center text-center">
       <h1 class="text-cyan-100 text-3xl sm:text-4xl font-bold mb-4 drop-shadow-[0_0_3px_#0ff]">
         {Movie?.title}
