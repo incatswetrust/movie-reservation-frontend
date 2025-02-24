@@ -3,6 +3,7 @@
 	import type { MovieCreateDto, MovieReadDto } from "../../../Api";
 	import { api } from "../../../Module";
 	import type { AxiosResponse } from "axios";
+	import ShowTimeByMovieTable from "../showtimes/ShowTimeByMovieTable.svelte";
 
     export let Id: number;
 
@@ -187,6 +188,7 @@
                 </button>
             {/if}
         </div>
-
+        <ShowTimeByMovieTable MovieId={Id}/>
     </div>
 {/if}
+

@@ -3,15 +3,13 @@
 	import type { ShowtimeReadDto } from "../../../Api";
 	import type { AxiosResponse } from "axios";
 	import { api } from "../../../Module";
-    import NewShowtimeByHall from './NewShowtimeByHall.svelte'
 
 
-    export let HallId: number;
-
+    export let MovieId: number;
     const showtimes = createQuery<ShowtimeReadDto[]>({
         queryKey:['showtimes'],
         queryFn: async () => {
-            const responce:AxiosResponse<ShowtimeReadDto[]> = await api.showtimes.showtimesHallDetail(HallId);
+            const responce:AxiosResponse<ShowtimeReadDto[]> = await api.showtimes.showtimesMovieDetail(MovieId);
             return responce.data;
         }
     });
@@ -55,7 +53,6 @@
       
     };
 
-    
 </script>
 
 <table class="min-w-full text-left text-sm text-cyan-300 bg-black bg-opacity-80">
@@ -70,7 +67,10 @@
             Id
           </th>
           <th class="px-4 py-2 font-bold whitespace-nowrap border-b border-cyan-100">
-            Movie title
+            Cinema
+          </th>
+          <th class="px-4 py-2 font-bold whitespace-nowrap border-b border-cyan-100">
+            Hall
           </th>
           <th class="px-4 py-2 font-bold whitespace-nowrap border-b border-cyan-100">
             Start time
@@ -114,8 +114,11 @@
             {showtime.id}
           </td>
           <td class="px-4 py-2 whitespace-nowrap text-cyan-400">
-           {showtime.movieName}
+           {showtime.cinemaName}
           </td>
+          <td class="px-4 py-2 whitespace-nowrap text-cyan-400">
+            {showtime.hallName}
+           </td>
           <td class="px-4 py-2 whitespace-nowrap text-cyan-400">
             {showtime.startTime}
           </td>
@@ -148,5 +151,3 @@
       </tbody>
       {/if}
 </table>
-
-<NewShowtimeByHall HallId={HallId} bind:IsOpenned={IsOpenned}/>
