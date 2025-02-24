@@ -116,13 +116,13 @@
             {showtime.id}
           </td>
           <td class="px-4 py-2 whitespace-nowrap text-cyan-400">
-           {showtime.movieName}
+           {FormatParser.shortNameFormat(showtime.movieName)}
           </td>
           <td class="px-4 py-2 whitespace-nowrap text-cyan-400">
-            {showtime.cinemaName} 
+            {FormatParser.shortNameFormat(showtime.cinemaName)} 
           </td>
           <td class="px-4 py-2 whitespace-nowrap text-cyan-400">
-            {showtime.hallName}
+            {FormatParser.shortNameFormat(showtime.hallName)}
           </td>
           <td class="px-4 py-2 whitespace-nowrap text-cyan-400">
             {FormatParser.formatDateTime(showtime.startTime)}

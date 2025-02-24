@@ -14,4 +14,21 @@ export class FormatParser{
             const date = new Date(dateTimeString);
             return date.toLocaleString('en-US', options);
     };
+
+    static formatMinutesToHours(minutes: number|undefined): string {
+        if(minutes === undefined){
+          return "";
+        }
+      if (minutes < 60) {
+        return `${minutes}m`;
+      } else {
+        const h = Math.floor(minutes / 60);
+        const m = minutes % 60;
+        return `${h}h ${m}m`;
+      }
+    };
+
+    static shortNameFormat(original: string|undefined|null): string{
+        return original?.slice(0, 20)+`${(original?.length!==undefined && original?.length>=20 ? '...':'')}`
+    }
 }
