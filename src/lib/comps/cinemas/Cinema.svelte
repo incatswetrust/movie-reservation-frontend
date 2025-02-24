@@ -16,8 +16,8 @@
     <p class="leading-relaxed text-base text-cyan-400">
       {Cinema?.address}
     </p>
-    <a href="#" class="mt-3 inline-flex items-center text-fuchsia-300 hover:text-fuchsia-100 transition-colors">
-      Learn More
+    <a href="cinemas/{Cinema?.id}" class="mt-3 inline-flex items-center text-fuchsia-300 hover:text-fuchsia-100 transition-colors">
+      Go to the halls
       <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="w-4 h-4 ml-2" viewBox="0 0 24 24">
         <path d="M5 12h14M12 5l7 7-7 7"></path>
       </svg>
