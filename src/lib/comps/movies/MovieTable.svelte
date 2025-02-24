@@ -2,7 +2,7 @@
     import {createMutation, createQuery, useQueryClient} from "@tanstack/svelte-query";
     import type {AxiosResponse} from "axios";
     import { api } from "../../../Module";
-	  import {type MovieReadDto } from "../../../Api";
+	  import {type MovieReadDto, type ShowtimeReadDto } from "../../../Api";
 	  import NewMovie from "./NewMovie.svelte";
 	  import { goto } from "$app/navigation";
 	  import MovieLabel from "./MovieLabel.svelte";
@@ -16,6 +16,14 @@
         queryFn: async() => {
             const responce:AxiosResponse<MovieReadDto[]> = await api.movies.moviesList();
             return responce.data;
+        }
+    });
+
+    const showtimes = createQuery<ShowtimeReadDto[]>({
+        queryKey: ['showtimes'],
+        queryFn: async() => {
+          const response:AxiosResponse<ShowtimeReadDto[]> = await api.showtimes.showtimesList();
+          return response.data;
         }
     });
 
@@ -111,7 +119,7 @@
       </thead>
   
       <!-- Body -->
-       {#if $movies.isSuccess} 
+       {#if $movies.isSuccess && $showtimes.isSuccess} 
         
       <tbody class="divide-y divide-cyan-700">
         {#each $movies.data as movie}
@@ -136,7 +144,7 @@
             {movie.releaseYear}
           </td>
           <td class="px-4 py-2 whitespace-nowrap text-cyan-400">
-            {100} <!--change to showtimes count-->
+            {$showtimes.data!==null && $showtimes.data!==undefined ? $showtimes.data.filter(item => item.movieId === movie.id).length : 0} <!--change to showtimes count-->
           </td>
           <td class="px-4 py-2 whitespace-nowrap">
             <button aria-label="delete" on:click={(() => Delete(movie.id))} class="inline-block rounded-sm bg-transperent px-4 py-2 text-xs font-medium text-fuchsia-600 hover:text-fuchsia-500 transition-colors">

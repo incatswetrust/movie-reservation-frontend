@@ -19,11 +19,14 @@
 
     let editHallNameMode: boolean = false;
     let hallUpdate: HallUpdateDto = {
+        cinemaId: $Hall.data?.cinemaId,
         name: $Hall.data?.name
     };
 
     const updateMutation = createMutation({
         mutationFn: async() => {
+            if($Hall.data?.id === undefined || $Hall.data?.id === null)
+                return null;
             const responce: AxiosResponse<HallReadDto> = await api.halls.hallsUpdate(Id, hallUpdate);
                 return responce.data;
         },

@@ -2,7 +2,7 @@
     import {createMutation, createQuery, useQueryClient} from "@tanstack/svelte-query";
     import type {AxiosResponse} from "axios";
     import { api } from "../../../Module";
-	  import {type CinemaReadDto } from "../../../Api";
+	  import {type CinemaReadDto, type HallReadDto } from "../../../Api";
 	  import NewCinema from "./NewCinema.svelte";
 	  import { goto } from "$app/navigation";
     const client = useQueryClient();
@@ -12,6 +12,13 @@
         const responce: AxiosResponse<CinemaReadDto[]> = await api.cinemas.cinemasList();
         return responce.data;
       }
+    });
+    const halls = createQuery<HallReadDto[]>({
+        queryKey: ['halls'],
+        queryFn: async() => {
+          const response:AxiosResponse<HallReadDto[]> = await api.halls.hallsList();
+          return response.data;
+        }
     });
 
     const deleteMutation = createMutation({
@@ -95,7 +102,7 @@
       </thead>
   
       <!-- Body -->
-       {#if $cinemas.isSuccess} 
+       {#if $cinemas.isSuccess && $halls.isSuccess} 
         
       <tbody class="divide-y divide-cyan-700">
         {#each $cinemas.data as cinema}
@@ -114,7 +121,7 @@
             {cinema.address} 
           </td>
           <td class="px-4 py-2 whitespace-nowrap text-cyan-400">
-            {800} <!--Change to cinema halls-->
+            {$halls.data!==null && $halls.data!==undefined ? $halls.data.filter(item => item.cinemaId === cinema.id).length : 0} <!--Change to cinema halls-->
           </td>
           <td class="px-4 py-2 whitespace-nowrap">
             <button aria-label="delete" on:click={(() => Delete(cinema.id))} class="inline-block rounded-sm bg-transperent px-4 py-2 text-xs font-medium text-fuchsia-600 hover:text-fuchsia-500 transition-colors">
