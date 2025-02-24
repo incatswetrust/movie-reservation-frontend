@@ -57,11 +57,10 @@
 
             <div class="flex justify-end space-x-3">
                 <button on:click={AddNewHall} class="px-4 py-2 bg-cyan-400 text-black font-bold rounded hover:bg-cyan-300 transition-colors shadow-[0_0_6px_#0ff]">
-                Add
+                    Add
                 </button>
-                <button on:click={Close}
-                class="px-4 py-2 bg-transparent border border-fuchsia-600 text-fuchsia-600 rounded hover:bg-fuchsia-900 hover:bg-opacity-20 transition-colors">
-                Cancel
+                <button on:click={Close} class="px-4 py-2 bg-transparent border border-fuchsia-600 text-fuchsia-600 rounded hover:bg-fuchsia-900 hover:bg-opacity-20 transition-colors">
+                    Cancel
                 </button>
             </div>
         </div>

@@ -73,16 +73,13 @@
             Movie title
           </th>
           <th class="px-4 py-2 font-bold whitespace-nowrap border-b border-cyan-100">
-            Cimena
-          </th>
-          <th class="px-4 py-2 font-bold whitespace-nowrap border-b border-cyan-100">
-            Hall
-          </th>
-          <th class="px-4 py-2 font-bold whitespace-nowrap border-b border-cyan-100">
             Start time
           </th>
           <th class="px-4 py-2 font-bold whitespace-nowrap border-b border-cyan-100">
             Price
+          </th>
+          <th class="px-4 py-2 font-bold whitespace-nowrap border-b border-cyan-100">
+            Booked
           </th>
           <th class="px-4 py-2 border-b border-cyan-500">
             <button aria-label="Delete checked" on:click={DeleteAll}
@@ -120,16 +117,13 @@
            {showtime.movieName}
           </td>
           <td class="px-4 py-2 whitespace-nowrap text-cyan-400">
-            {showtime.cinemaName} 
-          </td>
-          <td class="px-4 py-2 whitespace-nowrap text-cyan-400">
-            {showtime.hallName}
-          </td>
-          <td class="px-4 py-2 whitespace-nowrap text-cyan-400">
             {showtime.startTime}
           </td>
           <td class="px-4 py-2 whitespace-nowrap text-cyan-400">
             {showtime.price}
+          </td>
+          <td class="px-4 py-2 whitespace-nowrap text-cyan-400">
+            {66}
           </td>
           <td class="px-4 py-2 whitespace-nowrap">
             <button aria-label="delete"

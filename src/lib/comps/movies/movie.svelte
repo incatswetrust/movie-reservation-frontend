@@ -1,21 +1,11 @@
 <script lang="ts">
    import {api} from '../../../Module';
    import {type MovieReadDto} from '../../../Api';
+	import { FormatParser } from '$lib/tools/FormatParser';
 
    export let Movie: MovieReadDto|null; 
 
-   function formatMinutesToHours(minutes: number|undefined): string {
-    if(minutes === undefined){
-      return "";
-    }
-  if (minutes < 60) {
-    return `${minutes}m`;
-  } else {
-    const h = Math.floor(minutes / 60);
-    const m = minutes % 60;
-    return `${h}h ${m}m`;
-  }
-   }
+   
 </script>
 <div class="xl:w-1/4 md:w-1/2 p-4">
   <div
@@ -27,11 +17,11 @@
       alt="content"
     />
     <h3 class="tracking-widest text-fuchsia-400 text-xs font-medium mb-1">
-      {Movie?.releaseYear} | {Movie?.genre} | {formatMinutesToHours(Movie?.duration)}
+      {Movie?.releaseYear} | {Movie?.genre} | {FormatParser.formatMinutesToHours(Movie?.duration)}
     </h3>
     <div class="relative group w-64">
       <h2 class="text-lg text-cyan-100 font-bold mb-3 drop-shadow-[0_0_3px_#0ff]">
-        {Movie?.title?.slice(0, 20)+`${(Movie?.title?.length!==undefined && Movie?.title?.length>=20 ? '...':'')}`}
+        {FormatParser.shortNameFormat(Movie?.title)}
       </h2>
       {#if Movie?.title?.length!==undefined && Movie?.title?.length>=20}
         <div class="absolute hidden group-hover:block bg-gray-800 bg-opacity-90 text-cyan-200 text-sm px-3 py-2 rounded w-max max-w-xs -top-0 left-0 z-50">
@@ -39,20 +29,9 @@
         </div>
       {/if}
     </div>
-    <a 
-      class="mt-3 inline-flex items-center text-fuchsia-300 hover:text-fuchsia-100 transition-colors"
-      href={`/movies/${Movie?.id}`}
-    >
+    <a href={`/movies/${Movie?.id}`} class="mt-3 inline-flex items-center text-fuchsia-300 hover:text-fuchsia-100 transition-colors">
       Book now
-      <svg 
-        fill="none" 
-        stroke="currentColor" 
-        stroke-linecap="round" 
-        stroke-linejoin="round" 
-        stroke-width="2" 
-        class="w-4 h-4 ml-2" 
-        viewBox="0 0 24 24"
-      >
+      <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="w-4 h-4 ml-2" viewBox="0 0 24 24">
         <path d="M5 12h14M12 5l7 7-7 7"></path>
       </svg>
     </a>

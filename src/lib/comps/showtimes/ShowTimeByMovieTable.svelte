@@ -3,13 +3,13 @@
 	import type { ShowtimeReadDto } from "../../../Api";
 	import type { AxiosResponse } from "axios";
 	import { api } from "../../../Module";
-	import { FormatParser } from "$lib/tools/FormatParser";
 
 
+    export let MovieId: number;
     const showtimes = createQuery<ShowtimeReadDto[]>({
         queryKey:['showtimes'],
         queryFn: async () => {
-            const responce:AxiosResponse<ShowtimeReadDto[]> = await api.showtimes.showtimesList();
+            const responce:AxiosResponse<ShowtimeReadDto[]> = await api.showtimes.showtimesMovieDetail(MovieId);
             return responce.data;
         }
     });
@@ -31,14 +31,17 @@
       }
     };
 
-    
-
     let checkedIds: number[] = [];
     function checkAll(e: Event){
         if(e.target instanceof HTMLInputElement) {
         if($showtimes.data!==undefined)
           checkedIds = e.target.checked ? [...$showtimes.data.map(item => item.id ?? 0)] : [];
       }
+    };
+
+    let IsOpenned: boolean = false;
+    function OpenNewShowtimeModal(){
+        IsOpenned = true;
     };
 
     function Delete(id: number|undefined){
@@ -48,11 +51,6 @@
 
     async function Edit(id: number|undefined){
       
-    };
-
-    let IsOpenned: boolean = false;
-    function OpenNewShowtimeModal(){
-        IsOpenned = true;
     };
 
 </script>
@@ -69,10 +67,7 @@
             Id
           </th>
           <th class="px-4 py-2 font-bold whitespace-nowrap border-b border-cyan-100">
-            Movie title
-          </th>
-          <th class="px-4 py-2 font-bold whitespace-nowrap border-b border-cyan-100">
-            Cimena
+            Cinema
           </th>
           <th class="px-4 py-2 font-bold whitespace-nowrap border-b border-cyan-100">
             Hall
@@ -82,6 +77,9 @@
           </th>
           <th class="px-4 py-2 font-bold whitespace-nowrap border-b border-cyan-100">
             Price
+          </th>
+          <th class="px-4 py-2 font-bold whitespace-nowrap border-b border-cyan-100">
+            Booked
           </th>
           <th class="px-4 py-2 border-b border-cyan-500">
             <button aria-label="Delete checked" on:click={DeleteAll}
@@ -116,19 +114,19 @@
             {showtime.id}
           </td>
           <td class="px-4 py-2 whitespace-nowrap text-cyan-400">
-           {FormatParser.shortNameFormat(showtime.movieName)}
+           {showtime.cinemaName}
           </td>
           <td class="px-4 py-2 whitespace-nowrap text-cyan-400">
-            {FormatParser.shortNameFormat(showtime.cinemaName)} 
-          </td>
+            {showtime.hallName}
+           </td>
           <td class="px-4 py-2 whitespace-nowrap text-cyan-400">
-            {FormatParser.shortNameFormat(showtime.hallName)}
-          </td>
-          <td class="px-4 py-2 whitespace-nowrap text-cyan-400">
-            {FormatParser.formatDateTime(showtime.startTime)}
+            {showtime.startTime}
           </td>
           <td class="px-4 py-2 whitespace-nowrap text-cyan-400">
             {showtime.price}
+          </td>
+          <td class="px-4 py-2 whitespace-nowrap text-cyan-400">
+            {66}
           </td>
           <td class="px-4 py-2 whitespace-nowrap">
             <button aria-label="delete"
