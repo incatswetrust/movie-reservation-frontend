@@ -24,12 +24,9 @@
     });
 </script>
 
-<section class="bg-black bg-opacity-50">
-    <div class="container px-5 py-24 overflow-y-auto max-h-[90vh]">
+
         {#if $halls.isSuccess && $showtimes.isSuccess}
             {#each $halls.data as hall}
                 <Hall Hall={hall} showtimes={$showtimes.data!==null && $showtimes.data!==undefined ? $showtimes.data.filter(item=> item.hallId == hall.id):null}/>
             {/each}
         {/if}
-    </div>
-</section>
