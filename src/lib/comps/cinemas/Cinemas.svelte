@@ -8,8 +8,8 @@
     const cinemas = createQuery<CinemaReadDto[]>({
         queryKey: ['cinemas'],
         queryFn: async () => {
-        const response: AxiosResponse<CinemaReadDto[]> = await api.cinemas.cinemasList();
-        return response.data;
+            const response: AxiosResponse<CinemaReadDto[]> = await api.cinemas.cinemasList();
+            return response.data;
         }
     });
 </script>

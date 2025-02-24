@@ -1,4 +1,4 @@
-    <script lang="ts">
+<script lang="ts">
       import {type UserLoginDto, type UserReadDto} from '../../../Api';
       import {createMutation, useQueryClient} from "@tanstack/svelte-query";
       import {AxiosError, type AxiosResponse} from "axios";
@@ -45,8 +45,7 @@
       async function Auhtorize(){
         await $authMutation.mutate();
       }
-
-    </script>
+</script>
     
 
   
