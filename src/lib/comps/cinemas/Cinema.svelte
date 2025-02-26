@@ -2,7 +2,7 @@
   import {type CinemaReadDto} from '../../../Api';
   export let Cinema: CinemaReadDto|null;
 </script>
-<div class="flex items-center lg:w-3/5 mx-auto border-b border-cyan-600 pb-10 mb-10 sm:flex-row flex-col text-cyan-300">
+<div class="flex items-center lg:w-3/5 border-b border-cyan-600 pb-10 mb-10 sm:flex-row flex-col text-cyan-300">
   
   <div class="sm:w-32 sm:h-32 h-20 w-20 sm:mr-10 inline-flex items-center justify-center rounded-full border border-cyan-500 bg-black shadow-[0_0_8px_#0ff] flex-shrink-0">
     <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="sm:w-16 sm:h-16 w-10 h-10 text-cyan-300" viewBox="0 0 24 24">
@@ -16,8 +16,8 @@
     <p class="leading-relaxed text-base text-cyan-400">
       {Cinema?.address}
     </p>
-    <a href="#" class="mt-3 inline-flex items-center text-fuchsia-300 hover:text-fuchsia-100 transition-colors">
-      Learn More
+    <a href="cinemas/{Cinema?.id}" class="mt-3 inline-flex items-center text-fuchsia-300 hover:text-fuchsia-100 transition-colors">
+      Go to the halls
       <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="w-4 h-4 ml-2" viewBox="0 0 24 24">
         <path d="M5 12h14M12 5l7 7-7 7"></path>
       </svg>

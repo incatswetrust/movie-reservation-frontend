@@ -726,6 +726,22 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
 				...params
 			})
 	};
+	seats = {
+		/**
+		 * No description
+		 *
+		 * @tags Seats
+		 * @name SeatsDetail
+		 * @request GET:/api/Seats/{id}
+		 */
+		seatsDetail: (id: number, params: RequestParams = {}) =>
+			this.request<MovieReadDto[], any>({
+				path: `/api/Seats/${id}`,
+				method: 'GET',
+				format: 'json',
+				...params
+			})
+	};
 	showtimes = {
 		/**
 		 * No description
