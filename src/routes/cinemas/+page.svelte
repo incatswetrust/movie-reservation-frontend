@@ -17,6 +17,4 @@
 
 {#if $user.isSuccess && $user.data!==undefined && $user.data!==null && $user.data.role === UserRole.Value1}
 	<CinemaTable/>
-{:else}
-	<Cinemas/>
 {/if}
