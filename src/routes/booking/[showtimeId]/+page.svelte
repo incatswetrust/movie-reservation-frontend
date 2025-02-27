@@ -8,6 +8,7 @@
 	import { api } from '../../../Module';
 	import type { UserReadDto } from '../../../Api';
 	import { goto } from '$app/navigation';
+	import Booking from '$lib/comps/booking/Booking.svelte';
     export let data: PageData;
 
     
@@ -29,3 +30,6 @@
     });
 </script>
 
+{#if $user.isSuccess}
+    <Booking Id={data.id}/>
+{/if}
