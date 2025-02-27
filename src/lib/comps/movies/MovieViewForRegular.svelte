@@ -20,12 +20,10 @@
     const showtimes = createQuery<ShowtimeReadDto[]>({
         queryKey:['showtimes'],
         queryFn: async () => {
-            const responce:AxiosResponse<ShowtimeReadDto[]> = await api.showtimes.showtimesList();
+            const responce:AxiosResponse<ShowtimeReadDto[]> = await api.showtimes.showtimesMovieDetail(Id);
             return responce.data;
         }
     });
-
-    
 
     //Get all seats (free and booked)
 
@@ -33,9 +31,41 @@
 
     }
 
-    function sortBy(f: string){
+    let sortColumn: 'cinema' | 'time' | 'price' = 'time';
+    let sortDirection: 'asc' | 'desc' = 'asc';
 
+    $: sortedShowtimes = [...($showtimes.data ?? [])].sort((a, b) => {
+    let valA, valB;
+    switch (sortColumn) {
+      case 'cinema':
+        valA = a.cinemaName;
+        valB = b.cinemaName;
+        break;
+      case 'time':
+        valA = a.startTime!==undefined? new Date(a.startTime).getTime() : new Date();
+        valB = b.startTime!==undefined? new Date(b.startTime).getTime() : new Date();
+        break;
+      case 'price':
+        valA = a.price;
+        valB = b.price;
+        break;
     }
+    if(valA!== null && valB!==null && valA!== undefined && valB!==undefined){
+        if (valA < valB) return sortDirection === 'asc' ? -1 : 1;
+        if (valA > valB) return sortDirection === 'asc' ? 1 : -1;
+    }
+    return 0;
+  });
+    
+
+    function sortBy(column: 'cinema' | 'time' | 'price') {
+    if (sortColumn === column) {
+      sortDirection = sortDirection === 'asc' ? 'desc' : 'asc';
+    } else {
+      sortColumn = column;
+      sortDirection = 'asc';
+    }
+  }
 </script>
 
 
@@ -106,7 +136,7 @@
               </thead>
               
               <tbody class="divide-y divide-cyan-700">
-                {#each $showtimes.data as st}
+                {#each sortedShowtimes as st}
                   <tr class="hover:bg-cyan-900 hover:bg-opacity-20 transition-colors">
                     <td class="px-4 py-2">
                       {st.cinemaName}
