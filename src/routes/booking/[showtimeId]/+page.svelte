@@ -1,14 +1,17 @@
 <script lang="ts">
-    import type {AxiosResponse} from "axios";
-    import { createQuery, useQueryClient } from '@tanstack/svelte-query';
-	import { UserRole, type UserReadDto } from '../../../Api';
-    import Admin from './admin/Admin.svelte';
-    import Regular from './regular/Regular.svelte';
+    import type { PageData } from './$types'
+	import CinemaViewForAdmin from '$lib/comps/cinemas/CinemaViewForAdmin.svelte';
+	import HallViewForAdmin from '$lib/comps/halls/HallViewForAdmin.svelte';
+	import { createQuery } from '@tanstack/svelte-query';
+	import type { AxiosResponse } from 'axios';
+	import ShowtimesByHall from '$lib/comps/showtimes/ShowtimesByHall.svelte';
 	import { api } from '../../../Module';
-	import { goto } from "$app/navigation";
+	import type { UserReadDto } from '../../../Api';
+	import { goto } from '$app/navigation';
+	import Booking from '$lib/comps/booking/Booking.svelte';
+    export let data: PageData;
 
     
-
     const user = createQuery<UserReadDto|null>({
         queryKey: ['user'],
         queryFn: async () => {
@@ -28,11 +31,5 @@
 </script>
 
 {#if $user.isSuccess}
-    {#if $user.data!== null && $user.data!== undefined}
-        {#if $user.data.role == UserRole.Value1}
-            <Admin/>
-        {:else if $user.data.role == UserRole.Value0}
-            <Regular/>
-        {/if}
-    {/if}
+    <Booking Id={data.id}/>
 {/if}
