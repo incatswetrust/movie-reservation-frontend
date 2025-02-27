@@ -4,6 +4,7 @@
 	import type { AxiosResponse } from "axios";
 	import { api } from "../../../Module";
 	import { FormatParser } from "$lib/tools/FormatParser";
+	import { goto } from "$app/navigation";
 
     export let Id:number;
 
@@ -27,7 +28,10 @@
 
     //Get all seats (free and booked)
 
-    function bookShowtime(id:number|undefined){
+    async function bookShowtime(id:number|undefined){
+
+            if(id!==undefined)
+                await goto(`/booking/${id}`)
 
     }
 
@@ -151,7 +155,7 @@
                       ${st.price}
                     </td>
                     <td class="px-4 py-2">
-                      <button class="px-3 py-1 bg-transparent border border-fuchsia-600 text-fuchsia-600 rounded hover:bg-fuchsia-900 hover:bg-opacity-20 transition-colors" on:click={() => bookShowtime(st.id)} >
+                      <button class="px-3 py-1 bg-transparent border border-fuchsia-600 text-fuchsia-600 rounded hover:bg-fuchsia-900 hover:bg-opacity-20 transition-colors" on:click={async () => bookShowtime(st.id)} >
                         Book
                       </button>
                     </td>
