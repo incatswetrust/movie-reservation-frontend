@@ -1,12 +1,13 @@
 <script lang="ts">
-	import { createQuery } from "@tanstack/svelte-query";
-	import { type SeatReadDto, type CinemaReadDto, type HallReadDto, type ShowtimeReadDto, type MovieReadDto } from "../../../Api";
+	import { createMutation, createQuery } from "@tanstack/svelte-query";
+	import { type SeatReadDto, type CinemaReadDto, type HallReadDto, type ShowtimeReadDto, type MovieReadDto, type BookingReadDto, type BookingCreateDto } from "../../../Api";
 	import { api } from "../../../Module";
 	import type { AxiosResponse } from "axios";
 	import { FormatParser } from "$lib/tools/FormatParser";
+	import { goto } from "$app/navigation";
 
     export let Id: number;
-
+    export let userId: number;
     const showtime = createQuery<ShowtimeReadDto>({
         queryKey: ['showtime'],
         queryFn: async() => {
@@ -73,6 +74,26 @@
     } else {
       selectedSeatIds = [...selectedSeatIds, seat.id];
     }
+  };
+
+  let newBooking: BookingCreateDto = {
+    userId: userId,
+    showtimeId: Id,
+  }
+
+  const confirmMutation = createMutation({
+    mutationFn: async() => {
+        const response: AxiosResponse<BookingReadDto> = await api.bookings.bookingsCreate(newBooking);
+            return response.data;
+    },
+    onSuccess: async () => {
+        await goto ('/profile');
+    }
+  });
+
+  function confirm(){
+    newBooking.seatIds = selectedSeatIds;
+    $confirmMutation.mutate();
   }
 
 
@@ -127,5 +148,11 @@
       </div>
   </div>
 {/each}
+
+
 </div>
+
+<button on:click={confirm} class="block mx-auto px-3 py-1 my-5 bg-transparent border border-cyan-600 text-cyan-300 rounded hover:bg-cyan-900 hover:bg-opacity-20 transition-colors">
+    Confirm
+  </button>
 
