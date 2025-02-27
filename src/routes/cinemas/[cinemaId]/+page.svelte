@@ -19,6 +19,4 @@
 </script>
 {#if $user.isSuccess && $user.data!==undefined && $user.data!==null && $user.data.role === UserRole.Value1}
     <CinemaViewForAdmin Id={data.id}/>
-{:else}
-    <CinemaViewForRegular Id={data.id}/>
 {/if}

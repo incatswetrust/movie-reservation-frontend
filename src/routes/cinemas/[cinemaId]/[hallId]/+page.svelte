@@ -18,6 +18,4 @@
 </script>
 {#if $user.isSuccess && $user.data!==undefined && $user.data!==null && $user.data.role === UserRole.Value1}
     <HallViewForAdmin Id={data.id}/>
-{:else}
-    <ShowtimesByHall Id={data.id}/>
 {/if}

@@ -43,14 +43,16 @@
    
     <nav class="md:mr-auto md:ml-4 md:py-1 md:pl-4 md:border-l md:border-cyan-600 flex flex-wrap items-center text-base justify-center">
       <a href="/movies" class="mr-5 hover:text-cyan-100 transition-colors">Movies</a>
-      <a href="/cinemas" class="mr-5 hover:text-cyan-100 transition-colors">Cinemas</a>
-      <a href="/about" class="mr-5 hover:text-cyan-100 transition-colors">About</a>
+      
+      
       {#if $user.isSuccess}
         {#if $user.data!== null && $user.data!== undefined  && $user.data.role == UserRole.Value1}
+          <a href="/cinemas" class="mr-5 hover:text-cyan-100 transition-colors">Cinemas</a>
           <a href="/users" class="mr-5 hover:text-cyan-100 transition-colors">Users</a>
           <a href="/showtimes" class="mr-5 hover:text-cyan-100 transition-colors">Showtimes</a>
         {/if}
       {/if}
+      <a href="/about" class="mr-5 hover:text-cyan-100 transition-colors">About</a>
     </nav>
 
     
