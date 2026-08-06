@@ -38,7 +38,7 @@
     
 
 <modal id="new_cinema" class="fixed inset-0 bg-black bg-opacity-60 backdrop-blur-sm flex items-center justify-center z-50">
-  <div class="w-full max-w-md p-6 bg-black bg-opacity-80 border border-cyan-500 shadow-[0_0_15px_#0ff] rounded-md">
+  <div class="w-full max-w-md p-6 bg-black bg-opacity-80 border border-cyan-500 rounded-md">
     <h2 class="text-cyan-300 text-xl font-bold mb-4 drop-shadow-[0_0_4px_#0ff]">
       New cinema
     </h2>
