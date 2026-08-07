@@ -24,12 +24,12 @@
 	<title>Movie reservation system</title>
 </svelte:head>
 
-<div class="min-h-screen bg-primary text-text">
+<div class="flex min-h-screen flex-col bg-primary text-text">
 	<QueryClientProvider client={queryClient}>
 		<Navbar />
-		<!-- <section class="bg-black min-h-[100vh] bg-no-repeat bg-cover bg-center" style="background-image: url('/CyanLayer.svg');"> -->
-		<section class="min-h-[100vh] bg-black bg-cover bg-center">
+		<section class="flex-1 bg-primary bg-cover bg-center">
 			{@render children()}
 		</section>
+		<Footer />
 	</QueryClientProvider>
 </div>

@@ -1,77 +1,130 @@
 <script lang="ts">
 	import { UserRole, type UserReadDto } from '../../Api';
-  import type {AxiosResponse} from "axios";
-  import { createMutation, createQuery, useQueryClient } from '@tanstack/svelte-query';
-  import {api} from '../../Module';
-  const client = useQueryClient();
-  const user = createQuery<UserReadDto>({
-        queryKey: ['user'],
-        queryFn: async () => {
-            const response: AxiosResponse<UserReadDto> = await api.auth.authStatusList();
-                return response.data;
-        }
-    });
+	import type { AxiosResponse } from 'axios';
+	import { createMutation, createQuery, useQueryClient } from '@tanstack/svelte-query';
+	import { api } from '../../Module';
+	import ThemeToggle from './ThemeToggle.svelte';
 
-  const logoutMutation = createMutation({
-    mutationFn: async() => {
-      await api.auth.authLogoutCreate();
-    },
-    onSuccess: () =>{
-      client.invalidateQueries({queryKey: ['user']});
-    }
-  });
+	const client = useQueryClient();
 
-  function logout(){
-    $logoutMutation.mutate();
-  }  
+	const user = createQuery<UserReadDto>({
+		queryKey: ['user'],
+		queryFn: async () => {
+			const response: AxiosResponse<UserReadDto> = await api.auth.authStatusList();
+			return response.data;
+		}
+	});
 
+	const logoutMutation = createMutation({
+		mutationFn: async () => {
+			await api.auth.authLogoutCreate();
+		},
+		onSuccess: () => {
+			client.invalidateQueries({ queryKey: ['user'] });
+		}
+	});
 
+	function logout() {
+		$logoutMutation.mutate();
+	}
 
+	let mobileMenuOpen = $state(false);
+
+	const isLoggedIn = $derived($user.isSuccess && $user.data !== null && $user.data !== undefined);
+	const isAdmin = $derived(isLoggedIn && $user.data?.role === UserRole.Value1);
+
+	const navLinks = [
+		{ href: '/movies', label: 'Movies' },
+		{ href: '/cinemas', label: 'Cinemas' },
+		{ href: '/showtimes', label: 'Showtimes' },
+		{ href: '/about', label: 'About' }
+	];
+
+	const adminLinks = [{ href: '/users', label: 'Users' }];
+
+	function closeMobileMenu() {
+		mobileMenuOpen = false;
+	}
 </script>
-<header class="bg-black text-cyan-300 body-font shadow-[0_0_15px_#0ff]">
-  <div class="container mx-auto flex flex-wrap p-5 flex-col md:flex-row items-center">
-   
-    <a href="/" class="flex title-font font-medium items-center text-cyan-300 mb-4 md:mb-0 hover:text-cyan-100 transition-colors">
-      <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="currentColor" class="bi bi-film" viewBox="0 0 16 16">
-        <path d="M0 1a1 1 0 0 1 1-1h14a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1H1a1 1 0 0 1-1-1zm4 0v6h8V1zm8 8H4v6h8zM1 1v2h2V1zm2 3H1v2h2zM1 7v2h2V7zm2 3H1v2h2zm-2 3v2h2v-2zM15 1h-2v2h2zm-2 3v2h2V4zm2 3h-2v2h2zm-2 3v2h2v-2zm2 3h-2v2h2z"/>
-      </svg>
-      <span class="ml-3 text-xl font-bold tracking-wide drop-shadow-[0_0_5px_cyan]">
-        Movie reservation system
-      </span>
-    </a>
 
-   
-    <nav class="md:mr-auto md:ml-4 md:py-1 md:pl-4 md:border-l md:border-cyan-600 flex flex-wrap items-center text-base justify-center">
-      <a href="/movies" class="mr-5 hover:text-cyan-100 transition-colors">Movies</a>
-      
-      
-      {#if $user.isSuccess}
-        {#if $user.data!== null && $user.data!== undefined  && $user.data.role == UserRole.Value1}
-          <a href="/cinemas" class="mr-5 hover:text-cyan-100 transition-colors">Cinemas</a>
-          <a href="/users" class="mr-5 hover:text-cyan-100 transition-colors">Users</a>
-          <a href="/showtimes" class="mr-5 hover:text-cyan-100 transition-colors">Showtimes</a>
-        {/if}
-      {/if}
-      <a href="/about" class="mr-5 hover:text-cyan-100 transition-colors">About</a>
-    </nav>
+<header class="sticky top-0 z-40 border-b border-accent/15 bg-surface text-text">
+	<div class="container mx-auto flex items-center justify-between px-5 py-4">
+		<a href="/" class="flex items-center gap-2 text-accent">
+			<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
+				<path d="M0 1a1 1 0 0 1 1-1h14a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1H1a1 1 0 0 1-1-1zm4 0v6h8V1zm8 8H4v6h8zM1 1v2h2V1zm2 3H1v2h2zM1 7v2h2V7zm2 3H1v2h2zm-2 3v2h2v-2zM15 1h-2v2h2zm-2 3v2h2V4zm2 3h-2v2h2zm-2 3v2h2v-2zm2 3h-2v2h2z" />
+			</svg>
+			<span class="text-lg font-bold tracking-wide">Movie Reservation</span>
+		</a>
 
-    
-    <a href="/profile" class="flex items-center text-cyan-300 hover:text-cyan-100 transition-colors">
-      {#if $user.isSuccess}
-        <span>{$user.data!== null && $user.data!== undefined ? $user.data.username : ""}</span>
-      {/if}
-      <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="currentColor" class="ml-3" viewBox="0 0 16 16">
-        <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0"/>
-        <path d="M2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2zm12 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1v-1c0-1-1-4-6-4s-6 3-6 4v1a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1z"/>
-      </svg>
-    </a>
-    {#if $user.isSuccess && $user.data!== null && $user.data!== undefined}
-    <button aria-label="log-out" on:click={logout} class="items-center text-cyan-300 hover:text-cyan-100 transition-colors">
-      <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="currentColor" class="ml-3" viewBox="0 0 16 16">
-        <path d="M8.5 10c-.276 0-.5-.448-.5-1s.224-1 .5-1 .5.448.5 1-.224 1-.5 1"/>
-  <path d="M10.828.122A.5.5 0 0 1 11 .5V1h.5A1.5 1.5 0 0 1 13 2.5V15h1.5a.5.5 0 0 1 0 1h-13a.5.5 0 0 1 0-1H3V1.5a.5.5 0 0 1 .43-.495l7-1a.5.5 0 0 1 .398.117M11.5 2H11v13h1V2.5a.5.5 0 0 0-.5-.5M4 1.934V15h6V1.077z"/>
-      </svg>
-    </button>
-    {/if}
-  </div>
+		<nav class="hidden items-center gap-6 text-sm md:flex">
+			{#each navLinks as link (link.href)}
+				<a href={link.href} class="transition-colors hover:text-accent">{link.label}</a>
+			{/each}
+			{#if isAdmin}
+				{#each adminLinks as link (link.href)}
+					<a href={link.href} class="transition-colors hover:text-accent">{link.label}</a>
+				{/each}
+			{/if}
+		</nav>
+
+		<div class="hidden items-center gap-4 md:flex">
+			<ThemeToggle />
+			{#if isLoggedIn}
+				<a href="/profile" class="text-sm transition-colors hover:text-accent">{$user.data?.username}</a>
+				<button
+					aria-label="Log out"
+					onclick={logout}
+					class="rounded-full border border-accent px-4 py-1.5 text-sm text-accent transition-colors hover:bg-accent hover:text-primary"
+				>
+					Logout
+				</button>
+			{:else}
+				<a
+					href="/auth/login"
+					class="rounded-full bg-accent px-4 py-1.5 text-sm font-medium text-primary transition-opacity hover:opacity-90"
+				>
+					Login
+				</a>
+			{/if}
+		</div>
+
+		<button
+			aria-label="Toggle menu"
+			class="text-text md:hidden"
+			onclick={() => (mobileMenuOpen = !mobileMenuOpen)}
+		>
+			{#if mobileMenuOpen}
+				<svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" viewBox="0 0 24 24">
+					<path d="M18 6 6 18M6 6l12 12" />
+				</svg>
+			{:else}
+				<svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" viewBox="0 0 24 24">
+					<path d="M3 6h18M3 12h18M3 18h18" />
+				</svg>
+			{/if}
+		</button>
+	</div>
+
+	{#if mobileMenuOpen}
+		<div class="flex flex-col gap-4 border-t border-accent/15 px-5 py-4 md:hidden">
+			{#each navLinks as link (link.href)}
+				<a href={link.href} onclick={closeMobileMenu} class="hover:text-accent">{link.label}</a>
+			{/each}
+			{#if isAdmin}
+				{#each adminLinks as link (link.href)}
+					<a href={link.href} onclick={closeMobileMenu} class="hover:text-accent">{link.label}</a>
+				{/each}
+			{/if}
+			<div class="flex items-center justify-between border-t border-accent/10 pt-4">
+				<ThemeToggle />
+				{#if isLoggedIn}
+					<button aria-label="Log out" onclick={logout} class="text-sm text-accent">
+						Logout ({$user.data?.username})
+					</button>
+				{:else}
+					<a href="/auth/login" onclick={closeMobileMenu} class="text-sm font-medium text-accent">Login</a>
+				{/if}
+			</div>
+		</div>
+	{/if}
 </header>
