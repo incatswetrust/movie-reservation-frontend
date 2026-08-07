@@ -35,4 +35,8 @@ npm run build
 
 You can preview the production build with `npm run preview`.
 
-> To deploy your app, you may need to install an [adapter](https://svelte.dev/docs/kit/adapters) for your target environment.
+## Deploying
+
+This app is configured for [Vercel](https://vercel.com) via `@sveltejs/adapter-vercel`. Import the repo in Vercel — no environment variables are required.
+
+The backend is hosted separately at `http://moviereservationsystem.runasp.net` (HTTP only, no TLS). Since Vercel serves the frontend over HTTPS, the browser cannot call the backend directly (mixed-content blocking). Instead, `vercel.json` rewrites all `/api/*` requests to the backend at the edge, so the browser only ever talks to the same origin, and the existing relative `/api/...` calls in `src/Api.ts` work unchanged in both dev (via the Vite proxy in `vite.config.ts`) and production (via the Vercel rewrite). This also keeps auth cookies same-site without further CORS/credentials configuration.
