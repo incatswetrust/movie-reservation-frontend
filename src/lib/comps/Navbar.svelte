@@ -3,6 +3,8 @@
 	import type { AxiosResponse } from 'axios';
 	import { createMutation, createQuery, useQueryClient } from '@tanstack/svelte-query';
 	import { api } from '../../Module';
+	import { auth } from '$lib/stores/auth';
+	import { goto } from '$app/navigation';
 	import ThemeToggle from './ThemeToggle.svelte';
 
 	const client = useQueryClient();
@@ -19,8 +21,10 @@
 		mutationFn: async () => {
 			await api.auth.authLogoutCreate();
 		},
-		onSuccess: () => {
+		onSuccess: async () => {
+			auth.clear();
 			client.invalidateQueries({ queryKey: ['user'] });
+			await goto('/');
 		}
 	});
 
