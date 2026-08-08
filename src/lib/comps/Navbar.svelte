@@ -3,6 +3,8 @@
 	import type { AxiosResponse } from 'axios';
 	import { createMutation, createQuery, useQueryClient } from '@tanstack/svelte-query';
 	import { api } from '../../Module';
+	import { auth } from '$lib/stores/auth';
+	import { goto } from '$app/navigation';
 	import ThemeToggle from './ThemeToggle.svelte';
 
 	const client = useQueryClient();
@@ -19,8 +21,10 @@
 		mutationFn: async () => {
 			await api.auth.authLogoutCreate();
 		},
-		onSuccess: () => {
+		onSuccess: async () => {
+			auth.clear();
 			client.invalidateQueries({ queryKey: ['user'] });
+			await goto('/');
 		}
 	});
 
@@ -80,7 +84,7 @@
 				</button>
 			{:else}
 				<a
-					href="/auth/login"
+					href="/auth"
 					class="rounded-full bg-accent px-4 py-1.5 text-sm font-medium text-primary transition-opacity hover:opacity-90"
 				>
 					Login
@@ -122,7 +126,7 @@
 						Logout ({$user.data?.username})
 					</button>
 				{:else}
-					<a href="/auth/login" onclick={closeMobileMenu} class="text-sm font-medium text-accent">Login</a>
+					<a href="/auth" onclick={closeMobileMenu} class="text-sm font-medium text-accent">Login</a>
 				{/if}
 			</div>
 		</div>

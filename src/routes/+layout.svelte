@@ -3,6 +3,7 @@
 	import Navbar from '$lib/comps/Navbar.svelte';
 	import '../app.css';
 	import { theme } from '$lib/stores/theme';
+	import { auth } from '$lib/stores/auth';
 	let { children } = $props();
 
 	import { QueryClient, QueryClientProvider } from '@tanstack/svelte-query';
@@ -17,6 +18,10 @@
 
 	$effect(() => {
 		document.documentElement.classList.toggle('dark', $theme === 'dark');
+	});
+
+	$effect(() => {
+		auth.loadStatus();
 	});
 </script>
 
