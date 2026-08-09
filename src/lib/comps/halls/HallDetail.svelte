@@ -11,6 +11,7 @@
 	import { api } from '../../../Module';
 	import { auth } from '$lib/stores/auth';
 	import ShowTimeByHallTable from '../showtimes/ShowTimeByHallTable.svelte';
+	import HallGallery from '../HallGallery.svelte';
 
 	let { Id }: { Id: number } = $props();
 
@@ -177,43 +178,13 @@
 			<h2 class="mb-3 text-lg font-semibold text-text">Gallery</h2>
 			{#if $images.isLoading}
 				<p class="text-sm text-text/60">Loading images...</p>
-			{:else if $images.data && $images.data.length > 0}
-				<div class="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4">
-					{#each $images.data as image (image.id)}
-						<div class="group relative aspect-video overflow-hidden rounded-lg bg-primary">
-							<img
-								src={image.url ?? undefined}
-								alt={$hall.data.name ?? 'Hall'}
-								class="h-full w-full object-cover"
-							/>
-							{#if $auth.isAdmin}
-								<button
-									aria-label="Delete image"
-									onclick={() => deleteImage(image.id)}
-									class="absolute right-2 top-2 rounded-full bg-black/60 p-1.5 text-white opacity-0 transition-opacity group-hover:opacity-100 hover:text-red-400"
-								>
-									<svg
-										xmlns="http://www.w3.org/2000/svg"
-										viewBox="0 0 24 24"
-										fill="none"
-										stroke="currentColor"
-										stroke-width="2"
-										stroke-linecap="round"
-										stroke-linejoin="round"
-										class="h-4 w-4"
-									>
-										<path d="M3 6h18" />
-										<path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
-										<path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6" />
-										<path d="M10 11v6M14 11v6" />
-									</svg>
-								</button>
-							{/if}
-						</div>
-					{/each}
-				</div>
 			{:else}
-				<p class="text-sm text-text/60">No images yet.</p>
+				<HallGallery
+					images={$images.data ?? []}
+					isAdmin={$auth.isAdmin}
+					onDelete={deleteImage}
+					altText={$hall.data.name ?? 'Hall'}
+				/>
 			{/if}
 
 			{#if $auth.isAdmin}
