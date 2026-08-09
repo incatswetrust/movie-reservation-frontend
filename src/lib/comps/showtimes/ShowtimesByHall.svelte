@@ -26,8 +26,8 @@
     const movies = createQuery<MovieReadDto[]>({
     queryKey: ['movies'],
     queryFn: async () => {
-      const response: AxiosResponse<MovieReadDto[]> = await api.movies.moviesList();
-      return response.data;
+      const response = await api.movies.moviesList();
+      return response.data.items ?? [];
     }
   });
 
