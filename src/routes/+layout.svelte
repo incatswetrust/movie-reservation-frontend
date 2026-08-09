@@ -1,6 +1,7 @@
 <script lang="ts">
 	import Footer from '$lib/comps/Footer.svelte';
 	import Navbar from '$lib/comps/Navbar.svelte';
+	import Toast from '$lib/comps/Toast.svelte';
 	import '../app.css';
 	import { theme } from '$lib/stores/theme';
 	import { auth } from '$lib/stores/auth';
@@ -37,4 +38,5 @@
 		</section>
 		<Footer />
 	</QueryClientProvider>
+	<Toast />
 </div>

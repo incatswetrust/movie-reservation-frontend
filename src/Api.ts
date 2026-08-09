@@ -9,6 +9,21 @@
  * ---------------------------------------------------------------
  */
 
+export interface PagedResult<T> {
+	items?: T[] | null;
+	/** @format int32 */
+	total?: number;
+	/** @format int32 */
+	page?: number;
+	/** @format int32 */
+	pageSize?: number;
+}
+
+export interface ErrorResponse {
+	error?: string | null;
+	details?: any;
+}
+
 export interface BookingCreateDto {
 	/** @format int32 */
 	userId?: number;
@@ -74,6 +89,19 @@ export interface HallUpdateDto {
 	cinemaId?: number;
 }
 
+export interface HallImageReadDto {
+	/** @format int32 */
+	id?: number;
+	/** @format int32 */
+	hallId?: number;
+	url?: string | null;
+}
+
+export interface HallImageCreateDto {
+	url?: string | null;
+	base64Image?: string | null;
+}
+
 export interface MovieCreateDto {
 	title?: string | null;
 	description?: string | null;
@@ -83,6 +111,15 @@ export interface MovieCreateDto {
 	/** @format int32 */
 	releaseYear?: number;
 	base64Image?: string | null;
+	director?: string | null;
+	cast?: string | null;
+	language?: string | null;
+	country?: string | null;
+	ageRating?: string | null;
+	trailerUrl?: string | null;
+	/** @format double */
+	imdbRating?: number | null;
+	posterUrl?: string | null;
 }
 
 export interface MovieReadDto {
@@ -96,6 +133,15 @@ export interface MovieReadDto {
 	/** @format int32 */
 	releaseYear?: number;
 	base64Image?: string | null;
+	director?: string | null;
+	cast?: string | null;
+	language?: string | null;
+	country?: string | null;
+	ageRating?: string | null;
+	trailerUrl?: string | null;
+	/** @format double */
+	imdbRating?: number | null;
+	posterUrl?: string | null;
 }
 
 export interface MovieUpdateDto {
@@ -107,6 +153,15 @@ export interface MovieUpdateDto {
 	/** @format int32 */
 	releaseYear?: number;
 	base64Image?: string | null;
+	director?: string | null;
+	cast?: string | null;
+	language?: string | null;
+	country?: string | null;
+	ageRating?: string | null;
+	trailerUrl?: string | null;
+	/** @format double */
+	imdbRating?: number | null;
+	posterUrl?: string | null;
 }
 
 export interface SeatReadDto {
@@ -161,13 +216,20 @@ export interface UserReadDto {
 	/** @format int32 */
 	id?: number;
 	username?: string | null;
+	email?: string | null;
 	role?: UserRole;
 }
 
 export interface UserRegisterDto {
 	username?: string | null;
 	password?: string | null;
+	email?: string | null;
 	role?: UserRole;
+}
+
+export interface UserUpdateDto {
+	username?: string | null;
+	email?: string | null;
 }
 
 /** @format int32 */
@@ -395,6 +457,38 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
 				path: `/api/Auth/logout`,
 				method: 'POST',
 				...params
+			}),
+
+		/**
+		 * No description
+		 *
+		 * @tags Auth
+		 * @name AuthRefreshCreate
+		 * @request POST:/api/Auth/refresh
+		 */
+		authRefreshCreate: (params: RequestParams = {}) =>
+			this.request<UserReadDto, any>({
+				path: `/api/Auth/refresh`,
+				method: 'POST',
+				format: 'json',
+				...params
+			}),
+
+		/**
+		 * No description
+		 *
+		 * @tags Auth
+		 * @name AuthProfileUpdate
+		 * @request PUT:/api/Auth/profile
+		 */
+		authProfileUpdate: (data: UserUpdateDto, params: RequestParams = {}) =>
+			this.request<UserReadDto, any>({
+				path: `/api/Auth/profile`,
+				method: 'PUT',
+				body: data,
+				type: ContentType.Json,
+				format: 'json',
+				...params
 			})
 	};
 	bookings = {
@@ -405,10 +499,14 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
 		 * @name BookingsList
 		 * @request GET:/api/Bookings
 		 */
-		bookingsList: (params: RequestParams = {}) =>
-			this.request<BookingReadDto[], any>({
+		bookingsList: (
+			query?: { page?: number; pageSize?: number },
+			params: RequestParams = {}
+		) =>
+			this.request<PagedResult<BookingReadDto>, any>({
 				path: `/api/Bookings`,
 				method: 'GET',
+				query: query,
 				format: 'json',
 				...params
 			}),
@@ -467,10 +565,14 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
 		 * @name CinemasList
 		 * @request GET:/api/Cinemas
 		 */
-		cinemasList: (params: RequestParams = {}) =>
-			this.request<CinemaReadDto[], any>({
+		cinemasList: (
+			query?: { page?: number; pageSize?: number },
+			params: RequestParams = {}
+		) =>
+			this.request<PagedResult<CinemaReadDto>, any>({
 				path: `/api/Cinemas`,
 				method: 'GET',
+				query: query,
 				format: 'json',
 				...params
 			}),
@@ -630,6 +732,52 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
 				path: `/api/Halls/${id}`,
 				method: 'DELETE',
 				...params
+			}),
+
+		/**
+		 * No description
+		 *
+		 * @tags Halls
+		 * @name HallsImagesList
+		 * @request GET:/api/Halls/{id}/images
+		 */
+		hallsImagesList: (id: number, params: RequestParams = {}) =>
+			this.request<HallImageReadDto[], any>({
+				path: `/api/Halls/${id}/images`,
+				method: 'GET',
+				format: 'json',
+				...params
+			}),
+
+		/**
+		 * No description
+		 *
+		 * @tags Halls
+		 * @name HallsImagesCreate
+		 * @request POST:/api/Halls/{id}/images
+		 */
+		hallsImagesCreate: (id: number, data: HallImageCreateDto, params: RequestParams = {}) =>
+			this.request<HallImageReadDto, any>({
+				path: `/api/Halls/${id}/images`,
+				method: 'POST',
+				body: data,
+				type: ContentType.Json,
+				format: 'json',
+				...params
+			}),
+
+		/**
+		 * No description
+		 *
+		 * @tags Halls
+		 * @name HallsImagesDelete
+		 * @request DELETE:/api/Halls/{id}/images/{imageId}
+		 */
+		hallsImagesDelete: (id: number, imageId: number, params: RequestParams = {}) =>
+			this.request<void, any>({
+				path: `/api/Halls/${id}/images/${imageId}`,
+				method: 'DELETE',
+				...params
 			})
 	};
 	movies = {
@@ -640,10 +788,14 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
 		 * @name MoviesList
 		 * @request GET:/api/Movies
 		 */
-		moviesList: (params: RequestParams = {}) =>
-			this.request<MovieReadDto[], any>({
+		moviesList: (
+			query?: { page?: number; pageSize?: number },
+			params: RequestParams = {}
+		) =>
+			this.request<PagedResult<MovieReadDto>, any>({
 				path: `/api/Movies`,
 				method: 'GET',
+				query: query,
 				format: 'json',
 				...params
 			}),
@@ -722,6 +874,41 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
 			this.request<MovieReadDto[], any>({
 				path: `/api/Movies/genre/${genre}`,
 				method: 'GET',
+				format: 'json',
+				...params
+			}),
+
+		/**
+		 * No description
+		 *
+		 * @tags Movies
+		 * @name MoviesSearchList
+		 * @request GET:/api/Movies/search
+		 */
+		moviesSearchList: (query: { q: string }, params: RequestParams = {}) =>
+			this.request<MovieReadDto[], any>({
+				path: `/api/Movies/search`,
+				method: 'GET',
+				query: query,
+				format: 'json',
+				...params
+			}),
+
+		/**
+		 * No description
+		 *
+		 * @tags Movies
+		 * @name MoviesFilterList
+		 * @request GET:/api/Movies/filter
+		 */
+		moviesFilterList: (
+			query?: { genre?: string; year?: number; rating?: string },
+			params: RequestParams = {}
+		) =>
+			this.request<MovieReadDto[], any>({
+				path: `/api/Movies/filter`,
+				method: 'GET',
+				query: query,
 				format: 'json',
 				...params
 			})
@@ -847,6 +1034,22 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
 			this.request<ShowtimeReadDto[], any>({
 				path: `/api/Showtimes/hall/${movieId}`,
 				method: 'GET',
+				format: 'json',
+				...params
+			}),
+
+		/**
+		 * No description
+		 *
+		 * @tags Showtimes
+		 * @name ShowtimesAvailableList
+		 * @request GET:/api/Showtimes/available
+		 */
+		showtimesAvailableList: (query: { date: string }, params: RequestParams = {}) =>
+			this.request<ShowtimeReadDto[], any>({
+				path: `/api/Showtimes/available`,
+				method: 'GET',
+				query: query,
 				format: 'json',
 				...params
 			})

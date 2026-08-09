@@ -2,14 +2,13 @@
 	import { type MovieReadDto } from '../Api';
 	import { api } from '../Module';
 	import { createQuery } from '@tanstack/svelte-query';
-	import type { AxiosResponse } from 'axios';
 	import MovieCard from '$lib/comps/MovieCard.svelte';
 
 	const movies = createQuery<MovieReadDto[]>({
 		queryKey: ['movies'],
 		queryFn: async () => {
-			const response: AxiosResponse<MovieReadDto[]> = await api.movies.moviesList();
-			return response.data;
+			const response = await api.movies.moviesList();
+			return response.data.items ?? [];
 		}
 	});
 </script>
