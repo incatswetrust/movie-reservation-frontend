@@ -1,34 +1,173 @@
 <script lang="ts">
-	import { type MovieReadDto } from "../../../Api";
-	import { api } from "../../../Module";
-	import Movie from "./Movie.svelte";
-  import {createQuery} from "@tanstack/svelte-query";
-  import type {AxiosResponse} from "axios";
+	import { createMutation, createQuery, useQueryClient } from '@tanstack/svelte-query';
+	import { type MovieReadDto } from '../../../Api';
+	import { api } from '../../../Module';
+	import { auth } from '$lib/stores/auth';
+	import { toast } from '$lib/stores/toast';
+	import MovieCard from '$lib/comps/MovieCard.svelte';
+	import NewMovie from './NewMovie.svelte';
 
-  const movies = createQuery<MovieReadDto[]>({
-    queryKey: ['movies'],
-    queryFn: async () => {
-      const response: AxiosResponse<MovieReadDto[]> = await api.movies.moviesList();
-      return response.data;
-    }
-  });
+	const client = useQueryClient();
+
+	const allMovies = createQuery<MovieReadDto[]>({
+		queryKey: ['movies'],
+		queryFn: async () => {
+			const response = await api.movies.moviesList({ page: 1, pageSize: 100 });
+			return response.data.items ?? [];
+		}
+	});
+
+	let genres = $derived(
+		[...new Set(($allMovies.data ?? []).map((m) => m.genre).filter((g): g is string => !!g))].sort()
+	);
+
+	let searchInput = $state('');
+	let debouncedSearch = $state('');
+	let selectedGenre = $state('');
+	let searchTimer: ReturnType<typeof setTimeout>;
+
+	function onSearchInput() {
+		clearTimeout(searchTimer);
+		searchTimer = setTimeout(() => {
+			debouncedSearch = searchInput.trim();
+		}, 350);
+	}
+
+	let searchResults = $state<MovieReadDto[] | null>(null);
+	let isSearching = $state(false);
+
+	$effect(() => {
+		if (debouncedSearch.length === 0) {
+			searchResults = null;
+			return;
+		}
+		isSearching = true;
+		api.movies
+			.moviesSearchList({ q: debouncedSearch })
+			.then((response) => {
+				searchResults = response.data;
+			})
+			.finally(() => {
+				isSearching = false;
+			});
+	});
+
+	let filterResults = $state<MovieReadDto[] | null>(null);
+	let isFiltering = $state(false);
+
+	$effect(() => {
+		if (debouncedSearch.length > 0 || selectedGenre.length === 0) {
+			filterResults = null;
+			return;
+		}
+		isFiltering = true;
+		api.movies
+			.moviesFilterList({ genre: selectedGenre })
+			.then((response) => {
+				filterResults = response.data;
+			})
+			.finally(() => {
+				isFiltering = false;
+			});
+	});
+
+	let displayedMovies = $derived(
+		debouncedSearch.length > 0
+			? (searchResults ?? [])
+			: selectedGenre.length > 0
+				? (filterResults ?? [])
+				: ($allMovies.data ?? [])
+	);
+
+	let isBusy = $derived(debouncedSearch.length > 0 ? isSearching : selectedGenre.length > 0 ? isFiltering : $allMovies.isFetching);
+
+	const deleteMutation = createMutation({
+		mutationFn: async (id: number) => {
+			await api.movies.moviesDelete(id);
+		},
+		onSuccess: () => {
+			void client.invalidateQueries({ queryKey: ['movies'] });
+			toast.show('Movie deleted', 'success');
+		},
+		onError: () => {
+			toast.show('Failed to delete movie', 'error');
+		}
+	});
+
+	let isNewMovieOpen = $state(false);
+	let movieBeingEdited = $state<MovieReadDto | null>(null);
+
+	function handleAdd() {
+		movieBeingEdited = null;
+		isNewMovieOpen = true;
+	}
+
+	function handleEdit(movie: MovieReadDto) {
+		movieBeingEdited = movie;
+		isNewMovieOpen = true;
+	}
+
+	function handleDelete(movie: MovieReadDto) {
+		if (movie.id === undefined) return;
+		if (confirm(`Delete "${movie.title}"? This cannot be undone.`)) {
+			$deleteMutation.mutate(movie.id);
+		}
+	}
 </script>
-<section class="bg-black bg-opacity-50">
-    <div class="container px-5 mx-auto overflow-y-auto max-h-[90vh]">
-      <div class="flex flex-wrap w-full mb-20">
-        <div class="lg:w-1/2 w-full mb-6 lg:mb-0">
-          <h1 class="sm:text-3xl text-2xl font-medium title-font mb-2 text-fuchsia-200 drop-shadow-[0_0_3px_#FF00FF]">Show time</h1>
-          <div class="h-1 w-20 bg-cyan-200 drop-shadow-[0_0_3px_#0ff] rounded"></div>
-        </div>
-        <p class="lg:w-1/2 w-full leading-relaxed text-fuchsia-200 text-opacity-90">"I love acting. Oh, God, I love it. But all this fame and all this bullshit attention. I'm not supernatural. I've done nothing extremely special to deserve the position. It happens every couple of years, and it's happened to hundreds of people before me."</p>
-      </div>
-      <div class="flex flex-wrap -m-4">
-        {#if $movies.isSuccess}
-          {#each $movies.data as movie}
-            <Movie Movie = {movie}/>
-          {/each}
-        {/if}
-      </div>
-    </div>
-  </section>
 
+<section class="bg-primary">
+	<div class="container mx-auto px-5 py-10">
+		<div class="mb-8 flex flex-wrap items-end justify-between gap-4">
+			<div>
+				<h1 class="text-2xl font-semibold text-text sm:text-3xl">Movies</h1>
+				<div class="mt-2 h-1 w-16 rounded bg-accent"></div>
+				<p class="mt-3 text-text/70">Browse what's playing and pick your next watch.</p>
+			</div>
+			{#if $auth.isAdmin}
+				<button
+					onclick={handleAdd}
+					class="rounded-full bg-accent px-5 py-2 text-sm font-medium text-primary transition-opacity hover:opacity-90"
+				>
+					+ Add movie
+				</button>
+			{/if}
+		</div>
+
+		<div class="mb-8 flex flex-wrap gap-3">
+			<input
+				bind:value={searchInput}
+				oninput={onSearchInput}
+				type="search"
+				placeholder="Search by title or director..."
+				class="min-w-[220px] flex-1 rounded border border-accent/30 bg-transparent px-3 py-2 text-text placeholder-text/40 transition-colors focus:border-accent focus:outline-none"
+			/>
+			<select
+				bind:value={selectedGenre}
+				class="rounded border border-accent/30 bg-surface px-3 py-2 text-text transition-colors focus:border-accent focus:outline-none"
+			>
+				<option value="">All genres</option>
+				{#each genres as genre}
+					<option value={genre}>{genre}</option>
+				{/each}
+			</select>
+		</div>
+
+		{#if $allMovies.isLoading}
+			<p class="text-text/60">Loading movies...</p>
+		{:else if $allMovies.isError}
+			<p class="text-red-400">Failed to load movies.</p>
+		{:else if isBusy}
+			<p class="text-text/60">Searching...</p>
+		{:else if displayedMovies.length > 0}
+			<div class="grid grid-cols-2 gap-5 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
+				{#each displayedMovies as movie (movie.id)}
+					<MovieCard {movie} isAdmin={$auth.isAdmin} onEdit={handleEdit} onDelete={handleDelete} />
+				{/each}
+			</div>
+		{:else}
+			<p class="text-text/60">No movies found.</p>
+		{/if}
+	</div>
+</section>
+
+<NewMovie bind:IsOpenned={isNewMovieOpen} movie={movieBeingEdited} />

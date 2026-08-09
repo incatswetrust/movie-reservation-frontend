@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { createMutation, createQuery, useQueryClient } from '@tanstack/svelte-query';
-	import type { AxiosResponse } from 'axios';
 	import { type CinemaReadDto } from '../../../Api';
 	import { api } from '../../../Module';
 	import { auth } from '$lib/stores/auth';
@@ -13,8 +12,8 @@
 	const cinemas = createQuery<CinemaReadDto[]>({
 		queryKey: ['cinemas'],
 		queryFn: async () => {
-			const response: AxiosResponse<CinemaReadDto[]> = await api.cinemas.cinemasList();
-			return response.data;
+			const response = await api.cinemas.cinemasList({ page: 1, pageSize: 100 });
+			return response.data.items ?? [];
 		}
 	});
 

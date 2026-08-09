@@ -1,11 +1,15 @@
 <script lang="ts">
-	//get my bookings, manage profile 
+	import { onMount } from 'svelte';
+	import Profile from '$lib/comps/user/Profile.svelte';
+	import { requireAuth } from '$lib/tools/guards';
 
-	import User from "$lib/comps/user/User.svelte";
-	
+	let isReady = $state(false);
 
-
-
-
+	onMount(async () => {
+		isReady = await requireAuth();
+	});
 </script>
-<User/>
+
+{#if isReady}
+	<Profile />
+{/if}

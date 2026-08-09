@@ -34,3 +34,18 @@ export function validatePasswordConfirmation(password: string, confirmation: str
 	}
 	return '';
 }
+
+export function validateRange(
+	value: number | undefined | null,
+	min: number,
+	max: number,
+	fieldName: string
+): string {
+	if (value === undefined || value === null || Number.isNaN(value)) {
+		return `${fieldName} is required`;
+	}
+	if (value < min || value > max) {
+		return `${fieldName} must be between ${min} and ${max}`;
+	}
+	return '';
+}

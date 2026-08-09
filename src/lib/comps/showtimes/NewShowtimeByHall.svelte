@@ -1,140 +1,136 @@
 <script lang="ts">
-	import { createMutation, createQuery, useQueryClient } from "@tanstack/svelte-query";
-	import type { MovieReadDto, ShowtimeCreateDto, ShowtimeReadDto } from "../../../Api";
-	import { api } from "../../../Module";
-	import type { AxiosResponse } from "axios";
+	import { createMutation, createQuery, useQueryClient } from '@tanstack/svelte-query';
+	import type { MovieReadDto, ShowtimeCreateDto } from '../../../Api';
+	import { api } from '../../../Module';
+	import { toast } from '$lib/stores/toast';
+	import { validateRange } from '$lib/tools/validators';
 
-    export let IsOpenned:boolean = false;
-    export let HallId:number;
+	let { IsOpenned = $bindable(false), HallId }: { IsOpenned?: boolean; HallId: number } = $props();
 
-    let newShowtime: ShowtimeCreateDto ={
-        hallId: HallId,
-        movieId: 0,
-        startTime: "",
-        price: 0
-    };
+	function defaultStartTime(): string {
+		const now = new Date();
+		now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+		return now.toISOString().slice(0, 16);
+	}
 
-    const client = useQueryClient();
-    const addShowTimeMutation = createMutation({
-        mutationFn: async () => {
-            const responce: AxiosResponse<ShowtimeReadDto> = await api.showtimes.showtimesCreate(newShowtime);
-                return responce.data;
-        },
-        onSuccess: async () => {
-            await client.invalidateQueries({queryKey: ['showtimes']});
-            IsOpenned = false;
-        }
-    });
+	function emptyForm(): { movieId: number | undefined; startTime: string; price: number } {
+		return { movieId: undefined, startTime: defaultStartTime(), price: 10 };
+	}
 
-    let now = new Date();
-    const year = now.getFullYear();
-    const month = String(now.getMonth() + 1).padStart(2, '0');
-    const day = String(now.getDate()).padStart(2, '0');
-    const hour = String(now.getHours()).padStart(2, '0');
-    const min = String(now.getMinutes()).padStart(2, '0');
+	let form = $state(emptyForm());
+	let movieError = $state('');
+	let priceError = $state('');
 
-    let date = `${year}-${month}-${day}T${hour}:${min}`;
+	$effect(() => {
+		if (IsOpenned) {
+			form = emptyForm();
+			movieError = '';
+			priceError = '';
+		}
+	});
 
-    function AddNewShowTime(){
-        const datetime = new Date(date);
-        newShowtime.startTime = datetime.toISOString();
-        $addShowTimeMutation.mutate();
-    };
+	const movies = createQuery<MovieReadDto[]>({
+		queryKey: ['movies'],
+		queryFn: async () => {
+			const response = await api.movies.moviesList({ page: 1, pageSize: 100 });
+			return response.data.items ?? [];
+		}
+	});
 
-    function Close(){
-        IsOpenned = false;
-    };
+	const client = useQueryClient();
 
-    //getAllMovies
-    const movies = createQuery<MovieReadDto[]>({
-    queryKey: ['movies'],
-    queryFn: async () => {
-      const response: AxiosResponse<MovieReadDto[]> = await api.movies.moviesList();
-      return response.data;
-    }
-  });
+	const addShowtimeMutation = createMutation({
+		mutationFn: async () => {
+			const dto: ShowtimeCreateDto = {
+				hallId: HallId,
+				movieId: form.movieId,
+				startTime: new Date(form.startTime).toISOString(),
+				price: form.price
+			};
+			const response = await api.showtimes.showtimesCreate(dto);
+			return response.data;
+		},
+		onSuccess: async () => {
+			await client.invalidateQueries({ queryKey: ['showtimes'] });
+			toast.show('Showtime added', 'success');
+			IsOpenned = false;
+		},
+		onError: () => {
+			toast.show('Failed to add showtime', 'error');
+		}
+	});
+
+	function validate(): boolean {
+		movieError = form.movieId === undefined ? 'Select a movie' : '';
+		priceError = validateRange(form.price, 0, 10000, 'Price');
+		return !movieError && !priceError;
+	}
+
+	function submit() {
+		if (!validate()) return;
+		$addShowtimeMutation.mutate();
+	}
+
+	function close() {
+		IsOpenned = false;
+	}
 </script>
 
 {#if IsOpenned}
-    <modal id="new_hall" class="fixed inset-0 bg-black bg-opacity-60 backdrop-blur-sm flex items-center justify-center z-50">
-        <div class="w-full max-w-lg p-6 bg-black bg-opacity-80 border border-cyan-500 rounded-md">
-            <form class="mx-auto">
-                <label 
-                  for="movies"
-                  class="block text-cyan-400 text-sm mb-1"
-                >
-                  Select movie
-                </label>
-              
-                <select
-                  bind:value={newShowtime.movieId}
-                  id="movies"
-                  style="margin-bottom: 5px;"
-                  class="
-                    w-full
-                    px-3 py-2
-                    bg-transparent
-                    border border-cyan-500
-                    text-cyan-300
-                    rounded
-                    focus:outline-none
-                    focus:border-cyan-400
-                    hover:shadow-[0_0_6px_#0ff]
-                    transition-colors
-                    placeholder-cyan-500
-                  "
-                >
-                  <option selected>Choose a movie</option>
-                  {#if $movies.isSuccess}
-                    {#each $movies.data as movie}
-                      <option value={movie.id}>{movie.title}</option>
-                    {/each}
-                  {/if}
-                </select>
-              </form>
+	<div class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm">
+		<div class="w-full max-w-md rounded-md border border-accent/20 bg-surface p-6">
+			<h2 class="mb-4 text-xl font-bold text-text">New showtime</h2>
 
-            <div class="flex justify-between space-x-2">
-                <label for="number-of-rows" class="block text-cyan-400 text-sm mb-1">Start time</label>
-                <label for="seat-per-row" class="block text-cyan-400 text-sm mb-1">Price</label>
-            </div>
+			<label for="showtime-movie" class="mb-1 block text-sm text-text/70">Movie</label>
+			<select
+				bind:value={form.movieId}
+				id="showtime-movie"
+				class="mb-1 w-full rounded border border-accent/30 bg-transparent px-3 py-2 text-text transition-colors focus:border-accent focus:outline-none"
+			>
+				<option value={undefined} disabled>Choose a movie</option>
+				{#if $movies.isSuccess}
+					{#each $movies.data as movie}
+						<option value={movie.id}>{movie.title}</option>
+					{/each}
+				{/if}
+			</select>
+			{#if movieError}<p class="mb-3 text-xs text-red-500">{movieError}</p>{:else}<div class="mb-3"></div>{/if}
 
-            <div class="flex justify-end space-x-2">
-                <div class="flex flex-col mb-4 w-72">
-                    <input bind:value={date}
-                      type="datetime-local"
-                      id="startDateTime"
-                      name="startDateTime"
-                  
-                      class="
-                        px-3 py-2
-                        bg-transparent
-                        border border-cyan-500
-                        text-cyan-300
-                        placeholder-cyan-500
-                        rounded
-                        focus:outline-none
-                        focus:border-cyan-400
-                        hover:shadow-[0_0_6px_#0ff]
-                        transition-colors
-                      "
-                  
-                      
-                      min="2025-01-01T00:00"
-                      max="2026-12-31T23:59"
-                    />
-                  </div>
-                <input bind:value={newShowtime.price} id="password" type="number" class="w-full mb-6 px-3 py-2 bg-transparent border border-cyan-600 rounded text-cyan-100 focus:outline-none focus:border-cyan-400 placeholder-cyan-500 transition-colors"/>
-            </div>
+			<label for="showtime-start" class="mb-1 block text-sm text-text/70">Start time</label>
+			<input
+				bind:value={form.startTime}
+				id="showtime-start"
+				type="datetime-local"
+				class="mb-3 w-full rounded border border-accent/30 bg-transparent px-3 py-2 text-text transition-colors focus:border-accent focus:outline-none"
+			/>
 
-            <div class="flex justify-end space-x-3">
-                <button on:click={AddNewShowTime} class="px-4 py-2 bg-cyan-400 text-black font-bold rounded hover:bg-cyan-300 transition-colors shadow-[0_0_6px_#0ff]">
-                Add
-                </button>
-                <button on:click={Close}
-                class="px-4 py-2 bg-transparent border border-fuchsia-600 text-fuchsia-600 rounded hover:bg-fuchsia-900 hover:bg-opacity-20 transition-colors">
-                Cancel
-                </button>
-            </div>
-        </div>
-    </modal>
+			<label for="showtime-price" class="mb-1 block text-sm text-text/70">Price</label>
+			<input
+				bind:value={form.price}
+				id="showtime-price"
+				type="number"
+				min="0"
+				max="10000"
+				step="0.01"
+				class="w-full rounded border border-accent/30 bg-transparent px-3 py-2 text-text transition-colors focus:border-accent focus:outline-none"
+			/>
+			{#if priceError}<p class="mt-1 text-xs text-red-500">{priceError}</p>{/if}
+
+			<div class="mt-6 flex justify-end space-x-3">
+				<button
+					onclick={submit}
+					disabled={$addShowtimeMutation.isPending}
+					class="rounded bg-accent px-4 py-2 font-bold text-primary transition-opacity hover:opacity-90 disabled:opacity-50"
+				>
+					Add
+				</button>
+				<button
+					onclick={close}
+					class="rounded border border-accent/40 px-4 py-2 text-text transition-colors hover:bg-accent/10"
+				>
+					Cancel
+				</button>
+			</div>
+		</div>
+	</div>
 {/if}

@@ -1,68 +1,123 @@
 <script lang="ts">
-	import { createMutation, useQueryClient } from "@tanstack/svelte-query";
-	import type { HallCreateDto, HallReadDto } from "../../../Api";
-	import type { AxiosResponse } from "axios";
-	import { api } from "../../../Module";
+	import { createMutation, useQueryClient } from '@tanstack/svelte-query';
+	import type { HallCreateDto, HallReadDto } from '../../../Api';
+	import { api } from '../../../Module';
+	import { toast } from '$lib/stores/toast';
+	import { validateRequired, validateRange } from '$lib/tools/validators';
 
+	let {
+		IsOpenned = $bindable(false),
+		CinemaId
+	}: { IsOpenned?: boolean; CinemaId: number } = $props();
 
-    export let IsOpenned: boolean = false;
-    export let CinemaId: number;
+	function emptyForm(): HallCreateDto {
+		return { name: '', cinemaId: CinemaId, numberOfRows: 10, seatsPerRow: 10 };
+	}
 
-    const client = useQueryClient();
+	let form = $state<HallCreateDto>(emptyForm());
+	let nameError = $state('');
+	let rowsError = $state('');
+	let seatsError = $state('');
 
-    const addMovieMutation = createMutation({
-      mutationFn: async() => {
-        const responce:AxiosResponse<HallReadDto> = await api.halls.hallsCreate(newHall)
-          return responce.data;
-      },
-      onSuccess: async() => {
-        await client.invalidateQueries({queryKey: ['halls']});
-        IsOpenned = false;
-      }
-    })
-    
-    const newHall: HallCreateDto = {
-        name: "",
-        cinemaId: CinemaId,
-        numberOfRows: 0,
-        seatsPerRow: 0
-    };
+	$effect(() => {
+		if (IsOpenned) {
+			form = emptyForm();
+			nameError = '';
+			rowsError = '';
+			seatsError = '';
+		}
+	});
 
-    function AddNewHall(){
-        $addMovieMutation.mutate();
-    };
+	const client = useQueryClient();
 
-    function Close(){
-        IsOpenned = false;
-    }
+	const addHallMutation = createMutation({
+		mutationFn: async () => {
+			const response = await api.halls.hallsCreate(form);
+			return response.data as HallReadDto;
+		},
+		onSuccess: async () => {
+			await client.invalidateQueries({ queryKey: ['halls'] });
+			toast.show('Hall added', 'success');
+			IsOpenned = false;
+		},
+		onError: () => {
+			toast.show('Failed to add hall', 'error');
+		}
+	});
+
+	function validate(): boolean {
+		nameError = validateRequired(form.name ?? '', 'Name');
+		rowsError = validateRange(form.numberOfRows, 1, 50, 'Number of rows');
+		seatsError = validateRange(form.seatsPerRow, 1, 50, 'Seats per row');
+		return !nameError && !rowsError && !seatsError;
+	}
+
+	function submit() {
+		if (!validate()) return;
+		$addHallMutation.mutate();
+	}
+
+	function close() {
+		IsOpenned = false;
+	}
 </script>
 
-
-
 {#if IsOpenned}
-    <modal id="new_hall" class="fixed inset-0 bg-black bg-opacity-60 backdrop-blur-sm flex items-center justify-center z-50">
-        <div class="w-full max-w-lg p-6 bg-black bg-opacity-80 border border-cyan-500 rounded-md">
-            <label for="name" class="block text-cyan-400 text-sm mb-1">Name</label>
-            <input bind:value={newHall.name} id="name" type="text" class="w-full mb-6 px-3 py-2 bg-transparent border border-cyan-600 rounded text-cyan-100 focus:outline-none focus:border-cyan-400 placeholder-cyan-500 transition-colors"/>
+	<div class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm">
+		<div class="w-full max-w-md rounded-md border border-accent/20 bg-surface p-6">
+			<h2 class="mb-4 text-xl font-bold text-text">New hall</h2>
 
-            <div class="flex justify-between space-x-2">
-                <label for="number-of-rows" class="block text-cyan-400 text-sm mb-1">Number of rows</label>
-                <label for="seat-per-row" class="block text-cyan-400 text-sm mb-1">Sears pew row </label>
-            </div>
+			<label for="hall-name" class="mb-1 block text-sm text-text/70">Name</label>
+			<input
+				bind:value={form.name}
+				id="hall-name"
+				type="text"
+				class="mb-1 w-full rounded border border-accent/30 bg-transparent px-3 py-2 text-text placeholder-text/40 transition-colors focus:border-accent focus:outline-none"
+			/>
+			{#if nameError}<p class="mb-3 text-xs text-red-500">{nameError}</p>{:else}<div class="mb-3"></div>{/if}
 
-            <div class="flex justify-end space-x-2">
-                <input bind:value={newHall.numberOfRows} id="password" type="number" class="w-full mb-6 px-3 py-2 bg-transparent border border-cyan-600 rounded text-cyan-100 focus:outline-none focus:border-cyan-400 placeholder-cyan-500 transition-colors"/>
-                <input bind:value={newHall.seatsPerRow} id="password" type="number" class="w-full mb-6 px-3 py-2 bg-transparent border border-cyan-600 rounded text-cyan-100 focus:outline-none focus:border-cyan-400 placeholder-cyan-500 transition-colors"/>
-            </div>
+			<div class="grid grid-cols-2 gap-3">
+				<div>
+					<label for="hall-rows" class="mb-1 block text-sm text-text/70">Rows</label>
+					<input
+						bind:value={form.numberOfRows}
+						id="hall-rows"
+						type="number"
+						min="1"
+						max="50"
+						class="w-full rounded border border-accent/30 bg-transparent px-3 py-2 text-text transition-colors focus:border-accent focus:outline-none"
+					/>
+					{#if rowsError}<p class="mt-1 text-xs text-red-500">{rowsError}</p>{/if}
+				</div>
+				<div>
+					<label for="hall-seats" class="mb-1 block text-sm text-text/70">Seats per row</label>
+					<input
+						bind:value={form.seatsPerRow}
+						id="hall-seats"
+						type="number"
+						min="1"
+						max="50"
+						class="w-full rounded border border-accent/30 bg-transparent px-3 py-2 text-text transition-colors focus:border-accent focus:outline-none"
+					/>
+					{#if seatsError}<p class="mt-1 text-xs text-red-500">{seatsError}</p>{/if}
+				</div>
+			</div>
 
-            <div class="flex justify-end space-x-3">
-                <button on:click={AddNewHall} class="px-4 py-2 bg-cyan-400 text-black font-bold rounded hover:bg-cyan-300 transition-colors shadow-[0_0_6px_#0ff]">
-                    Add
-                </button>
-                <button on:click={Close} class="px-4 py-2 bg-transparent border border-fuchsia-600 text-fuchsia-600 rounded hover:bg-fuchsia-900 hover:bg-opacity-20 transition-colors">
-                    Cancel
-                </button>
-            </div>
-        </div>
-    </modal>
+			<div class="mt-6 flex justify-end space-x-3">
+				<button
+					onclick={submit}
+					disabled={$addHallMutation.isPending}
+					class="rounded bg-accent px-4 py-2 font-bold text-primary transition-opacity hover:opacity-90 disabled:opacity-50"
+				>
+					Add
+				</button>
+				<button
+					onclick={close}
+					class="rounded border border-accent/40 px-4 py-2 text-text transition-colors hover:bg-accent/10"
+				>
+					Cancel
+				</button>
+			</div>
+		</div>
+	</div>
 {/if}
