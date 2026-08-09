@@ -1,9 +1,15 @@
 <script lang="ts">
   export let IsOpenned: boolean = false;
+  import { onMount } from "svelte";
   import { createMutation, useQueryClient } from "@tanstack/svelte-query";
 	import type { AxiosResponse } from "axios";
 	import type { MovieCreateDto, MovieReadDto } from "../../../Api";
 	import { api } from "../../../Module";
+	import { requireAdmin } from "$lib/tools/guards";
+
+	onMount(() => {
+		requireAdmin();
+	});
 
     const newMovie:MovieCreateDto={
         title:"",

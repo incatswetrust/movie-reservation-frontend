@@ -35,26 +35,25 @@
 
 
 {#if IsOpenned}
-    
 
-<modal id="new_cinema" class="fixed inset-0 bg-black bg-opacity-60 backdrop-blur-sm flex items-center justify-center z-50">
-  <div class="w-full max-w-md p-6 bg-black bg-opacity-80 border border-cyan-500 rounded-md">
-    <h2 class="text-cyan-300 text-xl font-bold mb-4 drop-shadow-[0_0_4px_#0ff]">
+<modal id="new_cinema" class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
+  <div class="w-full max-w-md rounded-md border border-accent/20 bg-surface p-6">
+    <h2 class="mb-4 text-xl font-bold text-text">
       New cinema
     </h2>
-    <label for="username" class="block text-cyan-400 text-sm mb-1">
+    <label for="cinema-name" class="mb-1 block text-sm text-text/70">
       Name
     </label>
-    <input bind:value={newCinema.name} id="username" type="text" class="w-full mb-4 px-3 py-2 bg-transparent border border-cyan-600 rounded text-cyan-100 focus:outline-none focus:border-cyan-400 placeholder-cyan-500 transition-colors"/>
-    <label for="password" class="block text-cyan-400 text-sm mb-1">
+    <input bind:value={newCinema.name} id="cinema-name" type="text" class="mb-4 w-full rounded border border-accent/30 bg-transparent px-3 py-2 text-text placeholder-text/40 transition-colors focus:border-accent focus:outline-none"/>
+    <label for="cinema-address" class="mb-1 block text-sm text-text/70">
       Address
     </label>
-    <input bind:value={newCinema.address} id="password" type="text" class="w-full mb-6 px-3 py-2 bg-transparent border border-cyan-600 rounded text-cyan-100 focus:outline-none focus:border-cyan-400 placeholder-cyan-500 transition-colors"/>
+    <input bind:value={newCinema.address} id="cinema-address" type="text" class="mb-6 w-full rounded border border-accent/30 bg-transparent px-3 py-2 text-text placeholder-text/40 transition-colors focus:border-accent focus:outline-none"/>
     <div class="flex justify-end space-x-3">
-      <button on:click={AddNewCinema} class="px-4 py-2 bg-cyan-400 text-black font-bold rounded hover:bg-cyan-300 transition-colors shadow-[0_0_6px_#0ff]">
+      <button on:click={AddNewCinema} class="rounded bg-accent px-4 py-2 font-bold text-primary transition-opacity hover:opacity-90">
         Add
       </button>
-      <button on:click={Close} class="px-4 py-2 bg-transparent border border-fuchsia-600 text-fuchsia-600 rounded hover:bg-fuchsia-900 hover:bg-opacity-20 transition-colors">
+      <button on:click={Close} class="rounded border border-accent/40 px-4 py-2 text-text transition-colors hover:bg-accent/10">
         Cancel
       </button>
     </div>

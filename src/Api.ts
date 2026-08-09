@@ -74,6 +74,19 @@ export interface HallUpdateDto {
 	cinemaId?: number;
 }
 
+export interface HallImageReadDto {
+	/** @format int32 */
+	id?: number;
+	/** @format int32 */
+	hallId?: number;
+	url?: string | null;
+}
+
+export interface HallImageCreateDto {
+	url?: string | null;
+	base64Image?: string | null;
+}
+
 export interface MovieCreateDto {
 	title?: string | null;
 	description?: string | null;
@@ -628,6 +641,52 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
 		hallsDelete: (id: number, params: RequestParams = {}) =>
 			this.request<void, any>({
 				path: `/api/Halls/${id}`,
+				method: 'DELETE',
+				...params
+			}),
+
+		/**
+		 * No description
+		 *
+		 * @tags Halls
+		 * @name HallsImagesList
+		 * @request GET:/api/Halls/{id}/images
+		 */
+		hallsImagesList: (id: number, params: RequestParams = {}) =>
+			this.request<HallImageReadDto[], any>({
+				path: `/api/Halls/${id}/images`,
+				method: 'GET',
+				format: 'json',
+				...params
+			}),
+
+		/**
+		 * No description
+		 *
+		 * @tags Halls
+		 * @name HallsImagesCreate
+		 * @request POST:/api/Halls/{id}/images
+		 */
+		hallsImagesCreate: (id: number, data: HallImageCreateDto, params: RequestParams = {}) =>
+			this.request<HallImageReadDto, any>({
+				path: `/api/Halls/${id}/images`,
+				method: 'POST',
+				body: data,
+				type: ContentType.Json,
+				format: 'json',
+				...params
+			}),
+
+		/**
+		 * No description
+		 *
+		 * @tags Halls
+		 * @name HallsImagesDelete
+		 * @request DELETE:/api/Halls/{id}/images/{imageId}
+		 */
+		hallsImagesDelete: (id: number, imageId: number, params: RequestParams = {}) =>
+			this.request<void, any>({
+				path: `/api/Halls/${id}/images/${imageId}`,
 				method: 'DELETE',
 				...params
 			})

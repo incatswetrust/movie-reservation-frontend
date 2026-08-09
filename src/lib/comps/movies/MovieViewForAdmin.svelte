@@ -1,11 +1,17 @@
 <script lang="ts">
+	import { onMount } from "svelte";
 	import { createMutation, createQuery, useQueryClient } from "@tanstack/svelte-query";
 	import type { MovieCreateDto, MovieReadDto } from "../../../Api";
 	import { api } from "../../../Module";
 	import type { AxiosResponse } from "axios";
 	import ShowTimeByMovieTable from "../showtimes/ShowTimeByMovieTable.svelte";
+	import { requireAdmin } from "$lib/tools/guards";
 
     export let Id: number;
+
+    onMount(() => {
+        requireAdmin();
+    });
 
     const client = useQueryClient();
     const movie = createQuery<MovieReadDto>({
