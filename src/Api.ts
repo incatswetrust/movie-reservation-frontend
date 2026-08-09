@@ -216,13 +216,20 @@ export interface UserReadDto {
 	/** @format int32 */
 	id?: number;
 	username?: string | null;
+	email?: string | null;
 	role?: UserRole;
 }
 
 export interface UserRegisterDto {
 	username?: string | null;
 	password?: string | null;
+	email?: string | null;
 	role?: UserRole;
+}
+
+export interface UserUpdateDto {
+	username?: string | null;
+	email?: string | null;
 }
 
 /** @format int32 */
@@ -450,6 +457,38 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
 				path: `/api/Auth/logout`,
 				method: 'POST',
 				...params
+			}),
+
+		/**
+		 * No description
+		 *
+		 * @tags Auth
+		 * @name AuthRefreshCreate
+		 * @request POST:/api/Auth/refresh
+		 */
+		authRefreshCreate: (params: RequestParams = {}) =>
+			this.request<UserReadDto, any>({
+				path: `/api/Auth/refresh`,
+				method: 'POST',
+				format: 'json',
+				...params
+			}),
+
+		/**
+		 * No description
+		 *
+		 * @tags Auth
+		 * @name AuthProfileUpdate
+		 * @request PUT:/api/Auth/profile
+		 */
+		authProfileUpdate: (data: UserUpdateDto, params: RequestParams = {}) =>
+			this.request<UserReadDto, any>({
+				path: `/api/Auth/profile`,
+				method: 'PUT',
+				body: data,
+				type: ContentType.Json,
+				format: 'json',
+				...params
 			})
 	};
 	bookings = {
@@ -460,10 +499,14 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
 		 * @name BookingsList
 		 * @request GET:/api/Bookings
 		 */
-		bookingsList: (params: RequestParams = {}) =>
-			this.request<BookingReadDto[], any>({
+		bookingsList: (
+			query?: { page?: number; pageSize?: number },
+			params: RequestParams = {}
+		) =>
+			this.request<PagedResult<BookingReadDto>, any>({
 				path: `/api/Bookings`,
 				method: 'GET',
+				query: query,
 				format: 'json',
 				...params
 			}),
@@ -522,10 +565,14 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
 		 * @name CinemasList
 		 * @request GET:/api/Cinemas
 		 */
-		cinemasList: (params: RequestParams = {}) =>
-			this.request<CinemaReadDto[], any>({
+		cinemasList: (
+			query?: { page?: number; pageSize?: number },
+			params: RequestParams = {}
+		) =>
+			this.request<PagedResult<CinemaReadDto>, any>({
 				path: `/api/Cinemas`,
 				method: 'GET',
+				query: query,
 				format: 'json',
 				...params
 			}),
