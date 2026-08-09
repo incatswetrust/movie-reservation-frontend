@@ -85,6 +85,7 @@
 		},
 		onSuccess: async () => {
 			await client.invalidateQueries({ queryKey: ['movies'] });
+			await client.invalidateQueries({ queryKey: ['movie'] });
 			toast.show(movie ? 'Movie updated' : 'Movie added', 'success');
 			IsOpenned = false;
 		},
