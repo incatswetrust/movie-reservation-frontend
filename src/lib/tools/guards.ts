@@ -1,6 +1,7 @@
 import { get } from 'svelte/store';
 import { goto } from '$app/navigation';
 import { auth } from '$lib/stores/auth';
+import { toast } from '$lib/stores/toast';
 
 /**
  * Route guards for client-side auth checks. This codebase resolves auth state
@@ -54,6 +55,7 @@ export async function requireAdmin(redirectTo = '/'): Promise<boolean> {
 	}
 
 	if (!state.isAdmin) {
+		toast.show('Admins only. Redirecting...', 'error');
 		await goto(redirectTo);
 		return false;
 	}
