@@ -2,7 +2,7 @@
 	"rewrites": [
 		{
 			"source": "/api/:path*",
-			"destination": "http://moviereservationsystem.runasp.net/api/:path*"
+			"destination": "https://moviereservationsystem.runasp.net/api/:path*"
 		}
 	]
 }
