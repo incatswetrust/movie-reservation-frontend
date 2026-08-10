@@ -1,21 +1,9 @@
 <script lang="ts">
-	import { UserRole, type UserReadDto } from '../../Api';
-	import type { AxiosResponse } from 'axios';
-	import { createMutation, createQuery, useQueryClient } from '@tanstack/svelte-query';
+	import { createMutation } from '@tanstack/svelte-query';
 	import { api } from '../../Module';
 	import { auth } from '$lib/stores/auth';
 	import { goto } from '$app/navigation';
 	import ThemeToggle from './ThemeToggle.svelte';
-
-	const client = useQueryClient();
-
-	const user = createQuery<UserReadDto>({
-		queryKey: ['user'],
-		queryFn: async () => {
-			const response: AxiosResponse<UserReadDto> = await api.auth.authStatusList();
-			return response.data;
-		}
-	});
 
 	const logoutMutation = createMutation({
 		mutationFn: async () => {
@@ -23,7 +11,6 @@
 		},
 		onSuccess: async () => {
 			auth.clear();
-			client.invalidateQueries({ queryKey: ['user'] });
 			await goto('/');
 		}
 	});
@@ -34,8 +21,8 @@
 
 	let mobileMenuOpen = $state(false);
 
-	const isLoggedIn = $derived($user.isSuccess && $user.data !== null && $user.data !== undefined);
-	const isAdmin = $derived(isLoggedIn && $user.data?.role === UserRole.Value1);
+	const isLoggedIn = $derived($auth.isAuthenticated);
+	const isAdmin = $derived($auth.isAdmin);
 
 	const navLinks = [
 		{ href: '/movies', label: 'Movies' },
@@ -74,7 +61,7 @@
 		<div class="hidden items-center gap-4 md:flex">
 			<ThemeToggle />
 			{#if isLoggedIn}
-				<a href="/profile" class="text-sm transition-colors hover:text-accent">{$user.data?.username}</a>
+				<a href="/profile" class="text-sm transition-colors hover:text-accent">{$auth.user?.username}</a>
 				<button
 					aria-label="Log out"
 					onclick={logout}
@@ -123,7 +110,7 @@
 				<ThemeToggle />
 				{#if isLoggedIn}
 					<button aria-label="Log out" onclick={logout} class="text-sm text-accent">
-						Logout ({$user.data?.username})
+						Logout ({$auth.user?.username})
 					</button>
 				{:else}
 					<a href="/auth" onclick={closeMobileMenu} class="text-sm font-medium text-accent">Login</a>

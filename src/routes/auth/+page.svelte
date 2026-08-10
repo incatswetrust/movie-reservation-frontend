@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { createMutation, useQueryClient } from '@tanstack/svelte-query';
+	import { createMutation } from '@tanstack/svelte-query';
 	import { AxiosError, type AxiosResponse } from 'axios';
 	import { api } from '../../Module';
 	import type { UserLoginDto, UserReadDto, UserRegisterDto } from '../../Api';
@@ -11,8 +11,6 @@
 		validatePassword,
 		validatePasswordConfirmation
 	} from '$lib/tools/validators';
-
-	const client = useQueryClient();
 
 	let mode = $state<'login' | 'register'>('login');
 
@@ -46,7 +44,6 @@
 
 	async function onSuccess(userData: UserReadDto) {
 		auth.setUser(userData);
-		client.invalidateQueries({ queryKey: ['user'] });
 		await goto(redirectParam || '/');
 	}
 
