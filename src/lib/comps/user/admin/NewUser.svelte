@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { createMutation, useQueryClient } from '@tanstack/svelte-query';
+	import { AxiosError } from 'axios';
 	import type { UserCreateDto, UserReadDto } from '../../../../Api';
 	import { UserRole } from '../../../../Api';
 	import { api } from '../../../../Module';
@@ -28,7 +29,7 @@
 
 	const addUserMutation = createMutation({
 		mutationFn: async () => {
-			const response = await api.users.usersCreate(form);
+			const response = await api.users.usersCreate({ ...form, email: form.email || null });
 			return response.data as UserReadDto;
 		},
 		onSuccess: async () => {
@@ -36,8 +37,12 @@
 			toast.show('User added', 'success');
 			IsOpenned = false;
 		},
-		onError: () => {
-			toast.show('Failed to add user', 'error');
+		onError: (error) => {
+			const message =
+				error instanceof AxiosError && typeof error.response?.data?.error === 'string'
+					? error.response.data.error
+					: 'Failed to add user';
+			toast.show(message, 'error');
 		}
 	});
 
