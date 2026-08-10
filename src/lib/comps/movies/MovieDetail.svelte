@@ -78,7 +78,7 @@
 			<div class="flex flex-col gap-8 lg:flex-row">
 				<div class="lg:w-1/3">
 					<img
-						src={$movie.data.posterUrl ?? $movie.data.base64Image ?? undefined}
+						src={$movie.data.posterUrl || $movie.data.base64Image || undefined}
 						alt={$movie.data.title ?? 'Movie poster'}
 						class="w-full rounded-lg object-cover shadow-lg"
 					/>

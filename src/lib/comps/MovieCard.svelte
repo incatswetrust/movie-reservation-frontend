@@ -20,7 +20,7 @@
 	class="group relative block aspect-[2/3] w-full shrink-0 overflow-hidden rounded-lg bg-surface"
 >
 	<img
-		src={movie.posterUrl ?? movie.base64Image ?? undefined}
+		src={movie.posterUrl || movie.base64Image || undefined}
 		alt={movie.title ?? 'Movie poster'}
 		class="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
 	/>
