@@ -232,6 +232,10 @@ export interface UserUpdateDto {
 	email?: string | null;
 }
 
+export interface GoogleExchangeDto {
+	code: string;
+}
+
 /** @format int32 */
 export enum UserRole {
 	Value0 = 0,
@@ -485,6 +489,23 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
 			this.request<UserReadDto, any>({
 				path: `/api/Auth/profile`,
 				method: 'PUT',
+				body: data,
+				type: ContentType.Json,
+				format: 'json',
+				...params
+			}),
+
+		/**
+		 * No description
+		 *
+		 * @tags Auth
+		 * @name AuthGoogleExchangeCreate
+		 * @request POST:/api/Auth/google/exchange
+		 */
+		authGoogleExchangeCreate: (data: GoogleExchangeDto, params: RequestParams = {}) =>
+			this.request<UserReadDto, any>({
+				path: `/api/Auth/google/exchange`,
+				method: 'POST',
 				body: data,
 				type: ContentType.Json,
 				format: 'json',
