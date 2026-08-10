@@ -10,6 +10,7 @@
 	} from '../../../Api';
 	import { api } from '../../../Module';
 	import { auth } from '$lib/stores/auth';
+	import { compressImageDataUrl } from '$lib/tools/imageCompression';
 	import ShowTimeByHallTable from '../showtimes/ShowTimeByHallTable.svelte';
 	import HallGallery from '../HallGallery.svelte';
 
@@ -90,8 +91,8 @@
 			return;
 		}
 		const reader = new FileReader();
-		reader.onload = () => {
-			imageFileBase64 = reader.result as string;
+		reader.onload = async () => {
+			imageFileBase64 = await compressImageDataUrl(reader.result as string);
 		};
 		reader.readAsDataURL(file);
 	}
