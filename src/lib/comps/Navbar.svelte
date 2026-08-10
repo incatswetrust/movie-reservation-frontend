@@ -22,7 +22,7 @@
 	let mobileMenuOpen = $state(false);
 
 	const isLoggedIn = $derived($auth.isAuthenticated);
-	const isAdmin = $derived($auth.isAdmin);
+	const canAccessAdminPanel = $derived($auth.isAdmin || $auth.isViewer);
 
 	const navLinks = [
 		{ href: '/movies', label: 'Movies' },
@@ -51,7 +51,7 @@
 			{#each navLinks as link (link.href)}
 				<a href={link.href} class="transition-colors hover:text-accent">{link.label}</a>
 			{/each}
-			{#if isAdmin}
+			{#if canAccessAdminPanel}
 				{#each adminLinks as link (link.href)}
 					<a href={link.href} class="transition-colors hover:text-accent">{link.label}</a>
 				{/each}
@@ -101,7 +101,7 @@
 			{#each navLinks as link (link.href)}
 				<a href={link.href} onclick={closeMobileMenu} class="hover:text-accent">{link.label}</a>
 			{/each}
-			{#if isAdmin}
+			{#if canAccessAdminPanel}
 				{#each adminLinks as link (link.href)}
 					<a href={link.href} onclick={closeMobileMenu} class="hover:text-accent">{link.label}</a>
 				{/each}

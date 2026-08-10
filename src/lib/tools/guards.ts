@@ -62,3 +62,27 @@ export async function requireAdmin(redirectTo = '/'): Promise<boolean> {
 
 	return true;
 }
+
+/**
+ * Redirects users who are neither admin nor viewer away from admin-panel pages.
+ * Call from `onMount`. Resolves to `true` when the user can view the admin panel
+ * (admin or viewer), `false` otherwise (a redirect has already been triggered).
+ */
+export async function requireAdminPanelAccess(redirectTo = '/'): Promise<boolean> {
+	await waitForAuthReady();
+
+	const state = get(auth);
+
+	if (!state.isAuthenticated) {
+		await goto('/auth');
+		return false;
+	}
+
+	if (!state.isAdmin && !state.isViewer) {
+		toast.show('Admins only. Redirecting...', 'error');
+		await goto(redirectTo);
+		return false;
+	}
+
+	return true;
+}

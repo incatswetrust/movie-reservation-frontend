@@ -7,6 +7,7 @@ export interface AuthState {
 	user: UserReadDto | null;
 	isAuthenticated: boolean;
 	isAdmin: boolean;
+	isViewer: boolean;
 	isLoading: boolean;
 }
 
@@ -14,6 +15,7 @@ const initialState: AuthState = {
 	user: null,
 	isAuthenticated: false,
 	isAdmin: false,
+	isViewer: false,
 	isLoading: true
 };
 
@@ -25,12 +27,13 @@ function createAuthStore() {
 			user,
 			isAuthenticated: true,
 			isAdmin: user.role === UserRole.Value1,
+			isViewer: user.role === UserRole.Value2,
 			isLoading: false
 		});
 	}
 
 	function clear() {
-		set({ user: null, isAuthenticated: false, isAdmin: false, isLoading: false });
+		set({ user: null, isAuthenticated: false, isAdmin: false, isViewer: false, isLoading: false });
 	}
 
 	async function loadStatus() {

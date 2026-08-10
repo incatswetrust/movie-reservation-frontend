@@ -232,6 +232,13 @@ export interface UserUpdateDto {
 	email?: string | null;
 }
 
+export interface UserCreateDto {
+	username: string;
+	password: string;
+	email?: string | null;
+	role?: UserRole;
+}
+
 export interface GoogleExchangeDto {
 	code: string;
 }
@@ -239,7 +246,8 @@ export interface GoogleExchangeDto {
 /** @format int32 */
 export enum UserRole {
 	Value0 = 0,
-	Value1 = 1
+	Value1 = 1,
+	Value2 = 2
 }
 
 import type {
@@ -1102,6 +1110,23 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
 			this.request<UserReadDto, any>({
 				path: `/api/Users/${id}`,
 				method: 'GET',
+				format: 'json',
+				...params
+			}),
+
+		/**
+		 * No description
+		 *
+		 * @tags Users
+		 * @name UsersCreate
+		 * @request POST:/api/Users
+		 */
+		usersCreate: (data: UserCreateDto, params: RequestParams = {}) =>
+			this.request<UserReadDto, any>({
+				path: `/api/Users`,
+				method: 'POST',
+				body: data,
+				type: ContentType.Json,
 				format: 'json',
 				...params
 			}),

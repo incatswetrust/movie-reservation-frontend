@@ -2,7 +2,9 @@
 	import { createMutation, createQuery, useQueryClient } from '@tanstack/svelte-query';
 	import { api } from '../../../../Module';
 	import { type UserReadDto, UserRole } from '../../../../Api';
+	import { auth } from '$lib/stores/auth';
 	import { toast } from '$lib/stores/toast';
+	import NewUser from './NewUser.svelte';
 
 	const client = useQueryClient();
 
@@ -35,15 +37,32 @@
 	}
 
 	function roleLabel(role: UserRole | undefined) {
-		return role === UserRole.Value1 ? 'Admin' : 'User';
+		if (role === UserRole.Value1) return 'Admin';
+		if (role === UserRole.Value2) return 'Viewer';
+		return 'User';
 	}
+
+	let isNewUserOpen = $state(false);
 </script>
 
 <section class="bg-primary">
 	<div class="container mx-auto px-5 py-10">
-		<h1 class="text-2xl font-semibold text-text sm:text-3xl">Users</h1>
-		<div class="mt-2 h-1 w-16 rounded bg-accent"></div>
-		<p class="mt-3 mb-8 text-text/70">Manage registered accounts.</p>
+		<div class="mb-2 flex flex-wrap items-start justify-between gap-4">
+			<div>
+				<h1 class="text-2xl font-semibold text-text sm:text-3xl">Users</h1>
+				<div class="mt-2 h-1 w-16 rounded bg-accent"></div>
+				<p class="mt-3 text-text/70">Manage registered accounts.</p>
+			</div>
+			{#if $auth.isAdmin}
+				<button
+					onclick={() => (isNewUserOpen = true)}
+					class="rounded-full bg-accent px-5 py-2 text-sm font-medium text-primary transition-opacity hover:opacity-90"
+				>
+					+ Add user
+				</button>
+			{/if}
+		</div>
+		<div class="mb-8"></div>
 
 		{#if $users.isLoading}
 			<p class="text-text/60">Loading users...</p>
@@ -73,12 +92,14 @@
 									</span>
 								</td>
 								<td class="px-4 py-3 text-right">
-									<button
-										onclick={() => handleDelete(user)}
-										class="rounded-full border border-red-500/40 px-3 py-1 text-xs text-red-400 transition-colors hover:bg-red-500/10"
-									>
-										Delete
-									</button>
+									{#if $auth.isAdmin}
+										<button
+											onclick={() => handleDelete(user)}
+											class="rounded-full border border-red-500/40 px-3 py-1 text-xs text-red-400 transition-colors hover:bg-red-500/10"
+										>
+											Delete
+										</button>
+									{/if}
 								</td>
 							</tr>
 						{/each}
@@ -90,3 +111,7 @@
 		{/if}
 	</div>
 </section>
+
+{#if $auth.isAdmin}
+	<NewUser bind:IsOpenned={isNewUserOpen} />
+{/if}
