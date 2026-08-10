@@ -78,7 +78,11 @@
 	}
 
 	function googleLogin() {
-		window.location.href = '/api/Auth/google';
+		// Hits the backend directly (bypassing the /api rewrite proxy) so the OAuth
+		// correlation cookie is set on the same origin Google redirects back to —
+		// through the proxy, the cookie would end up on the frontend's own domain
+		// while Google's callback lands on the backend's, breaking correlation.
+		window.location.href = 'https://moviereservationsystem.runasp.net/api/Auth/google';
 	}
 
 	const activeMutation = $derived(mode === 'login' ? loginMutation : registerMutation);
