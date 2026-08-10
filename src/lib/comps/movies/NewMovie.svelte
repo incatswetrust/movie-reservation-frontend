@@ -4,6 +4,7 @@
 	import { api } from '../../../Module';
 	import { toast } from '$lib/stores/toast';
 	import { validateRequired, validateRange } from '$lib/tools/validators';
+	import { compressImageDataUrl } from '$lib/tools/imageCompression';
 
 	let {
 		IsOpenned = $bindable(false),
@@ -116,9 +117,10 @@
 		}
 
 		const reader = new FileReader();
-		reader.onload = () => {
-			posterPreview = reader.result as string;
-			form.base64Image = posterPreview;
+		reader.onload = async () => {
+			const compressed = await compressImageDataUrl(reader.result as string);
+			posterPreview = compressed;
+			form.base64Image = compressed;
 		};
 		reader.readAsDataURL(file);
 	}
