@@ -112,7 +112,7 @@ body {
 
 	/* Chips */
 	.chip {
-		@apply inline-flex items-center justify-center gap-1.5 rounded-[10px] border border-default px-3 py-1.5 text-sm font-medium text-ink-secondary transition-colors duration-fast;
+		@apply inline-flex items-center justify-center gap-1.5 rounded-[10px] border px-3 py-1.5 text-sm font-medium text-ink-secondary transition-colors duration-fast;
 	}
 	.chip-selected {
 		@apply border-brand-gold bg-brand-gold text-on-accent;
