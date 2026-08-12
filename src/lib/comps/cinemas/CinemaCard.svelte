@@ -15,16 +15,18 @@
 </script>
 
 <div
-	class="group relative flex flex-col rounded-lg border border-accent/10 bg-surface p-5 transition-colors hover:border-accent/40"
+	class="card group relative flex flex-col gap-4 p-5 transition-all duration-fast hover:-translate-y-0.5 hover:shadow-floating"
 >
-	<a href={`/cinemas/${cinema.id}`} class="flex flex-1 flex-col gap-2">
-		<div class="flex h-11 w-11 items-center justify-center rounded-full bg-accent/10 text-accent">
+	<a href={`/cinemas/${cinema.id}`} class="flex flex-1 flex-col gap-3">
+		<div
+			class="flex h-11 w-11 items-center justify-center rounded-full bg-surface-secondary text-ink-secondary"
+		>
 			<svg
 				xmlns="http://www.w3.org/2000/svg"
 				viewBox="0 0 24 24"
 				fill="none"
 				stroke="currentColor"
-				stroke-width="2"
+				stroke-width="1.75"
 				stroke-linecap="round"
 				stroke-linejoin="round"
 				class="h-5 w-5"
@@ -33,9 +35,11 @@
 				<path d="M9 21v-4h6v4M9 7h.01M9 11h.01M9 15h.01M15 7h.01M15 11h.01M15 15h.01" />
 			</svg>
 		</div>
-		<h3 class="text-lg font-semibold text-text">{cinema.name}</h3>
-		<p class="text-sm text-text/70">{cinema.address}</p>
-		<span class="mt-2 inline-flex items-center gap-1 text-sm text-accent">
+		<div>
+			<h3 class="text-base font-semibold text-ink">{cinema.name}</h3>
+			<p class="mt-1 text-sm text-ink-secondary">{cinema.address}</p>
+		</div>
+		<span class="btn-primary mt-1 w-full text-sm">
 			View halls
 			<svg
 				xmlns="http://www.w3.org/2000/svg"
@@ -53,7 +57,9 @@
 	</a>
 
 	{#if isAdmin}
-		<div class="absolute right-3 top-3 flex gap-1 opacity-0 transition-opacity group-hover:opacity-100">
+		<div
+			class="absolute right-3 top-3 flex gap-1.5 opacity-0 transition-opacity duration-fast group-hover:opacity-100"
+		>
 			<button
 				aria-label="Edit cinema"
 				onclick={(e) => {
@@ -61,7 +67,7 @@
 					e.stopPropagation();
 					onEdit?.(cinema);
 				}}
-				class="rounded-full bg-primary/80 p-1.5 text-text transition-colors hover:text-accent"
+				class="grid h-9 w-9 place-items-center rounded-full border border-subtle bg-elevated text-ink-secondary shadow-soft transition-colors duration-fast hover:text-ink"
 			>
 				<svg
 					xmlns="http://www.w3.org/2000/svg"
@@ -84,7 +90,7 @@
 					e.stopPropagation();
 					onDelete?.(cinema);
 				}}
-				class="rounded-full bg-primary/80 p-1.5 text-text transition-colors hover:text-red-400"
+				class="grid h-9 w-9 place-items-center rounded-full border border-subtle bg-elevated text-ink shadow-soft transition-colors duration-fast hover:text-brand-red"
 			>
 				<svg
 					xmlns="http://www.w3.org/2000/svg"

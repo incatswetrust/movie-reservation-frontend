@@ -115,57 +115,63 @@
 	}
 </script>
 
-<section class="bg-primary">
+<section class="bg-app">
 	<div class="container mx-auto px-5 py-10">
 		<div class="mb-8 flex flex-wrap items-end justify-between gap-4">
 			<div>
-				<h1 class="text-2xl font-semibold text-text sm:text-3xl">Movies</h1>
-				<div class="mt-2 h-1 w-16 rounded bg-accent"></div>
-				<p class="mt-3 text-text/70">Browse what's playing and pick your next watch.</p>
+				<h1 class="text-2xl font-semibold text-ink sm:text-3xl">Movies</h1>
+				<div class="mt-2 h-1 w-16 rounded bg-brand-gold"></div>
+				<p class="mt-3 text-ink-secondary">Browse what's playing and pick your next watch.</p>
 			</div>
 			{#if $auth.isAdmin}
-				<button
-					onclick={handleAdd}
-					class="rounded-full bg-accent px-5 py-2 text-sm font-medium text-primary transition-opacity hover:opacity-90"
-				>
-					+ Add movie
-				</button>
+				<button onclick={handleAdd} class="btn-primary"> + Add movie </button>
 			{/if}
 		</div>
 
-		<div class="mb-8 flex flex-wrap gap-3">
+		<div class="mb-8 flex flex-col gap-4">
 			<input
 				bind:value={searchInput}
 				oninput={onSearchInput}
 				type="search"
 				placeholder="Search by title or director..."
-				class="min-w-[220px] flex-1 rounded border border-accent/30 bg-transparent px-3 py-2 text-text placeholder-text/40 transition-colors focus:border-accent focus:outline-none"
+				class="input max-w-md"
 			/>
-			<select
-				bind:value={selectedGenre}
-				class="rounded border border-accent/30 bg-surface px-3 py-2 text-text transition-colors focus:border-accent focus:outline-none"
-			>
-				<option value="">All genres</option>
-				{#each genres as genre}
-					<option value={genre}>{genre}</option>
-				{/each}
-			</select>
+			{#if genres.length > 0}
+				<div class="flex flex-wrap gap-2">
+					<button
+						type="button"
+						onclick={() => (selectedGenre = '')}
+						class={selectedGenre === '' ? 'chip chip-selected' : 'chip hover:border-brand-gold'}
+					>
+						All genres
+					</button>
+					{#each genres as genre}
+						<button
+							type="button"
+							onclick={() => (selectedGenre = genre)}
+							class={selectedGenre === genre ? 'chip chip-selected' : 'chip hover:border-brand-gold'}
+						>
+							{genre}
+						</button>
+					{/each}
+				</div>
+			{/if}
 		</div>
 
 		{#if $allMovies.isLoading}
-			<p class="text-text/60">Loading movies...</p>
+			<p class="text-ink-secondary">Loading movies...</p>
 		{:else if $allMovies.isError}
-			<p class="text-red-400">Failed to load movies.</p>
+			<p class="text-brand-red">Failed to load movies.</p>
 		{:else if isBusy}
-			<p class="text-text/60">Searching...</p>
+			<p class="text-ink-secondary">Searching...</p>
 		{:else if displayedMovies.length > 0}
-			<div class="grid grid-cols-2 gap-5 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
+			<div class="grid grid-cols-2 gap-5 sm:grid-cols-3 lg:grid-cols-4">
 				{#each displayedMovies as movie (movie.id)}
 					<MovieCard {movie} isAdmin={$auth.isAdmin} onEdit={handleEdit} onDelete={handleDelete} />
 				{/each}
 			</div>
 		{:else}
-			<p class="text-text/60">No movies found.</p>
+			<p class="text-ink-secondary">No movies found.</p>
 		{/if}
 	</div>
 </section>

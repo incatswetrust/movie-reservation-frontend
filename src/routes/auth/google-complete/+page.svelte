@@ -24,6 +24,10 @@
 	});
 </script>
 
-<div class="flex min-h-[calc(100vh-4rem)] items-center justify-center px-4">
-	<p class="text-text/60">Signing you in...</p>
+<div class="flex min-h-[calc(100vh-4rem)] flex-col items-center justify-center gap-4 px-4">
+	<div
+		class="h-8 w-8 animate-spin rounded-full border-2 border-subtle border-t-brand-gold"
+		aria-hidden="true"
+	></div>
+	<p class="text-ink-secondary">Signing you in...</p>
 </div>

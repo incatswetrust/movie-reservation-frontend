@@ -8,16 +8,16 @@
 	];
 </script>
 
-<footer class="border-t border-accent/15 bg-surface text-text">
+<footer class="border-t border-subtle bg-surface text-ink">
 	<div class="container mx-auto flex flex-col items-center gap-4 px-5 py-8 sm:flex-row sm:justify-between">
 		<div class="flex flex-col items-center gap-1 sm:items-start">
-			<span class="text-sm font-semibold text-accent">Movie Reservation</span>
-			<span class="text-xs text-text/60">&copy; {year} Movie Reservation System. All rights reserved.</span>
+			<span class="text-sm font-semibold text-ink">Movie Reservation</span>
+			<span class="text-xs text-ink-muted">&copy; {year} Movie Reservation System. All rights reserved.</span>
 		</div>
 
 		<nav class="flex items-center gap-5 text-sm">
 			{#each links as link (link.href)}
-				<a href={link.href} class="transition-colors hover:text-accent">{link.label}</a>
+				<a href={link.href} class="text-ink-secondary transition-colors duration-fast hover:text-brand-gold">{link.label}</a>
 			{/each}
 		</nav>
 
@@ -27,7 +27,7 @@
 				target="_blank"
 				rel="noreferrer"
 				aria-label="GitHub"
-				class="text-text/70 transition-colors hover:text-accent"
+				class="text-ink-secondary transition-colors duration-fast hover:text-brand-gold"
 			>
 				<svg fill="currentColor" viewBox="0 0 24 24" class="h-5 w-5">
 					<path
@@ -53,7 +53,7 @@
 				target="_blank"
 				rel="noreferrer"
 				aria-label="X (Twitter)"
-				class="text-text/70 transition-colors hover:text-accent"
+				class="text-ink-secondary transition-colors duration-fast hover:text-brand-gold"
 			>
 				<svg
 					fill="currentColor"
@@ -79,7 +79,7 @@
 				target="_blank"
 				rel="noreferrer"
 				aria-label="Instagram"
-				class="text-text/70 transition-colors hover:text-accent"
+				class="text-ink-secondary transition-colors duration-fast hover:text-brand-gold"
 			>
 				<svg
 					fill="none"
@@ -103,7 +103,7 @@
 				target="_blank"
 				rel="noreferrer"
 				aria-label="LinkedIn"
-				class="text-text/70 transition-colors hover:text-accent"
+				class="text-ink-secondary transition-colors duration-fast hover:text-brand-gold"
 			>
 				<svg
 					fill="currentColor"

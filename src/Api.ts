@@ -24,6 +24,43 @@ export interface ErrorResponse {
 	details?: any;
 }
 
+export interface RevenueSummaryDto {
+	/** @format double */
+	totalRevenue?: number;
+	/** @format double */
+	revenueLast30Days?: number;
+	/** @format int32 */
+	totalBookingsCount?: number;
+}
+
+export interface ShowtimeOccupancyDto {
+	/** @format int32 */
+	showtimeId?: number;
+	/** @format int32 */
+	movieId?: number;
+	movieTitle?: string | null;
+	/** @format int32 */
+	hallId?: number;
+	hallName?: string | null;
+	cinemaName?: string | null;
+	/** @format date-time */
+	startTime?: string;
+	/** @format int32 */
+	bookedSeatsCount?: number;
+	/** @format int32 */
+	totalSeatsCount?: number;
+	/** @format double */
+	occupancyPercentage?: number;
+}
+
+export interface TopMovieDto {
+	/** @format int32 */
+	movieId?: number;
+	title?: string | null;
+	/** @format int32 */
+	bookedSeatsCount?: number;
+}
+
 export interface BookingCreateDto {
 	/** @format int32 */
 	userId?: number;
@@ -95,6 +132,7 @@ export interface HallImageReadDto {
 	/** @format int32 */
 	hallId?: number;
 	url?: string | null;
+	base64Image?: string | null;
 }
 
 export interface HallImageCreateDto {
@@ -667,6 +705,22 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
 				path: `/api/Cinemas/${id}`,
 				method: 'DELETE',
 				...params
+			}),
+
+		/**
+		 * No description
+		 *
+		 * @tags Cinemas
+		 * @name CinemasSearchList
+		 * @request GET:/api/Cinemas/search
+		 */
+		cinemasSearchList: (query: { q: string }, params: RequestParams = {}) =>
+			this.request<CinemaReadDto[], any>({
+				path: `/api/Cinemas/search`,
+				method: 'GET',
+				query: query,
+				format: 'json',
+				...params
 			})
 	};
 	halls = {
@@ -677,10 +731,27 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
 		 * @name HallsList
 		 * @request GET:/api/Halls
 		 */
-		hallsList: (params: RequestParams = {}) =>
-			this.request<HallReadDto[], any>({
+		hallsList: (query?: { page?: number; pageSize?: number }, params: RequestParams = {}) =>
+			this.request<PagedResult<HallReadDto>, any>({
 				path: `/api/Halls`,
 				method: 'GET',
+				query: query,
+				format: 'json',
+				...params
+			}),
+
+		/**
+		 * No description
+		 *
+		 * @tags Halls
+		 * @name HallsSearchList
+		 * @request GET:/api/Halls/search
+		 */
+		hallsSearchList: (query: { q: string }, params: RequestParams = {}) =>
+			this.request<HallReadDto[], any>({
+				path: `/api/Halls/search`,
+				method: 'GET',
+				query: query,
 				format: 'json',
 				...params
 			}),
@@ -966,10 +1037,11 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
 		 * @name ShowtimesList
 		 * @request GET:/api/Showtimes
 		 */
-		showtimesList: (params: RequestParams = {}) =>
-			this.request<ShowtimeReadDto[], any>({
+		showtimesList: (query?: { page?: number; pageSize?: number }, params: RequestParams = {}) =>
+			this.request<PagedResult<ShowtimeReadDto>, any>({
 				path: `/api/Showtimes`,
 				method: 'GET',
+				query: query,
 				format: 'json',
 				...params
 			}),
@@ -1142,6 +1214,52 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
 			this.request<UserReadDto, any>({
 				path: `/api/Users/${id}`,
 				method: 'DELETE',
+				format: 'json',
+				...params
+			})
+	};
+	analytics = {
+		/**
+		 * No description
+		 *
+		 * @tags Analytics
+		 * @name AnalyticsRevenueList
+		 * @request GET:/api/Analytics/revenue
+		 */
+		analyticsRevenueList: (params: RequestParams = {}) =>
+			this.request<RevenueSummaryDto, any>({
+				path: `/api/Analytics/revenue`,
+				method: 'GET',
+				format: 'json',
+				...params
+			}),
+
+		/**
+		 * No description
+		 *
+		 * @tags Analytics
+		 * @name AnalyticsOccupancyList
+		 * @request GET:/api/Analytics/occupancy
+		 */
+		analyticsOccupancyList: (params: RequestParams = {}) =>
+			this.request<ShowtimeOccupancyDto[], any>({
+				path: `/api/Analytics/occupancy`,
+				method: 'GET',
+				format: 'json',
+				...params
+			}),
+
+		/**
+		 * No description
+		 *
+		 * @tags Analytics
+		 * @name AnalyticsTopMoviesList
+		 * @request GET:/api/Analytics/top-movies
+		 */
+		analyticsTopMoviesList: (params: RequestParams = {}) =>
+			this.request<TopMovieDto[], any>({
+				path: `/api/Analytics/top-movies`,
+				method: 'GET',
 				format: 'json',
 				...params
 			})

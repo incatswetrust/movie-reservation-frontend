@@ -42,52 +42,50 @@
 		return 'User';
 	}
 
+	function isFeaturedRole(role: UserRole | undefined) {
+		return role === UserRole.Value1;
+	}
+
 	let isNewUserOpen = $state(false);
 </script>
 
-<section class="bg-primary">
+<section class="bg-app">
 	<div class="container mx-auto px-5 py-10">
-		<div class="mb-2 flex flex-wrap items-start justify-between gap-4">
+		<div class="mb-8 flex flex-wrap items-start justify-between gap-4">
 			<div>
-				<h1 class="text-2xl font-semibold text-text sm:text-3xl">Users</h1>
-				<div class="mt-2 h-1 w-16 rounded bg-accent"></div>
-				<p class="mt-3 text-text/70">Manage registered accounts.</p>
+				<h1 class="text-2xl font-bold text-ink sm:text-3xl">Users</h1>
+				<div class="mt-2 h-1 w-16 rounded-full bg-brand-gold"></div>
+				<p class="mt-3 text-ink-secondary">Manage registered accounts.</p>
 			</div>
 			{#if $auth.isAdmin}
-				<button
-					onclick={() => (isNewUserOpen = true)}
-					class="rounded-full bg-accent px-5 py-2 text-sm font-medium text-primary transition-opacity hover:opacity-90"
-				>
-					+ Add user
-				</button>
+				<button onclick={() => (isNewUserOpen = true)} class="btn-primary">+ Add user</button>
 			{/if}
 		</div>
-		<div class="mb-8"></div>
 
 		{#if $users.isLoading}
-			<p class="text-text/60">Loading users...</p>
+			<p class="text-ink-muted">Loading users...</p>
 		{:else if $users.isError}
-			<p class="text-red-400">Failed to load users.</p>
+			<p class="text-brand-red">Failed to load users.</p>
 		{:else if $users.data && $users.data.length > 0}
-			<div class="overflow-x-auto rounded-lg border border-accent/15 bg-surface">
+			<div class="card overflow-x-auto">
 				<table class="min-w-full text-left text-sm">
-					<thead class="border-b border-accent/15 text-text/60">
+					<thead class="bg-surface-secondary text-ink-secondary">
 						<tr>
-							<th class="px-4 py-3 font-medium">Id</th>
-							<th class="px-4 py-3 font-medium">Username</th>
-							<th class="px-4 py-3 font-medium">Email</th>
-							<th class="px-4 py-3 font-medium">Role</th>
+							<th class="px-4 py-3 font-semibold">Id</th>
+							<th class="px-4 py-3 font-semibold">Username</th>
+							<th class="px-4 py-3 font-semibold">Email</th>
+							<th class="px-4 py-3 font-semibold">Role</th>
 							<th class="px-4 py-3"></th>
 						</tr>
 					</thead>
-					<tbody class="divide-y divide-accent/10">
+					<tbody class="divide-y divide-subtle">
 						{#each $users.data as user (user.id)}
-							<tr class="text-text">
-								<td class="px-4 py-3 text-text/70">{user.id}</td>
-								<td class="px-4 py-3">{user.username}</td>
-								<td class="px-4 py-3 text-text/70">{user.email ?? '—'}</td>
+							<tr class="text-ink transition-colors duration-fast hover:bg-surface-secondary">
+								<td class="px-4 py-3 text-ink-muted">{user.id}</td>
+								<td class="px-4 py-3 font-medium">{user.username}</td>
+								<td class="px-4 py-3 text-ink-secondary">{user.email ?? '—'}</td>
 								<td class="px-4 py-3">
-									<span class="rounded-full border border-accent/30 px-2 py-0.5 text-xs">
+									<span class={isFeaturedRole(user.role) ? 'chip chip-selected' : 'chip'}>
 										{roleLabel(user.role)}
 									</span>
 								</td>
@@ -95,9 +93,26 @@
 									{#if $auth.isAdmin}
 										<button
 											onclick={() => handleDelete(user)}
-											class="rounded-full border border-red-500/40 px-3 py-1 text-xs text-red-400 transition-colors hover:bg-red-500/10"
+											aria-label={`Delete ${user.username}`}
+											title="Delete user"
+											class="icon-button h-9 w-9 rounded-sm text-brand-red hover:border-brand-red"
 										>
-											Delete
+											<svg
+												xmlns="http://www.w3.org/2000/svg"
+												viewBox="0 0 24 24"
+												fill="none"
+												stroke="currentColor"
+												stroke-width="1.75"
+												stroke-linecap="round"
+												stroke-linejoin="round"
+												class="h-4 w-4"
+											>
+												<path d="M3 6h18" />
+												<path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+												<path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6" />
+												<path d="M10 11v6" />
+												<path d="M14 11v6" />
+											</svg>
 										</button>
 									{/if}
 								</td>
@@ -107,7 +122,7 @@
 				</table>
 			</div>
 		{:else}
-			<p class="text-text/60">No users found.</p>
+			<p class="text-ink-muted">No users found.</p>
 		{/if}
 	</div>
 </section>
