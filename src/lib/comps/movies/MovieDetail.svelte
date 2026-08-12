@@ -73,31 +73,31 @@
 </script>
 
 {#if $movie.isSuccess && $movie.data}
-	<section class="bg-primary">
+	<section class="bg-app">
 		<div class="container mx-auto px-5 py-10">
 			<div class="flex flex-col gap-8 lg:flex-row">
 				<div class="lg:w-1/3">
 					<img
 						src={$movie.data.posterUrl || $movie.data.base64Image || undefined}
 						alt={$movie.data.title ?? 'Movie poster'}
-						class="w-full rounded-lg object-cover shadow-lg"
+						class="w-full rounded-lg object-cover shadow-floating"
 					/>
 				</div>
 
 				<div class="lg:w-2/3">
 					<div class="mb-2 flex flex-wrap items-start justify-between gap-3">
-						<h1 class="text-3xl font-bold text-text">{$movie.data.title}</h1>
+						<h1 class="text-3xl font-bold text-ink">{$movie.data.title}</h1>
 						{#if $auth.isAdmin}
 							<div class="flex gap-2">
 								<button
 									onclick={() => (isNewMovieOpen = true)}
-									class="rounded-full border border-accent/40 px-4 py-1.5 text-sm text-text transition-colors hover:bg-accent/10"
+									class="rounded-full border border-strong px-4 py-1.5 text-sm text-ink transition-colors duration-fast hover:bg-surface-secondary"
 								>
 									Edit
 								</button>
 								<button
 									onclick={handleDelete}
-									class="rounded-full border border-red-500/40 px-4 py-1.5 text-sm text-red-400 transition-colors hover:bg-red-500/10"
+									class="rounded-full border border-brand-red/40 px-4 py-1.5 text-sm text-brand-red transition-colors duration-fast hover:bg-brand-red/10"
 								>
 									Delete
 								</button>
@@ -105,9 +105,9 @@
 						{/if}
 					</div>
 
-					<div class="mb-4 flex flex-wrap items-center gap-3 text-sm text-text/70">
+					<div class="mb-4 flex flex-wrap items-center gap-3 text-sm text-ink-secondary">
 						{#if $movie.data.imdbRating}
-							<span class="flex items-center gap-1 font-semibold text-accent">
+							<span class="flex items-center gap-1 font-semibold text-brand-gold">
 								★ {$movie.data.imdbRating}
 							</span>
 						{/if}
@@ -118,35 +118,35 @@
 						<span>{FormatParser.formatMinutesToHours($movie.data.duration)}</span>
 						{#if $movie.data.ageRating}
 							<span>&middot;</span>
-							<span class="rounded border border-accent/30 px-1.5 py-0.5 text-xs">{$movie.data.ageRating}</span>
+							<span class="rounded border border-subtle px-1.5 py-0.5 text-xs">{$movie.data.ageRating}</span>
 						{/if}
 					</div>
 
-					<p class="mb-6 leading-relaxed text-text/80">{$movie.data.description}</p>
+					<p class="mb-6 leading-relaxed text-ink-secondary">{$movie.data.description}</p>
 
 					<dl class="mb-6 grid grid-cols-1 gap-3 text-sm sm:grid-cols-2">
 						{#if $movie.data.director}
 							<div>
-								<dt class="text-text/50">Director</dt>
-								<dd class="text-text">{$movie.data.director}</dd>
+								<dt class="text-ink-muted">Director</dt>
+								<dd class="text-ink">{$movie.data.director}</dd>
 							</div>
 						{/if}
 						{#if $movie.data.cast}
 							<div>
-								<dt class="text-text/50">Cast</dt>
-								<dd class="text-text">{$movie.data.cast}</dd>
+								<dt class="text-ink-muted">Cast</dt>
+								<dd class="text-ink">{$movie.data.cast}</dd>
 							</div>
 						{/if}
 						{#if $movie.data.language}
 							<div>
-								<dt class="text-text/50">Language</dt>
-								<dd class="text-text">{$movie.data.language}</dd>
+								<dt class="text-ink-muted">Language</dt>
+								<dd class="text-ink">{$movie.data.language}</dd>
 							</div>
 						{/if}
 						{#if $movie.data.country}
 							<div>
-								<dt class="text-text/50">Country</dt>
-								<dd class="text-text">{$movie.data.country}</dd>
+								<dt class="text-ink-muted">Country</dt>
+								<dd class="text-ink">{$movie.data.country}</dd>
 							</div>
 						{/if}
 					</dl>
@@ -163,23 +163,20 @@
 						</div>
 					{/if}
 
-					<div class="rounded-lg border border-accent/15 bg-surface p-5">
-						<h2 class="mb-4 text-xl font-semibold text-text">Showtimes</h2>
+					<div class="card p-5">
+						<h2 class="mb-4 text-xl font-semibold text-ink">Showtimes</h2>
 
 						{#if $showtimes.isSuccess && sortedShowtimes.length > 0}
-							<div class="flex flex-col divide-y divide-accent/10">
+							<div class="flex flex-col divide-y divide-subtle">
 								{#each sortedShowtimes as st}
 									<div class="flex flex-wrap items-center justify-between gap-3 py-3">
 										<div>
-											<p class="text-text">{st.cinemaName} &middot; {st.hallName}</p>
-											<p class="text-sm text-text/60">{FormatParser.formatDateTime(st.startTime)}</p>
+											<p class="text-ink">{st.cinemaName} &middot; {st.hallName}</p>
+											<p class="text-sm text-ink-muted">{FormatParser.formatDateTime(st.startTime)}</p>
 										</div>
 										<div class="flex items-center gap-3">
-											<span class="text-accent">${st.price}</span>
-											<button
-												onclick={() => bookShowtime(st.id)}
-												class="rounded-full bg-accent px-4 py-1.5 text-sm font-medium text-primary transition-opacity hover:opacity-90"
-											>
+											<span class="font-semibold text-ink">${st.price}</span>
+											<button onclick={() => bookShowtime(st.id)} class="btn-primary min-h-0 py-1.5 text-sm">
 												Book
 											</button>
 										</div>
@@ -187,7 +184,7 @@
 								{/each}
 							</div>
 						{:else}
-							<p class="text-text/60">No showtimes scheduled yet.</p>
+							<p class="text-ink-muted">No showtimes scheduled yet.</p>
 						{/if}
 					</div>
 				</div>
