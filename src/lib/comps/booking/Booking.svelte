@@ -116,97 +116,122 @@
 	}
 </script>
 
-<section class="bg-primary">
-	<div class="container mx-auto px-5 py-10">
-		<h1 class="text-2xl font-semibold text-text sm:text-3xl">{$movie.data?.title}</h1>
-		<p class="mt-2 text-text/70">
+<section class="min-h-screen bg-app pb-28 sm:pb-32">
+	<div class="mx-auto max-w-6xl px-4 py-8 sm:px-6 sm:py-10 lg:px-8">
+		<h1 class="text-[clamp(28px,4vw,40px)] font-bold leading-[1.05] tracking-[-0.02em] text-ink">
+			{$movie.data?.title}
+		</h1>
+		<p class="mt-2 text-[15px] text-ink-secondary">
 			{$cinema.data?.name} &middot; {$hall.data?.name} &middot; {FormatParser.formatDateTime(
 				$showtime.data?.startTime
 			)}
 		</p>
-		<p class="text-sm text-text/50">{$cinema.data?.address}</p>
+		<p class="mt-1 text-xs font-medium text-ink-muted">{$cinema.data?.address}</p>
 
-		<div class="mt-8 flex flex-col gap-8 lg:flex-row">
-			<div class="rounded-lg border border-accent/15 bg-surface p-6 lg:flex-1">
-				<div
-					class="mb-8 py-3 text-center text-xs uppercase tracking-widest text-text/50 before:mr-6 before:inline-block before:w-1/4 before:border-t before:border-accent/30 after:ml-6 after:inline-block after:w-1/4 after:border-t after:border-accent/30"
-				>
-					Screen
+		<div class="mt-8 flex flex-col gap-6 lg:flex-row lg:gap-8">
+			<div class="card p-6 sm:p-8 lg:flex-1">
+				<div class="mx-auto mb-10 w-full max-w-xs sm:max-w-sm">
+					<div
+						class="h-1.5 w-full rounded-full bg-gradient-to-r from-transparent via-ink-muted/40 to-transparent"
+					></div>
+					<p class="mt-2 text-center text-xs font-semibold uppercase tracking-[0.3em] text-ink-muted">
+						Screen
+					</p>
 				</div>
 
 				{#if $seats.isSuccess}
-					<div class="flex flex-col items-center gap-2">
+					<div class="flex flex-col items-center gap-2.5">
 						{#each Object.keys(groupedByRow) as row}
 							<div class="flex w-full items-center justify-center gap-3">
-								<div class="w-6 text-right text-sm font-semibold text-text/50">{row}</div>
+								<div class="w-6 shrink-0 text-right text-xs font-semibold text-ink-muted">{row}</div>
 								<div class="flex flex-wrap justify-center gap-2">
 									{#each groupedByRow[row] as seat}
 										{@const isSelected = seat.id !== undefined && selectedSeatIds.includes(seat.id)}
 										<button
-											aria-label={`Seat ${row}${seat.seatNumber}`}
+											type="button"
+											aria-label={`Seat ${row}${seat.seatNumber}${seat.isReserved ? ', reserved' : isSelected ? ', selected' : ', available'}`}
+											aria-pressed={isSelected}
 											onclick={() => toggleSeat(seat)}
 											disabled={seat.isReserved}
-											class="flex h-8 w-8 items-center justify-center rounded border text-xs font-medium transition-colors {seat.isReserved
-												? 'cursor-not-allowed border-red-500/40 bg-red-500/15 text-red-400'
+											class="relative flex h-9 w-9 items-center justify-center rounded-xs text-xs font-semibold transition-all duration-fast {seat.isReserved
+												? 'cursor-not-allowed border border-transparent bg-brand-charcoal text-white/80'
 												: isSelected
-													? 'border-accent bg-accent text-primary'
-													: 'border-accent/30 text-text hover:border-accent'}"
+													? 'scale-105 border-2 border-brand-gold bg-brand-gold text-on-accent shadow-soft'
+													: 'border border-strong text-ink-secondary hover:border-brand-gold hover:text-ink'}"
 										>
 											{seat.seatNumber}
+											{#if isSelected}
+												<span
+													class="absolute -right-1.5 -top-1.5 flex h-4 w-4 items-center justify-center rounded-full bg-brand-charcoal text-white"
+												>
+													<svg
+														viewBox="0 0 24 24"
+														fill="none"
+														stroke="currentColor"
+														stroke-width="2.5"
+														stroke-linecap="round"
+														stroke-linejoin="round"
+														class="h-2.5 w-2.5"
+													>
+														<polyline points="20 6 9 17 4 12"></polyline>
+													</svg>
+												</span>
+											{/if}
 										</button>
 									{/each}
 								</div>
-								<div class="w-6 text-left text-sm font-semibold text-text/50">{row}</div>
+								<div class="w-6 shrink-0 text-left text-xs font-semibold text-ink-muted">{row}</div>
 							</div>
 						{/each}
 					</div>
 
-					<div class="mt-8 flex flex-wrap items-center justify-center gap-6 text-sm text-text/70">
+					<div class="mt-8 flex flex-wrap items-center justify-center gap-x-6 gap-y-3 text-xs font-medium text-ink-secondary">
 						<span class="flex items-center gap-2">
-							<span class="h-4 w-4 rounded border border-accent/30"></span>
+							<span class="h-4 w-4 rounded-xs border border-strong"></span>
 							Available
 						</span>
 						<span class="flex items-center gap-2">
-							<span class="h-4 w-4 rounded bg-accent"></span>
+							<span class="h-4 w-4 rounded-xs border-2 border-brand-gold bg-brand-gold"></span>
 							Selected
 						</span>
 						<span class="flex items-center gap-2">
-							<span class="h-4 w-4 rounded border border-red-500/40 bg-red-500/15"></span>
-							Booked
+							<span class="h-4 w-4 rounded-xs bg-brand-charcoal"></span>
+							Reserved
 						</span>
 					</div>
 				{:else}
-					<p class="text-text/60">Loading seats...</p>
+					<p class="py-10 text-center text-ink-muted">Loading seats...</p>
 				{/if}
 			</div>
 
-			<div class="h-fit rounded-lg border border-accent/15 bg-surface p-6 lg:w-80">
-				<h2 class="mb-4 text-lg font-semibold text-text">Order summary</h2>
-				<div class="flex items-center justify-between text-sm text-text/70">
+			<aside class="card h-fit p-6 lg:w-80">
+				<h2 class="text-[16px] font-semibold leading-[1.3] text-ink">Order summary</h2>
+				<div class="mt-4 flex items-center justify-between text-[15px] text-ink-secondary">
 					<span>Seats selected</span>
-					<span class="text-text">{selectedSeatIds.length}</span>
+					<span class="font-medium text-ink">{selectedSeatIds.length}</span>
 				</div>
-				<div class="mt-2 flex items-center justify-between text-sm text-text/70">
+				<div class="mt-2 flex items-center justify-between text-[15px] text-ink-secondary">
 					<span>Price per seat</span>
-					<span class="text-text">${$showtime.data?.price ?? 0}</span>
+					<span class="font-medium text-ink">${$showtime.data?.price ?? 0}</span>
 				</div>
-				<div class="mt-4 flex items-center justify-between border-t border-accent/15 pt-4 text-base font-semibold">
-					<span class="text-text">Total</span>
-					<span class="text-accent">${totalPrice}</span>
-				</div>
+			</aside>
+		</div>
+	</div>
 
+	<div class="bottom-action">
+		<div class="mx-auto flex w-full max-w-6xl items-center justify-between gap-4">
+			<div>
 				{#if selectionError}
-					<p class="mt-3 text-sm text-red-400">{selectionError}</p>
+					<p class="text-xs font-semibold text-brand-red">{selectionError}</p>
+				{:else}
+					<p class="text-xs font-medium uppercase tracking-wide text-ink-muted">Total</p>
 				{/if}
-
-				<button
-					onclick={confirm}
-					disabled={$confirmMutation.isPending}
-					class="mt-6 w-full rounded-full bg-accent px-4 py-2.5 font-medium text-primary transition-opacity hover:opacity-90 disabled:opacity-50"
-				>
-					{$confirmMutation.isPending ? 'Confirming...' : 'Confirm booking'}
-				</button>
+				<p class="text-[28px] font-bold leading-none tracking-[-0.02em] text-ink">${totalPrice}</p>
 			</div>
+
+			<button onclick={confirm} disabled={$confirmMutation.isPending} class="btn-primary">
+				{$confirmMutation.isPending ? 'Confirming...' : 'Confirm booking'}
+			</button>
 		</div>
 	</div>
 </section>
