@@ -37,7 +37,13 @@
 		{ href: '/about', label: 'About' }
 	];
 
-	const adminLinks = [{ href: '/users', label: 'Users' }];
+	const adminLinks = [
+		{ href: '/users', label: 'Users', adminOnly: false },
+		// Analytics is Admin-only on the backend (no Viewer access), unlike the other admin-panel links.
+		{ href: '/analytics', label: 'Analytics', adminOnly: true }
+	];
+
+	const visibleAdminLinks = $derived(adminLinks.filter((link) => !link.adminOnly || $auth.isAdmin));
 
 	function closeMobileMenu() {
 		mobileMenuOpen = false;
@@ -77,7 +83,7 @@
 				</a>
 			{/each}
 			{#if canAccessAdminPanel}
-				{#each adminLinks as link (link.href)}
+				{#each visibleAdminLinks as link (link.href)}
 					<a
 						href={link.href}
 						class="relative py-1 transition-colors duration-fast {isActive(link.href)
@@ -161,7 +167,7 @@
 				</a>
 			{/each}
 			{#if canAccessAdminPanel}
-				{#each adminLinks as link (link.href)}
+				{#each visibleAdminLinks as link (link.href)}
 					<a
 						href={link.href}
 						onclick={closeMobileMenu}
