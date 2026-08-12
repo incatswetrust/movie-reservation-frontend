@@ -6,7 +6,7 @@
 	type="button"
 	aria-label="Toggle color theme"
 	on:click={() => theme.toggle()}
-	class="rounded-full p-2 text-text transition-colors hover:bg-surface"
+	class="icon-button"
 >
 	{#if $theme === 'dark'}
 		<svg
