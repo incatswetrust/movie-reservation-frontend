@@ -31,8 +31,9 @@
 	const showtimes = createQuery<ShowtimeReadDto[]>({
 		queryKey: ['showtimes'],
 		queryFn: async () => {
-			const response = await api.showtimes.showtimesList();
-			return response.data;
+			// Only used to count showtimes per hall client-side — ask for enough to cover it.
+			const response = await api.showtimes.showtimesList({ page: 1, pageSize: 1000 });
+			return response.data.items ?? [];
 		}
 	});
 

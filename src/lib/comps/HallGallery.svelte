@@ -5,7 +5,7 @@
 		isAdmin = false,
 		onDelete
 	}: {
-		images: { id?: number; url?: string | null }[];
+		images: { id?: number; url?: string | null; base64Image?: string | null }[];
 		altText?: string;
 		isAdmin?: boolean;
 		onDelete?: (id: number) => void;
@@ -50,7 +50,7 @@
 				<div
 					class="group relative aspect-video w-full shrink-0 snap-start overflow-hidden rounded-xl bg-surface-secondary"
 				>
-					<img src={image.url ?? undefined} alt={altText} class="h-full w-full object-cover" />
+					<img src={image.url ?? image.base64Image ?? undefined} alt={altText} class="h-full w-full object-cover" />
 					{#if isAdmin && image.id !== undefined}
 						<button
 							aria-label="Delete image"
@@ -119,7 +119,7 @@
 							: 'border-subtle hover:border-strong'}"
 					>
 						<img
-							src={image.url ?? undefined}
+							src={image.url ?? image.base64Image ?? undefined}
 							alt={`${altText} thumbnail ${i + 1}`}
 							class="h-full w-full object-cover"
 						/>

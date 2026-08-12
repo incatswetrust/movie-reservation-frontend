@@ -40,15 +40,24 @@
 	}
 
 	let isNewShowtimeOpen = $state(false);
+	let editingShowtime = $state<ShowtimeReadDto | null>(null);
+
+	function openCreate() {
+		editingShowtime = null;
+		isNewShowtimeOpen = true;
+	}
+
+	function openEdit(showtime: ShowtimeReadDto) {
+		editingShowtime = showtime;
+		isNewShowtimeOpen = true;
+	}
 </script>
 
 <section>
 	<div class="mb-4 flex flex-wrap items-center justify-between gap-4">
 		<h2 class="text-lg font-bold text-ink">Showtimes</h2>
 		{#if $auth.isAdmin}
-			<button onclick={() => (isNewShowtimeOpen = true)} class="btn-primary text-sm">
-				+ Add showtime
-			</button>
+			<button onclick={openCreate} class="btn-primary text-sm"> + Add showtime </button>
 		{/if}
 	</div>
 
@@ -71,6 +80,12 @@
 							<span class="font-bold text-brand-gold">${showtime.price}</span>
 							{#if $auth.isAdmin}
 								<button
+									onclick={() => openEdit(showtime)}
+									class="rounded-full border border-subtle px-3 py-1 text-xs text-ink-secondary transition-colors duration-fast hover:bg-surface-secondary"
+								>
+									Edit
+								</button>
+								<button
 									onclick={() => handleDelete(showtime.id)}
 									class="rounded-full border border-brand-red/40 px-3 py-1 text-xs text-brand-red transition-colors duration-fast hover:bg-brand-red/10"
 								>
@@ -87,4 +102,4 @@
 	{/if}
 </section>
 
-<NewShowtimeByHall HallId={HallId} bind:IsOpenned={isNewShowtimeOpen} />
+<NewShowtimeByHall HallId={HallId} bind:IsOpenned={isNewShowtimeOpen} bind:editingShowtime />

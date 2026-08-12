@@ -26,6 +26,42 @@
 		}
 	});
 
+	let searchInput = $state('');
+	let debouncedSearch = $state('');
+	let searchTimer: ReturnType<typeof setTimeout>;
+
+	function onSearchInput() {
+		clearTimeout(searchTimer);
+		searchTimer = setTimeout(() => {
+			debouncedSearch = searchInput.trim();
+		}, 350);
+	}
+
+	let searchResults = $state<CinemaReadDto[] | null>(null);
+	let isSearching = $state(false);
+
+	$effect(() => {
+		if (debouncedSearch.length === 0) {
+			searchResults = null;
+			return;
+		}
+		isSearching = true;
+		api.cinemas
+			.cinemasSearchList({ q: debouncedSearch })
+			.then((response) => {
+				searchResults = response.data;
+			})
+			.finally(() => {
+				isSearching = false;
+			});
+	});
+
+	let displayedCinemas = $derived(
+		debouncedSearch.length > 0 ? (searchResults ?? []) : ($cinemas.data ?? [])
+	);
+
+	let isBusy = $derived(debouncedSearch.length > 0 ? isSearching : $cinemas.isFetching);
+
 	let isNewCinemaOpen = $state(false);
 
 	function handleEdit(cinema: CinemaReadDto) {
@@ -57,13 +93,25 @@
 			{/if}
 		</div>
 
+		<div class="mb-8">
+			<input
+				bind:value={searchInput}
+				oninput={onSearchInput}
+				type="search"
+				placeholder="Search by name or address..."
+				class="input max-w-md"
+			/>
+		</div>
+
 		{#if $cinemas.isLoading}
 			<p class="text-ink-muted">Loading cinemas...</p>
 		{:else if $cinemas.isError}
 			<p class="text-brand-red">Failed to load cinemas.</p>
-		{:else if $cinemas.data && $cinemas.data.length > 0}
+		{:else if isBusy}
+			<p class="text-ink-muted">Searching...</p>
+		{:else if displayedCinemas.length > 0}
 			<div class="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-				{#each $cinemas.data as cinema (cinema.id)}
+				{#each displayedCinemas as cinema (cinema.id)}
 					<CinemaCard {cinema} isAdmin={$auth.isAdmin} onEdit={handleEdit} onDelete={handleDelete} />
 				{/each}
 			</div>

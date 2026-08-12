@@ -8,8 +8,10 @@
 	const allShowtimes = createQuery<ShowtimeReadDto[]>({
 		queryKey: ['showtimes'],
 		queryFn: async () => {
-			const response = await api.showtimes.showtimesList();
-			return response.data;
+			// This view filters client-side across the whole set (no pager UI here), so ask
+			// for a page large enough to cover it rather than just the first 20.
+			const response = await api.showtimes.showtimesList({ page: 1, pageSize: 1000 });
+			return response.data.items ?? [];
 		}
 	});
 
