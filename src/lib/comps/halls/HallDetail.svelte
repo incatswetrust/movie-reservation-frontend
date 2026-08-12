@@ -126,15 +126,17 @@
 </script>
 
 {#if $hall.isSuccess && $hall.data}
-	<div class="mx-auto max-w-5xl px-5 py-10">
+	<div class="mx-auto max-w-5xl px-5 py-10 sm:px-8">
 		<div class="mb-2 flex flex-wrap items-center gap-2">
 			{#if !editNameMode}
-				<h1 class="text-2xl font-semibold text-text sm:text-3xl">{$hall.data.name}</h1>
+				<h1 class="text-[clamp(28px,4vw,44px)] font-bold leading-[1.05] tracking-tight text-ink">
+					{$hall.data.name}
+				</h1>
 				{#if $auth.isAdmin}
 					<button
 						aria-label="Edit hall name"
 						onclick={() => (editNameMode = true)}
-						class="rounded-full p-1.5 text-text/60 transition-colors hover:text-accent"
+						class="grid h-9 w-9 place-items-center rounded-full text-ink-muted transition-colors duration-fast hover:text-ink"
 					>
 						<svg
 							xmlns="http://www.w3.org/2000/svg"
@@ -152,33 +154,19 @@
 					</button>
 				{/if}
 			{:else}
-				<input
-					bind:value={hallNameDraft}
-					type="text"
-					class="rounded border border-accent/30 bg-transparent px-3 py-1.5 text-text focus:border-accent focus:outline-none"
-				/>
-				<button
-					onclick={() => $updateMutation.mutate()}
-					class="rounded bg-accent px-3 py-1.5 text-sm font-medium text-primary transition-opacity hover:opacity-90"
-				>
-					Save
-				</button>
-				<button
-					onclick={() => (editNameMode = false)}
-					class="rounded border border-accent/30 px-3 py-1.5 text-sm text-text transition-colors hover:bg-accent/10"
-				>
-					Cancel
-				</button>
+				<input bind:value={hallNameDraft} type="text" class="input max-w-xs" />
+				<button onclick={() => $updateMutation.mutate()} class="btn-primary">Save</button>
+				<button onclick={() => (editNameMode = false)} class="btn-secondary">Cancel</button>
 			{/if}
 		</div>
-		<div class="mb-8 h-1 w-16 rounded bg-accent"></div>
-		<p class="mb-8 text-text/70">{$hall.data.seats?.length ?? 0} seats</p>
+		<div class="mb-8 h-1 w-16 rounded-full bg-brand-gold"></div>
+		<p class="mb-8 text-[15px] text-ink-secondary">{$hall.data.seats?.length ?? 0} seats</p>
 
 		<!-- Gallery -->
 		<section class="mb-10">
-			<h2 class="mb-3 text-lg font-semibold text-text">Gallery</h2>
+			<h2 class="mb-3 text-xl font-bold text-ink">Gallery</h2>
 			{#if $images.isLoading}
-				<p class="text-sm text-text/60">Loading images...</p>
+				<p class="text-sm text-ink-muted">Loading images...</p>
 			{:else}
 				<HallGallery
 					images={$images.data ?? []}
@@ -189,19 +177,21 @@
 			{/if}
 
 			{#if $auth.isAdmin}
-				<div class="mt-4 flex flex-wrap items-end gap-3 rounded-lg border border-accent/10 bg-surface p-4">
+				<div class="card mt-4 flex flex-wrap items-end gap-3 p-4">
 					<div class="min-w-[200px] flex-1">
-						<label for="image-url" class="mb-1 block text-xs text-text/60">Image URL</label>
+						<label for="image-url" class="mb-1 block text-xs font-medium text-ink-muted"
+							>Image URL</label
+						>
 						<input
 							id="image-url"
 							bind:value={imageUrlDraft}
 							type="text"
 							placeholder="https://..."
-							class="w-full rounded border border-accent/30 bg-transparent px-3 py-1.5 text-sm text-text placeholder-text/40 focus:border-accent focus:outline-none"
+							class="input"
 						/>
 					</div>
 					<label
-						class="cursor-pointer rounded border border-dashed border-accent/40 px-3 py-1.5 text-sm text-text/70 transition-colors hover:border-accent"
+						class="flex min-h-[48px] cursor-pointer items-center rounded-2xl border border-dashed border-strong px-4 text-sm text-ink-secondary transition-colors duration-fast hover:border-brand-gold"
 					>
 						<input
 							type="file"
@@ -211,12 +201,7 @@
 						/>
 						{imageFileBase64 ? 'File selected' : 'Choose file'}
 					</label>
-					<button
-						onclick={uploadImage}
-						class="rounded bg-accent px-4 py-1.5 text-sm font-medium text-primary transition-opacity hover:opacity-90"
-					>
-						Upload
-					</button>
+					<button onclick={uploadImage} class="btn-primary">Upload</button>
 				</div>
 			{/if}
 		</section>
@@ -224,18 +209,21 @@
 		<!-- Seat plan -->
 		<section class="mb-10">
 			<div
-				class="flex items-center py-3 text-sm uppercase tracking-wide text-text/50 before:me-6 before:flex-1 before:border-2 before:border-accent/30 after:ms-6 after:flex-1 after:border-2 after:border-accent/30"
+				class="flex items-center py-3 text-xs font-medium uppercase tracking-wide text-ink-muted before:me-6 before:flex-1 before:border-t-2 before:border-subtle after:ms-6 after:flex-1 after:border-t-2 after:border-subtle"
 			>
 				Screen
 			</div>
 
 			{#each Object.keys(groupedByRow) as row}
 				<div class="mb-2 flex items-center">
-					<div class="mr-4 flex w-6 justify-end font-bold text-text/50">{row}</div>
+					<div class="mr-4 flex w-6 justify-end text-sm font-bold text-ink-muted">{row}</div>
 					<div class="flex flex-1 justify-between">
 						{#each groupedByRow[row] as seat}
 							<div
-								class="flex h-8 w-8 items-center justify-center border border-accent/30 text-sm text-text/70"
+								class="flex h-8 w-8 items-center justify-center rounded-sm border text-xs font-medium transition-colors duration-fast {seat.isReserved
+									? 'border-ink/10 bg-ink text-app'
+									: 'border-dashed border-subtle text-ink-secondary'}"
+								title={seat.isReserved ? 'Reserved' : 'Available'}
 							>
 								{seat.seatNumber}
 							</div>
@@ -243,7 +231,9 @@
 					</div>
 				</div>
 			{/each}
-			<div class="py-3 before:flex-1 before:border-2 before:border-accent/30 after:flex-1 after:border-2 after:border-accent/30"></div>
+			<div
+				class="py-3 before:flex-1 before:border-t-2 before:border-subtle after:flex-1 after:border-t-2 after:border-subtle"
+			></div>
 		</section>
 
 		<ShowTimeByHallTable HallId={Id} />
