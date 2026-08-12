@@ -72,15 +72,8 @@
 </script>
 
 <div class="mb-8 flex flex-wrap gap-3">
-	<input
-		bind:value={dateFilter}
-		type="date"
-		class="rounded border border-accent/30 bg-surface px-3 py-2 text-text transition-colors focus:border-accent focus:outline-none"
-	/>
-	<select
-		bind:value={cinemaFilter}
-		class="rounded border border-accent/30 bg-surface px-3 py-2 text-text transition-colors focus:border-accent focus:outline-none"
-	>
+	<input bind:value={dateFilter} type="date" class="input sm:max-w-[200px]" />
+	<select bind:value={cinemaFilter} class="input sm:max-w-[220px]">
 		<option value="">All cinemas</option>
 		{#each cinemas as cinema}
 			<option value={cinema}>{cinema}</option>
@@ -89,27 +82,24 @@
 </div>
 
 {#if $allShowtimes.isError}
-	<p class="text-red-400">Failed to load showtimes.</p>
+	<p class="text-brand-red">Failed to load showtimes.</p>
 {:else if $allShowtimes.isLoading || isLoadingDate}
-	<p class="text-text/60">Loading showtimes...</p>
+	<p class="text-ink-muted">Loading showtimes...</p>
 {:else if groupedByDate.length > 0}
 	<div class="flex flex-col gap-8">
 		{#each groupedByDate as [date, items]}
 			<div>
-				<h2 class="mb-3 text-lg font-semibold text-text">{date}</h2>
+				<h2 class="mb-3 text-xl font-bold text-ink">{date}</h2>
 				<div class="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
 					{#each items as st}
-						<div class="flex flex-col gap-2 rounded-lg border border-accent/15 bg-surface p-4">
-							<h3 class="font-semibold text-text">{st.movieName}</h3>
-							<p class="text-sm text-text/70">{st.cinemaName} &middot; {st.hallName}</p>
+						<div class="card flex flex-col gap-2 p-4">
+							<h3 class="font-semibold text-ink">{st.movieName}</h3>
+							<p class="text-sm text-ink-secondary">{st.cinemaName} &middot; {st.hallName}</p>
 							<div class="mt-1 flex items-center justify-between">
-								<span class="text-sm text-text/80">{FormatParser.formatDateTime(st.startTime)}</span>
-								<span class="text-accent">${st.price}</span>
+								<span class="text-sm text-ink-secondary">{FormatParser.formatDateTime(st.startTime)}</span>
+								<span class="font-bold text-brand-gold">${st.price}</span>
 							</div>
-							<button
-								onclick={() => bookShowtime(st.id)}
-								class="mt-2 rounded-full bg-accent px-4 py-1.5 text-sm font-medium text-primary transition-opacity hover:opacity-90"
-							>
+							<button onclick={() => bookShowtime(st.id)} class="btn-primary mt-2 w-full text-sm">
 								Book
 							</button>
 						</div>
@@ -119,5 +109,5 @@
 		{/each}
 	</div>
 {:else}
-	<p class="text-text/60">No showtimes found.</p>
+	<p class="text-ink-muted">No showtimes found.</p>
 {/if}

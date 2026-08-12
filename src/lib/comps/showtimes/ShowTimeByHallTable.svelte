@@ -44,36 +44,35 @@
 
 <section>
 	<div class="mb-4 flex flex-wrap items-center justify-between gap-4">
-		<h2 class="text-lg font-semibold text-text">Showtimes</h2>
+		<h2 class="text-lg font-bold text-ink">Showtimes</h2>
 		{#if $auth.isAdmin}
-			<button
-				onclick={() => (isNewShowtimeOpen = true)}
-				class="rounded-full bg-accent px-4 py-1.5 text-sm font-medium text-primary transition-opacity hover:opacity-90"
-			>
+			<button onclick={() => (isNewShowtimeOpen = true)} class="btn-primary text-sm">
 				+ Add showtime
 			</button>
 		{/if}
 	</div>
 
 	{#if $showtimes.isLoading}
-		<p class="text-text/60">Loading showtimes...</p>
+		<p class="text-ink-muted">Loading showtimes...</p>
 	{:else if $showtimes.isError}
-		<p class="text-red-400">Failed to load showtimes.</p>
+		<p class="text-brand-red">Failed to load showtimes.</p>
 	{:else if $showtimes.data && $showtimes.data.length > 0}
-		<div class="rounded-lg border border-accent/15 bg-surface">
-			<div class="flex flex-col divide-y divide-accent/10">
+		<div class="card">
+			<div class="flex flex-col divide-y divide-subtle">
 				{#each $showtimes.data as showtime (showtime.id)}
-					<div class="flex flex-wrap items-center justify-between gap-3 p-4">
+					<div
+						class="flex flex-wrap items-center justify-between gap-3 p-4 transition-colors duration-fast hover:bg-surface-secondary"
+					>
 						<div>
-							<p class="text-text">{showtime.movieName}</p>
-							<p class="text-sm text-text/60">{FormatParser.formatDateTime(showtime.startTime)}</p>
+							<p class="font-medium text-ink">{showtime.movieName}</p>
+							<p class="text-sm text-ink-muted">{FormatParser.formatDateTime(showtime.startTime)}</p>
 						</div>
 						<div class="flex items-center gap-3">
-							<span class="text-accent">${showtime.price}</span>
+							<span class="font-bold text-brand-gold">${showtime.price}</span>
 							{#if $auth.isAdmin}
 								<button
 									onclick={() => handleDelete(showtime.id)}
-									class="rounded-full border border-red-500/40 px-3 py-1 text-xs text-red-400 transition-colors hover:bg-red-500/10"
+									class="rounded-full border border-brand-red/40 px-3 py-1 text-xs text-brand-red transition-colors duration-fast hover:bg-brand-red/10"
 								>
 									Delete
 								</button>
@@ -84,7 +83,7 @@
 			</div>
 		</div>
 	{:else}
-		<p class="text-text/60">No showtimes scheduled for this hall yet.</p>
+		<p class="text-ink-muted">No showtimes scheduled for this hall yet.</p>
 	{/if}
 </section>
 
