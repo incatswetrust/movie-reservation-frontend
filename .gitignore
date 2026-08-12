@@ -21,3 +21,6 @@ Thumbs.db
 # Vite
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
+
+# Design reference (not for commit)
+cinematic_entertainment_light_dark_design_system.md

@@ -40,28 +40,27 @@
 	}
 </script>
 
-<section class="bg-primary">
-	<div class="container mx-auto px-5 py-10">
+<section class="bg-app">
+	<div class="container mx-auto px-5 py-10 sm:px-8 lg:px-10">
 		<div class="mb-10 flex flex-wrap items-end justify-between gap-4">
 			<div>
-				<h1 class="text-2xl font-semibold text-text sm:text-3xl">Cinemas</h1>
-				<div class="mt-2 h-1 w-16 rounded bg-accent"></div>
-				<p class="mt-3 text-text/70">Find a cinema near you and browse its halls.</p>
+				<h1 class="text-[clamp(28px,4vw,44px)] font-bold leading-[1.05] tracking-tight text-ink">
+					Cinemas
+				</h1>
+				<div class="mt-3 h-1 w-16 rounded-full bg-brand-gold"></div>
+				<p class="mt-3 text-[15px] text-ink-secondary">
+					Find a cinema near you and browse its halls.
+				</p>
 			</div>
 			{#if $auth.isAdmin}
-				<button
-					onclick={() => (isNewCinemaOpen = true)}
-					class="rounded-full bg-accent px-5 py-2 text-sm font-medium text-primary transition-opacity hover:opacity-90"
-				>
-					+ Add cinema
-				</button>
+				<button onclick={() => (isNewCinemaOpen = true)} class="btn-primary">+ Add cinema</button>
 			{/if}
 		</div>
 
 		{#if $cinemas.isLoading}
-			<p class="text-text/60">Loading cinemas...</p>
+			<p class="text-ink-muted">Loading cinemas...</p>
 		{:else if $cinemas.isError}
-			<p class="text-red-400">Failed to load cinemas.</p>
+			<p class="text-brand-red">Failed to load cinemas.</p>
 		{:else if $cinemas.data && $cinemas.data.length > 0}
 			<div class="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
 				{#each $cinemas.data as cinema (cinema.id)}
@@ -69,7 +68,7 @@
 				{/each}
 			</div>
 		{:else}
-			<p class="text-text/60">No cinemas yet.</p>
+			<p class="text-ink-muted">No cinemas yet.</p>
 		{/if}
 	</div>
 </section>

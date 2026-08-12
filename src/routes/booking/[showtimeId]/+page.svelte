@@ -15,4 +15,6 @@
 
 {#if isReady}
 	<Booking Id={data.id} />
+{:else}
+	<div class="min-h-screen bg-app"></div>
 {/if}

@@ -17,24 +17,24 @@
 
 <a
 	href={`/movies/${movie.id}`}
-	class="group relative block aspect-[2/3] w-full shrink-0 overflow-hidden rounded-lg bg-surface"
+	class="group relative block aspect-[2/3] w-full shrink-0 overflow-hidden rounded-lg bg-surface shadow-card transition-all duration-fast hover:-translate-y-0.5 hover:shadow-floating"
 >
 	<img
 		src={movie.posterUrl || movie.base64Image || undefined}
 		alt={movie.title ?? 'Movie poster'}
-		class="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+		class="h-full w-full object-cover transition-transform duration-slow group-hover:scale-105"
 	/>
 
 	{#if movie.imdbRating}
 		<span
-			class="absolute left-2 top-2 rounded-full bg-black/70 px-2 py-0.5 text-xs font-semibold text-accent"
+			class="absolute left-2 top-2 inline-flex items-center gap-1 rounded-full border border-subtle bg-elevated/90 px-2 py-0.5 text-xs font-semibold text-brand-gold shadow-soft backdrop-blur-sm"
 		>
 			★ {movie.imdbRating}
 		</span>
 	{/if}
 
 	{#if isAdmin}
-		<div class="absolute right-2 top-2 flex gap-1 opacity-0 transition-opacity group-hover:opacity-100">
+		<div class="absolute right-2 top-2 flex gap-1 opacity-0 transition-opacity duration-fast group-hover:opacity-100">
 			<button
 				aria-label="Edit movie"
 				onclick={(e) => {
@@ -42,7 +42,7 @@
 					e.stopPropagation();
 					onEdit?.(movie);
 				}}
-				class="rounded-full bg-black/70 p-1.5 text-white transition-colors hover:text-accent"
+				class="rounded-full border border-subtle bg-elevated/90 p-1.5 text-ink shadow-soft backdrop-blur-sm transition-colors duration-fast hover:text-brand-gold"
 			>
 				<svg
 					xmlns="http://www.w3.org/2000/svg"
@@ -65,7 +65,7 @@
 					e.stopPropagation();
 					onDelete?.(movie);
 				}}
-				class="rounded-full bg-black/70 p-1.5 text-white transition-colors hover:text-red-400"
+				class="rounded-full border border-subtle bg-elevated/90 p-1.5 text-ink shadow-soft backdrop-blur-sm transition-colors duration-fast hover:text-brand-red"
 			>
 				<svg
 					xmlns="http://www.w3.org/2000/svg"
@@ -86,11 +86,9 @@
 		</div>
 	{/if}
 
-	<div
-		class="absolute inset-0 flex flex-col justify-end bg-gradient-to-t from-black/90 via-black/20 to-transparent p-4 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
-	>
-		<h3 class="font-semibold text-white">{movie.title}</h3>
-		<p class="text-xs text-white/80">
+	<div class="media-overlay absolute inset-0 flex flex-col justify-end p-4">
+		<h3 class="truncate font-semibold text-white">{movie.title}</h3>
+		<p class="truncate text-xs text-white/80">
 			{movie.releaseYear} &middot; {movie.genre} &middot; {FormatParser.formatMinutesToHours(movie.duration)}
 		</p>
 	</div>

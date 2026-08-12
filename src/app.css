@@ -4,20 +4,130 @@
 
 @import 'checkbox-neon.css';
 
+/*
+  Cinematic Entertainment UI — Light & Dark Design System
+  Neutral surfaces + vivid accents: red = action, gold = selection.
+*/
 :root {
-	--color-primary: 245 245 245;
-	--color-surface: 255 255 255;
-	--color-accent: 232 184 109;
-	--color-text: 17 17 17;
+	/* Backgrounds */
+	--bg-app: 246 246 247; /* #F6F6F7 */
+	--bg-surface: 255 255 255; /* #FFFFFF */
+	--bg-surface-secondary: 241 242 244; /* #F1F2F4 */
+	--bg-elevated: 255 255 255; /* #FFFFFF */
+
+	/* Text */
+	--text-primary: 30 30 34; /* #1E1E22 */
+	--text-secondary: 91 92 99; /* #5B5C63 */
+	--text-muted: 141 142 150; /* #8D8E96 */
+	--text-disabled: 185 186 193; /* #B9BAC1 */
+	--text-on-accent: 17 17 17; /* #111111 */
+
+	/* Brand */
+	--brand-red: 240 0 0; /* #F00000 */
+	--brand-gold: 247 187 14; /* #F7BB0E */
+	--brand-charcoal: 41 40 44; /* #29282C */
+
+	/* Borders */
+	--border-subtle: rgba(41, 40, 44, 0.08);
+	--border-default: rgba(41, 40, 44, 0.12);
+	--border-strong: rgba(41, 40, 44, 0.22);
+
+	/* Shadows */
+	--shadow-soft: 0 12px 30px rgba(0, 0, 0, 0.08);
+	--shadow-card: 0 10px 25px rgba(0, 0, 0, 0.1);
+	--shadow-floating: 0 16px 36px rgba(0, 0, 0, 0.12);
 }
 
 .dark {
-	--color-primary: 15 15 15;
-	--color-surface: 26 26 26;
-	--color-accent: 232 184 109;
-	--color-text: 245 245 245;
+	/* Backgrounds */
+	--bg-app: 18 18 22; /* #121216 */
+	--bg-surface: 26 26 31; /* #1A1A1F */
+	--bg-surface-secondary: 34 34 40; /* #222228 */
+	--bg-elevated: 41 40 44; /* #29282C */
+
+	/* Text */
+	--text-primary: 255 255 255;
+	--text-secondary: 201 202 209; /* #C9CAD1 */
+	--text-muted: 141 142 150; /* #8D8E96 */
+	--text-disabled: 95 96 104; /* #5F6068 */
+	--text-on-accent: 17 17 17; /* #111111 */
+
+	/* Brand */
+	--brand-red: 240 0 0;
+	--brand-gold: 247 187 14;
+	--brand-charcoal: 41 40 44;
+
+	/* Borders */
+	--border-subtle: rgba(255, 255, 255, 0.06);
+	--border-default: rgba(255, 255, 255, 0.1);
+	--border-strong: rgba(255, 255, 255, 0.18);
+
+	/* Shadows */
+	--shadow-soft: 0 16px 40px rgba(0, 0, 0, 0.35);
+	--shadow-card: 0 18px 44px rgba(0, 0, 0, 0.45);
+	--shadow-floating: 0 20px 50px rgba(0, 0, 0, 0.55);
 }
 
 body {
 	font-family: 'Inter', ui-sans-serif, system-ui, sans-serif;
+	background-color: rgb(var(--bg-app));
+	color: rgb(var(--text-primary));
+	transition:
+		background-color 180ms ease,
+		color 180ms ease;
+}
+
+@layer components {
+	/* Buttons */
+	.btn-primary {
+		@apply inline-flex min-h-[48px] items-center justify-center gap-2 rounded-2xl bg-brand-red px-6 font-bold text-white transition-all duration-fast hover:brightness-110 active:scale-[0.98] disabled:pointer-events-none disabled:opacity-40;
+	}
+	.btn-selected {
+		@apply inline-flex min-h-[44px] items-center justify-center gap-2 rounded-xl bg-brand-gold px-5 font-semibold text-on-accent transition-all duration-fast active:scale-[0.98];
+	}
+	.btn-secondary {
+		@apply inline-flex min-h-[48px] items-center justify-center gap-2 rounded-2xl border border-subtle bg-surface-secondary px-6 font-semibold text-ink transition-all duration-fast hover:border-strong active:scale-[0.98] disabled:pointer-events-none disabled:opacity-40;
+	}
+
+	/* Cards */
+	.card {
+		@apply rounded-lg border border-subtle bg-surface shadow-card;
+	}
+	.card-secondary {
+		@apply rounded-md bg-surface-secondary;
+	}
+	.card-floating {
+		@apply rounded-xl bg-elevated shadow-floating;
+	}
+
+	/* Media card image overlay for text-on-image legibility */
+	.media-overlay {
+		background: linear-gradient(to bottom, transparent 35%, rgba(0, 0, 0, 0.78) 100%);
+	}
+
+	/* Inputs */
+	.input {
+		@apply min-h-[48px] w-full rounded-2xl border border-subtle bg-surface-secondary px-4 text-ink placeholder:text-ink-muted transition-colors duration-normal focus:border-brand-gold focus:outline-none;
+	}
+
+	/* Chips */
+	.chip {
+		@apply inline-flex items-center justify-center gap-1.5 rounded-[10px] border px-3 py-1.5 text-sm font-medium text-ink-secondary transition-colors duration-fast;
+	}
+	.chip-selected {
+		@apply border-brand-gold bg-brand-gold text-on-accent;
+	}
+	.chip-disabled {
+		@apply pointer-events-none opacity-35;
+	}
+
+	/* Floating icon button */
+	.icon-button {
+		@apply grid h-12 w-12 place-items-center rounded-2xl border border-subtle bg-elevated text-ink shadow-soft transition-transform duration-fast hover:-translate-y-0.5;
+	}
+
+	/* Sticky bottom action bar */
+	.bottom-action {
+		@apply sticky bottom-0 z-30 flex items-center justify-between gap-4 border-t border-subtle bg-elevated px-5 py-4;
+	}
 }

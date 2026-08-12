@@ -30,10 +30,10 @@
 	<title>Movie reservation system</title>
 </svelte:head>
 
-<div class="flex min-h-screen flex-col bg-primary text-text">
+<div class="flex min-h-screen flex-col bg-app text-ink">
 	<QueryClientProvider client={queryClient}>
 		<Navbar />
-		<section class="flex-1 bg-primary bg-cover bg-center">
+		<section class="flex-1">
 			{@render children()}
 		</section>
 		<Footer />

@@ -90,12 +90,12 @@
 </svelte:head>
 
 <div class="flex min-h-[calc(100vh-4rem)] items-center justify-center px-4 py-12">
-	<div class="w-full max-w-md rounded-2xl border border-accent/15 bg-surface p-8 shadow-lg">
-		<div class="mb-6 flex rounded-full bg-primary p-1">
+	<div class="card-floating w-full max-w-md p-8">
+		<div class="mb-6 flex rounded-full bg-surface-secondary p-1">
 			<button
 				type="button"
-				class={`flex-1 rounded-full py-2 text-sm font-medium transition-colors ${
-					mode === 'login' ? 'bg-accent text-primary' : 'text-text hover:text-accent'
+				class={`flex-1 rounded-full py-2 text-sm font-medium transition-colors duration-fast ${
+					mode === 'login' ? 'bg-brand-gold text-on-accent' : 'text-ink-secondary hover:text-ink'
 				}`}
 				onclick={() => switchMode('login')}
 			>
@@ -103,8 +103,8 @@
 			</button>
 			<button
 				type="button"
-				class={`flex-1 rounded-full py-2 text-sm font-medium transition-colors ${
-					mode === 'register' ? 'bg-accent text-primary' : 'text-text hover:text-accent'
+				class={`flex-1 rounded-full py-2 text-sm font-medium transition-colors duration-fast ${
+					mode === 'register' ? 'bg-brand-gold text-on-accent' : 'text-ink-secondary hover:text-ink'
 				}`}
 				onclick={() => switchMode('register')}
 			>
@@ -112,15 +112,15 @@
 			</button>
 		</div>
 
-		<h1 class="mb-1 text-2xl font-bold text-text">
+		<h1 class="mb-1 text-2xl font-bold text-ink">
 			{mode === 'login' ? 'Welcome back' : 'Create an account'}
 		</h1>
-		<p class="mb-6 text-sm text-text/60">
+		<p class="mb-6 text-sm text-ink-secondary">
 			{mode === 'login' ? 'Sign in to manage your bookings' : 'Sign up to start booking tickets'}
 		</p>
 
 		{#if $activeMutation.isError}
-			<p class="mb-4 rounded-lg bg-red-500/10 px-3 py-2 text-sm text-red-500">
+			<p class="mb-4 rounded-xs bg-brand-red/10 px-3 py-2 text-sm text-brand-red">
 				{$activeMutation.error instanceof AxiosError && typeof $activeMutation.error.response?.data === 'string'
 					? $activeMutation.error.response.data
 					: 'Something went wrong. Please try again.'}
@@ -135,51 +135,39 @@
 			}}
 		>
 			<div>
-				<label for="username" class="mb-1 block text-sm text-text/80">Username</label>
-				<input
-					id="username"
-					type="text"
-					bind:value={username}
-					class="w-full rounded-lg border border-accent/20 bg-primary px-3 py-2 text-text outline-none transition-colors focus:border-accent"
-				/>
+				<label for="username" class="mb-1 block text-sm text-ink-secondary">Username</label>
+				<input id="username" type="text" bind:value={username} class="input" />
 				{#if usernameError}
-					<p class="mt-1 text-xs text-red-500">{usernameError}</p>
+					<p class="mt-1 text-xs text-brand-red">{usernameError}</p>
 				{/if}
 			</div>
 
 			<div>
-				<label for="password" class="mb-1 block text-sm text-text/80">Password</label>
-				<input
-					id="password"
-					type="password"
-					bind:value={password}
-					class="w-full rounded-lg border border-accent/20 bg-primary px-3 py-2 text-text outline-none transition-colors focus:border-accent"
-				/>
+				<label for="password" class="mb-1 block text-sm text-ink-secondary">Password</label>
+				<input id="password" type="password" bind:value={password} class="input" />
 				{#if passwordError}
-					<p class="mt-1 text-xs text-red-500">{passwordError}</p>
+					<p class="mt-1 text-xs text-brand-red">{passwordError}</p>
 				{/if}
 			</div>
 
 			{#if mode === 'register'}
 				<div>
-					<label for="confirmPassword" class="mb-1 block text-sm text-text/80">Confirm password</label>
+					<label for="confirmPassword" class="mb-1 block text-sm text-ink-secondary"
+						>Confirm password</label
+					>
 					<input
 						id="confirmPassword"
 						type="password"
 						bind:value={confirmPassword}
-						class="w-full rounded-lg border border-accent/20 bg-primary px-3 py-2 text-text outline-none transition-colors focus:border-accent"
+						class="input"
 					/>
 					{#if confirmPasswordError}
-						<p class="mt-1 text-xs text-red-500">{confirmPasswordError}</p>
+						<p class="mt-1 text-xs text-brand-red">{confirmPasswordError}</p>
 					{/if}
 				</div>
 			{/if}
 
-			<button
-				type="submit"
-				disabled={$activeMutation.isPending}
-				class="mt-2 rounded-full bg-accent px-4 py-2.5 font-medium text-primary transition-opacity hover:opacity-90 disabled:opacity-50"
-			>
+			<button type="submit" disabled={$activeMutation.isPending} class="btn-primary mt-2 w-full">
 				{#if $activeMutation.isPending}
 					Please wait...
 				{:else}
@@ -189,16 +177,12 @@
 		</form>
 
 		<div class="my-6 flex items-center gap-3">
-			<div class="h-px flex-1 bg-accent/15"></div>
-			<span class="text-xs text-text/50">or</span>
-			<div class="h-px flex-1 bg-accent/15"></div>
+			<div class="h-px flex-1 border-t border-subtle"></div>
+			<span class="text-xs text-ink-muted">or</span>
+			<div class="h-px flex-1 border-t border-subtle"></div>
 		</div>
 
-		<button
-			type="button"
-			onclick={googleLogin}
-			class="flex w-full items-center justify-center gap-2 rounded-full border border-accent/20 bg-primary px-4 py-2.5 text-sm font-medium text-text transition-colors hover:border-accent"
-		>
+		<button type="button" onclick={googleLogin} class="btn-secondary w-full text-sm">
 			<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="h-5 w-5">
 				<path
 					fill="#4285F4"
@@ -220,11 +204,11 @@
 			Continue with Google
 		</button>
 
-		<p class="mt-6 text-center text-sm text-text/60">
+		<p class="mt-6 text-center text-sm text-ink-secondary">
 			{mode === 'login' ? "Don't have an account?" : 'Already have an account?'}
 			<button
 				type="button"
-				class="font-medium text-accent hover:underline"
+				class="font-medium text-brand-gold hover:underline"
 				onclick={() => switchMode(mode === 'login' ? 'register' : 'login')}
 			>
 				{mode === 'login' ? 'Sign up' : 'Sign in'}

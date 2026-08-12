@@ -36,24 +36,24 @@
 
 {#if IsOpenned}
 
-<modal id="new_cinema" class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
-  <div class="w-full max-w-md rounded-md border border-accent/20 bg-surface p-6">
-    <h2 class="mb-4 text-xl font-bold text-text">
+<modal id="new_cinema" class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm">
+  <div class="card-floating w-full max-w-md p-6">
+    <h2 class="mb-4 text-xl font-bold text-ink">
       New cinema
     </h2>
-    <label for="cinema-name" class="mb-1 block text-sm text-text/70">
+    <label for="cinema-name" class="mb-1 block text-sm text-ink-secondary">
       Name
     </label>
-    <input bind:value={newCinema.name} id="cinema-name" type="text" class="mb-4 w-full rounded border border-accent/30 bg-transparent px-3 py-2 text-text placeholder-text/40 transition-colors focus:border-accent focus:outline-none"/>
-    <label for="cinema-address" class="mb-1 block text-sm text-text/70">
+    <input bind:value={newCinema.name} id="cinema-name" type="text" class="input mb-4"/>
+    <label for="cinema-address" class="mb-1 block text-sm text-ink-secondary">
       Address
     </label>
-    <input bind:value={newCinema.address} id="cinema-address" type="text" class="mb-6 w-full rounded border border-accent/30 bg-transparent px-3 py-2 text-text placeholder-text/40 transition-colors focus:border-accent focus:outline-none"/>
+    <input bind:value={newCinema.address} id="cinema-address" type="text" class="input mb-6"/>
     <div class="flex justify-end space-x-3">
-      <button on:click={AddNewCinema} class="rounded bg-accent px-4 py-2 font-bold text-primary transition-opacity hover:opacity-90">
+      <button on:click={AddNewCinema} class="btn-primary">
         Add
       </button>
-      <button on:click={Close} class="rounded border border-accent/40 px-4 py-2 text-text transition-colors hover:bg-accent/10">
+      <button on:click={Close} class="btn-secondary">
         Cancel
       </button>
     </div>
